@@ -43,3 +43,4 @@ quasar build
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
 
 ajuste para forçar push as 16:34
+ajuste para forçar a ativação dos icones push 08:57
