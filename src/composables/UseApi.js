@@ -55,6 +55,17 @@ export default function useApi() {
     return data
   }
 
+  const getByUserId = async (table, columnFilter = '', filter = '') => {
+    const { data, error } = await supabase
+      .from(table)
+      .select('*')
+      .eq(columnFilter, filter)
+    if (error) throw error
+    return data
+  }
+
+
+
   const post = async (table, form) => {
     const { data, error } = await supabase.from(table).insert([
       {
@@ -122,6 +133,7 @@ export default function useApi() {
     listPublic,
     fetchCount,
     getById,
+    getByUserId,
     post,
     update,
     remove,

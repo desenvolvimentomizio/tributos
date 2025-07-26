@@ -9,7 +9,7 @@
         :loading="loading"
       >
         <template v-slot:top>
-          <span class="text-h6"> {{ identificacaoContabilidade }} </span>
+          <span class="text-h6"> {{ idContabilidade }}  {{ identificacaoContabilidade }} </span>
 
           <div class="row justify-center">
             <q-btn
@@ -72,6 +72,8 @@ export default defineComponent({
   setup() {
     const contabilidades = ref([])
     const identificacaoContabilidade = ref('')
+    const idContabilidade = ref('')
+
     const empresas = ref([])
     const loading = ref(true)
     const router = useRouter()
@@ -87,6 +89,8 @@ export default defineComponent({
         loading.value = true
         contabilidades.value = await listPublic(tableContabilidade, user.value.id)
         identificacaoContabilidade.value = contabilidades.value[0]?.identificacao || ''
+        idContabilidade.value = contabilidades.value[0]?.id || ''
+
         loading.value = false
       } catch (error) {
         notifyError(error.message)
@@ -136,6 +140,7 @@ export default defineComponent({
       handleEdit,
       handleRemoveEmpresa,
       identificacaoContabilidade,
+      idContabilidade
     }
   },
 })

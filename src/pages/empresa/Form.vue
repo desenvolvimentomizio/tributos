@@ -19,9 +19,22 @@
         />
 
         <q-input
-          label="Inscrição Estadual"
+          label="Inscrição Estaudual"
           v-model="form.inscricao_estadual"
           :rules="[(val) => (val && val.length > 0) || 'CNPJ é obrigatório']"
+          unmasked-value
+        />
+
+        <q-input
+          label="CONTABILIDAE_ID"
+          v-model="form.contabilidade_id"
+          unmasked-value
+        />
+
+       <q-input
+          label="CNAE"
+          v-model="form.cnae"
+          :rules="[(val) => (val && val.length > 0) || 'CNAE é obrigatório']"
           unmasked-value
         />
 
@@ -39,7 +52,7 @@
           class="full-width"
           rounded
           flat
-          :to="{ name: 'empresa' }"
+          :to="{ name: 'contabilidade' }"
         />
       </q-form>
     </div>
@@ -56,30 +69,39 @@ import useNotify from 'src/composables/UseNotify'
 export default defineComponent({
   name: 'PageFormEmpresa',
   setup() {
-    const contabilidades = ref([])
     const table = 'empresa'
-    const tableContabilidade = 'contabilidade'
     const router = useRouter()
     const route = useRoute()
-    const { listPublic } = useApi()
     const { user } = useAuthUser()
-    const { post, getById, update } = useApi()
+    const { post, getById,getByUserId, update } = useApi()
     const { notifyError, notifySuccess } = useNotify()
 
     const isUpdate = computed(() => route.params.id)
 
-    let empresa = {}
+    let empresa = { }
+    let contabilidade = {
+       contabilidade_id: '',
+    }
+
     const form = ref({
-      contabilidade_id: '',
       identificacao: '',
+      contabilidade_id: '',
       cnpj: '',
-      inscricao_estadual: '',
+      inscricao_estadual:'',
+      cnae: '',
+      user_id: '',
+
     })
 
     onMounted(() => {
+
       if (isUpdate.value) {
         handleGetEmpresa(isUpdate.value)
       }
+      else {
+        handleGetContabilidade()
+      }
+
     })
 
     const handleSubmit = async () => {
@@ -101,21 +123,31 @@ export default defineComponent({
       try {
         empresa = await getById(table, id)
         Object.assign(form.value, empresa)
-        contabilidades.value = await listPublic(tableContabilidade, user.value.id)
-
-        console.log('Usuario:', user.value.id)
-        console.log('Contabilidade carregadas:', contabilidades.value)
-
-        empresa.contabilidade_id = contabilidades.value[0]?.id || ''
       } catch (error) {
         notifyError(error.message)
       }
     }
 
+    const handleGetContabilidade = async () => {
+      try {
+        contabilidade = await getByUserId('contabilidade','user_id', user.value.id)
+        console.log(contabilidade[0]?.id)
+        form.value.contabilidade_id =contabilidade[0]?.id
+        form.value.user_id = user.value.id
+      } catch (error) {
+        notifyError(error.message)
+      }
+    }
+
+
+
     return {
       handleSubmit,
       form,
       isUpdate,
+      handleGetContabilidade,
+
+
     }
   },
 })

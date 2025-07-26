@@ -84,8 +84,6 @@ export default defineComponent({
       try {
         loading.value = true
         contabilidades.value = await listPublic(table, user.value.id)
-        console.log('Usuario:', user.value.id)
-        console.log('Contabilidade carregadas:', contabilidades.value)
         loading.value = false
       } catch (error) {
         notifyError(error.message)
