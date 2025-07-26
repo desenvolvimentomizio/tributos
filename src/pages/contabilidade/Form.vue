@@ -4,6 +4,9 @@
       <div class="col-12 text-center">
         <p class="text-h6">Contabilidades</p>
       </div>
+
+
+
       <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md" @submit.prevent="handleSubmit">
         <q-input
           label="Identificação"
@@ -47,7 +50,10 @@ import useNotify from 'src/composables/UseNotify'
 
 export default defineComponent({
   name: 'PageFormContabilidade',
-  setup() {
+  setup()
+   {
+    const userName = ref('')
+
     const table = 'contabilidade'
     const router = useRouter()
     const route = useRoute()
@@ -60,9 +66,11 @@ export default defineComponent({
     const form = ref({
       identificacao: '',
       telefone: '',
+      nome_usuario: '',
     })
 
     onMounted(() => {
+      userName.value = localStorage.getItem('userName') || ''
       if (isUpdate.value) {
         handleGetContabilidade(isUpdate.value)
       }
@@ -70,6 +78,7 @@ export default defineComponent({
 
     const handleSubmit = async () => {
       try {
+        form.value.nome_usuario = userName.value
         if (isUpdate.value) {
           await update(table, form.value)
           notifySuccess('Registro atualizado com sucesso')
@@ -87,93 +96,18 @@ export default defineComponent({
       try {
         contabilidade = await getById(table, id)
         Object.assign(form.value, contabilidade)
+        form.value.nome_usuario = userName.value
       } catch (error) {
         notifyError(error.message)
       }
     }
 
-    const isValidPhone = (val) => {
-      const phone = val.replace(/\D/g, '')
-      const ddd = phone.substring(0, 2)
-      const validDDD = [
-        '11',
-        '12',
-        '13',
-        '14',
-        '15',
-        '16',
-        '17',
-        '18',
-        '19',
-        '21',
-        '22',
-        '24',
-        '27',
-        '28',
-        '31',
-        '32',
-        '33',
-        '34',
-        '35',
-        '37',
-        '38',
-        '41',
-        '42',
-        '43',
-        '44',
-        '45',
-        '46',
-        '51',
-        '53',
-        '54',
-        '55',
-        '61',
-        '62',
-        '64',
-        '63',
-        '65',
-        '66',
-        '67',
-        '68',
-        '69',
-        '71',
-        '73',
-        '74',
-        '75',
-        '77',
-        '79',
-        '81',
-        '82',
-        '83',
-        '84',
-        '85',
-        '86',
-        '87',
-        '88',
-        '89',
-        '91',
-        '92',
-        '93',
-        '94',
-        '95',
-        '96',
-        '97',
-        '98',
-        '99',
-      ]
-
-      if (!validDDD.includes(ddd)) return false
-      if (phone.length === 11 && phone[2] !== '9') return false // celular deve iniciar com 9
-      if (phone.length < 10 || phone.length > 11) return false
-
-      return true
-    }
 
     return {
       handleSubmit,
       form,
-      isUpdate,
-      isValidPhone,
+      isUpdate
+
     }
   },
 })

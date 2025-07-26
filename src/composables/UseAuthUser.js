@@ -52,6 +52,7 @@ export default function useAuthUser() {
     return !!user.value
   }
 
+
   /**
    * Register
    */
@@ -71,6 +72,10 @@ export default function useAuthUser() {
     if (error) throw error
     return user
   }
+
+
+
+
 
   /**
    * Update user email, password, or meta data

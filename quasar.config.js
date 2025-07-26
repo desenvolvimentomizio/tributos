@@ -16,6 +16,8 @@ export default defineConfig((/* ctx */) => {
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: ['app.css'],
 
+
+
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
       // 'ionicons-v4',
@@ -86,6 +88,7 @@ export default defineConfig((/* ctx */) => {
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
     framework: {
       config: {
+
         brand: {
           primary: '#051d36',
           secondary: '#26A69A',
@@ -98,7 +101,9 @@ export default defineConfig((/* ctx */) => {
           negative: '#C10015',
           info: '#31CCEC',
           warning: '#F2C037',
+
         },
+        cssAddon: true // permite aplicar a fonte em todos os componentes internos do Quasar
       },
 
       // iconSet: 'material-icons', // Quasar icon set

@@ -71,19 +71,27 @@ export default defineComponent({
       password: '',
     })
 
+
+
     const handleRegister = async () => {
-      try {
-        await register(form.value)
-        notifySuccess()
-        router.push({
-          name: 'email-confirmation',
-          query: { email: form.value.email },
-        })
-      } catch (error) {
-        console.error('Erro ao registrar usuário:', error)
-        notifyError(error.message || 'Erro desconhecido ao registrar')
-      }
-    }
+  try {
+    const { email, name, password } = form.value
+
+    await register({ email, password, name }) // `name` vai como parte do `meta`
+
+    // Armazena o name (já que o Supabase não retorna o metadata antes da confirmação de e-mail)
+    localStorage.setItem('userName', name)
+
+    notifySuccess()
+    router.push({
+      name: 'email-confirmation',
+      query: { email },
+    })
+  } catch (error) {
+    console.error('Erro ao registrar usuário:', error)
+    notifyError(error.message || 'Erro desconhecido ao registrar')
+  }
+}
 
     return {
       form,

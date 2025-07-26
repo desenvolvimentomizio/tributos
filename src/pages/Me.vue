@@ -8,15 +8,12 @@
         <card-dashboard table="product" label="Products" icon="mdi-archive" />
       </div>
     </div>
-    <div v-if="user">
-      <div>bem vindo {{ user.user_metadata.name }}</div>
-    </div>
+
   </q-page>
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent } from 'vue'
-import useAuthUser from 'src/composables/UseAuthUser'
+import { defineComponent, defineAsyncComponent, ref, onMounted } from 'vue'
 
 export default defineComponent({
   name: 'PageMe',
@@ -24,10 +21,14 @@ export default defineComponent({
     CardDashboard: defineAsyncComponent(() => import('components/CardDashbaord.vue')),
   },
   setup() {
-    const { user } = useAuthUser()
+    const userName = ref('')
+
+    onMounted(() => {
+      userName.value = localStorage.getItem('userName') || ''
+    })
 
     return {
-      user,
+      userName,
     }
   },
 })

@@ -9,12 +9,12 @@
         :loading="loading"
       >
         <template v-slot:top>
-          <span class="text-h6"> Contabilidades </span>
+          <span class="text-h6"> Contabilidades - {{ nome_usuario }} </span>
           <q-space />
 
           <div class="row justify-center">
             <q-btn
-              v-if="$q.platform.is.desktop"
+              v-if="$q.platform.is.desktop  && podeIncluirContabilidade"
               label="Incluir"
               color="primary"
               icon="mdi-plus"
@@ -28,20 +28,29 @@
             <q-btn
               icon="mdi-pencil-outline"
               color="info"
-              dense
               size="sm"
               @click="handleEdit(props.row)"
             >
-              <q-tooltip> Editar </q-tooltip>
+            <q-tooltip> Editar </q-tooltip>
             </q-btn>
+
+
             <q-btn
               icon="mdi-delete-outline"
               color="negative"
-              dense
               size="sm"
               @click="handleRemoveContabilidade(props.row)"
             >
               <q-tooltip> Excluir </q-tooltip>
+            </q-btn>
+
+            <q-btn
+              icon="mdi-domain"
+              color="primary"
+              size="sm"
+              @click="handleLisEmpresas(props.row)"
+            >
+              <q-tooltip> Empresas </q-tooltip>
             </q-btn>
           </q-td>
         </template>
@@ -60,7 +69,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, computed } from 'vue'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import useAuthUser from 'src/composables/UseAuthUser'
@@ -71,19 +80,28 @@ import { columnsContabilidade } from './table'
 export default defineComponent({
   name: 'PageContabilidadeList',
   setup() {
+    const nome_usuario = ref('')
     const contabilidades = ref([])
     const loading = ref(true)
     const router = useRouter()
     const $q = useQuasar()
     const table = 'contabilidade'
     const { user } = useAuthUser()
-    const { listPublic, remove } = useApi()
+    const { list, listPublic, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
 
     const handleListContabilidades = async () => {
       try {
         loading.value = true
-        contabilidades.value = await listPublic(table, user.value.id)
+        if (user.value.email === 'tributos@miziosistemas.com.br') {
+          contabilidades.value = await list(table)
+          nome_usuario.value = 'Administrador'
+        } else {
+           contabilidades.value = await listPublic(table, user.value.id)
+           nome_usuario.value = contabilidades.value[0]?.nome_usuario || ''
+           console.log(nome_usuario)
+        }
+
         loading.value = false
       } catch (error) {
         notifyError(error.message)
@@ -92,6 +110,10 @@ export default defineComponent({
 
     const handleEdit = (contabilidade) => {
       router.push({ name: 'form-contabilidade', params: { id: contabilidade.id } })
+    }
+
+    const handleLisEmpresas = async ()   =>{
+        router.replace({ name: 'empresa' })
     }
 
     const handleRemoveContabilidade = async (contabilidade) => {
@@ -115,12 +137,24 @@ export default defineComponent({
       handleListContabilidades()
     })
 
+    const podeIncluirContabilidade = computed(() => {
+    if (user.value.email === 'tributos@miziosistemas.com.br') {
+      return true
+    } else {
+      return contabilidades.value.length === 0
+    }
+    })
+
     return {
       columnsContabilidade,
       contabilidades,
       loading,
       handleEdit,
       handleRemoveContabilidade,
+      handleLisEmpresas,
+      podeIncluirContabilidade,
+      nome_usuario
+
     }
   },
 })
