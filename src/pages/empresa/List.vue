@@ -1,51 +1,71 @@
 <template>
   <q-page padding>
-    <div class="row">
-      <q-table
-        :rows="empresas"
-        :columns="columnsEmpresas"
-        row-key="id"
-        class="col-12"
-        :loading="loading"
-      >
-        <template v-slot:top>
-          <span class="text-h6"> {{ idContabilidade }}  {{ identificacaoContabilidade }} </span>
+    <!-- Card de Identificação da Contabilidade -->
+    <q-card class="q-pa-md q-mb-md shadow-1">
+      <div class="row items-center justify-between">
+        <div class="text-h6"> {{ identificacaoContabilidade }} </div>
+        <q-btn
+          v-if="$q.platform.is.desktop"
+          label="Incluir Empresa"
+          color="primary"
+          icon="mdi-plus"
+          dense
+          :to="{ name: 'form-empresa' }"
+        />
+      </div>
+    </q-card>
 
-          <div class="row justify-center">
-            <q-btn
-              v-if="$q.platform.is.desktop"
-              label="Incluir Empresa"
-              color="primary"
-              icon="mdi-plus"
-              dense
-              :to="{ name: 'form-empresa' }"
-            />
-          </div>
-        </template>
-        <template v-slot:body-cell-actions="props">
-          <q-td :props="props" class="q-gutter-x-sm">
-            <q-btn
-              icon="mdi-pencil-outline"
-              color="info"
-              dense
-              size="sm"
-              @click="handleEdit(props.row)"
-            >
-              <q-tooltip> Editar </q-tooltip>
-            </q-btn>
-            <q-btn
-              icon="mdi-delete-outline"
-              color="negative"
-              dense
-              size="sm"
-              @click="handleRemoveEmpresa(props.row)"
-            >
-              <q-tooltip> Excluir </q-tooltip>
-            </q-btn>
-          </q-td>
-        </template>
-      </q-table>
+    <!-- Filtro -->
+    <div class="row q-mb-sm">
+      <div class="col-12 col-md-4">
+        <q-input
+          dense
+          debounce="300"
+          outlined
+          v-model="filtro"
+          placeholder="Buscar por identificação..."
+          clearable
+          prefix="🔍"
+        />
+      </div>
     </div>
+
+    <!-- Tabela -->
+    <q-table
+      :rows="empresas"
+      :columns="columnsEmpresas"
+      row-key="id"
+      :loading="loading"
+      :filter="filtro"
+      flat
+      bordered
+      class="q-mb-xl"
+    >
+      <template v-slot:body-cell-actions="props">
+        <q-td :props="props" class="q-gutter-x-sm">
+          <q-btn
+            icon="mdi-pencil-outline"
+            color="info"
+            dense
+            size="sm"
+            @click="handleEdit(props.row)"
+          >
+            <q-tooltip> Editar </q-tooltip>
+          </q-btn>
+          <q-btn
+            icon="mdi-delete-outline"
+            color="negative"
+            dense
+            size="sm"
+            @click="handleRemoveEmpresa(props.row)"
+          >
+            <q-tooltip> Excluir </q-tooltip>
+          </q-btn>
+        </q-td>
+      </template>
+    </q-table>
+
+    <!-- Botão flutuante (mobile) -->
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-btn
         v-if="$q.platform.is.mobile"
@@ -73,9 +93,10 @@ export default defineComponent({
     const contabilidades = ref([])
     const identificacaoContabilidade = ref('')
     const idContabilidade = ref('')
-
     const empresas = ref([])
+    const filtro = ref('')
     const loading = ref(true)
+
     const router = useRouter()
     const $q = useQuasar()
     const table = 'empresa'
@@ -90,10 +111,10 @@ export default defineComponent({
         contabilidades.value = await listPublic(tableContabilidade, user.value.id)
         identificacaoContabilidade.value = contabilidades.value[0]?.identificacao || ''
         idContabilidade.value = contabilidades.value[0]?.id || ''
-
-        loading.value = false
       } catch (error) {
         notifyError(error.message)
+      } finally {
+        loading.value = false
       }
     }
 
@@ -101,9 +122,10 @@ export default defineComponent({
       try {
         loading.value = true
         empresas.value = await listPublic(table, user.value.id)
-        loading.value = false
       } catch (error) {
         notifyError(error.message)
+      } finally {
+        loading.value = false
       }
     }
 
@@ -112,36 +134,37 @@ export default defineComponent({
     }
 
     const handleRemoveEmpresa = async (empresa) => {
-      try {
-        $q.dialog({
-          title: 'Confirmação',
-          message: `Realmente deseja excluir a ${empresa.identificacao} ?`,
-          cancel: true,
-          persistent: true,
-        }).onOk(async () => {
+      $q.dialog({
+        title: 'Confirmação',
+        message: `Deseja excluir a empresa "${empresa.identificacao}"?`,
+        cancel: true,
+        persistent: true
+      }).onOk(async () => {
+        try {
           await remove(table, empresa.id)
           notifySuccess('Exclusão realizada com sucesso')
           handleListEmpresas()
-        })
-      } catch (error) {
-        notifyError(error.message)
-      }
+        } catch (error) {
+          notifyError(error.message)
+        }
+      })
     }
 
     onMounted(() => {
-      handleListEmpresas()
       handleListContabilidades()
+      handleListEmpresas()
     })
 
     return {
       columnsEmpresas,
       empresas,
+      filtro,
       loading,
-      handleEdit,
-      handleRemoveEmpresa,
       identificacaoContabilidade,
-      idContabilidade
+      idContabilidade,
+      handleEdit,
+      handleRemoveEmpresa
     }
-  },
+  }
 })
 </script>

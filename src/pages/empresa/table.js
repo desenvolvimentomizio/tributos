@@ -22,6 +22,14 @@ const columnsEmpresas = [
     sortable: true,
   },
 
+  {
+    name: 'cnae',
+    align: 'left',
+    label: 'CNAE',
+    field: 'cnae',
+    sortable: true,
+  },
+
   { name: 'actions', align: 'right', label: 'Funções', field: 'actions', sortable: false },
 ]
 
