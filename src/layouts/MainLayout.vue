@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title> Home - Mizio Tributos </q-toolbar-title>
+        <q-toolbar-title> Mizio Tributos </q-toolbar-title>
         <dark-mode-toogle />
         <div>
           <q-btn-dropdown flat color="white" icon="person">

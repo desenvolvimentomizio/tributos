@@ -5,20 +5,26 @@
         <p class="text-h6">Contabilidades</p>
       </div>
 
-
-
       <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md" @submit.prevent="handleSubmit">
         <q-input
           label="Identificação"
           v-model="form.identificacao"
-          :rules="[(val) => (val && val.length > 0) || 'Identificação é obrigatória']"
+          :rules="[
+              val => !!val || 'Identificação é obrigatória',
+              val => val.length >= 3 || 'Mínimo de 3 caracteres',
+              val => val.length <= 100 || 'Máximo de 100 caracteres'
+            ]"
         />
 
         <q-input
           label="Telefone"
           v-model="form.telefone"
-          :rules="[(val) => (val && val.length > 0) || 'Telefone é obrigatório']"
-          unmasked-value
+          mask="(##) #####-####"
+            unmasked-value
+            :rules="[
+              val => !!val || 'Telefone é obrigatório',
+              val => /^\d{10,11}$/.test(val) || 'Telefone deve conter 10 ou 11 dígitos numéricos'
+            ]"
         />
 
         <q-btn
