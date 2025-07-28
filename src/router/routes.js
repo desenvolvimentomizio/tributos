@@ -56,12 +56,6 @@ const routes = [
         component: () => import('pages/empresa/Form.vue'),
       },
 
-      {
-        path: 'form-regime/:id?',
-        name: 'form-regime',
-        component: () => import('pages/regime/Form.vue'),
-      },
-
 
       { path: 'product', name: 'product', component: () => import('pages/product/List.vue') },
       {

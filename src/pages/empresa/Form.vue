@@ -10,6 +10,12 @@
         <q-form ref="formRef" class="q-gutter-y-md" @submit.prevent="handleSubmit">
 
           <q-input
+            label="ID"
+            v-model="form.id"
+            hidden
+          />
+
+          <q-input
             label="Razão Social"
             v-model="form.identificacao"
             :rules="[(val) => (val && val.length > 5) || 'Identificação é obrigatória e maior que 5 caracteres']"
@@ -87,19 +93,21 @@ export default defineComponent({
   name: 'PageFormEmpresa',
 
   setup() {
+    let empresaSalva = null
 
     const formRef = ref(null)
     const table = 'empresa'
     const router = useRouter()
     const route = useRoute()
     const { user } = useAuthUser()
-    const { post, getById, getByUserId, update } = useApi()
+    const { post, getById, getByUserId, update, upsertRegimeTributario } = useApi()
     const { notifyError, notifySuccess } = useNotify()
 
     const isUpdate = computed(() => route.params.id)
     const cnpjRef = ref(null)
 
     const form = ref({
+      id: '',
       identificacao: '',
       contabilidade_id: '',
       regime_id: '',
@@ -127,7 +135,8 @@ export default defineComponent({
       }
       descricaoCnae.value = mapaCnae[form.value.cnae] || ''
     }
-        const handleSubmit = async () => {
+
+       const handleSubmit = async () => {
         const formValid = await formRef.value?.validate()
 
         if (!formValid ) {
@@ -138,11 +147,21 @@ export default defineComponent({
         try {
           if (isUpdate.value) {
             await update(table, form.value)
+            empresaSalva = form.value
             notifySuccess('Registro atualizado com sucesso')
           } else {
             await post(table, form.value)
+            empresaSalva = form.value
             notifySuccess('Registro incluído com sucesso')
           }
+
+          // Atualiza ou cria regime tributário
+          await upsertRegimeTributario(
+            empresaSalva.id,
+            empresaSalva.contabilidade_id,
+            empresaSalva.regime_id
+          )
+
           router.push({ name: 'empresa' })
         } catch (error) {
           notifyError(error.message)
@@ -217,7 +236,8 @@ function isValidCNPJ(cnpj) {
       cnpjRef,
       formRef,
       validaCnpjRule,
-      regimeOptions
+      regimeOptions,
+      upsertRegimeTributario
     }
   }
 })

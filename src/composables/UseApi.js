@@ -65,7 +65,6 @@ export default function useApi() {
   }
 
 
-
   const post = async (table, form) => {
     const { data, error } = await supabase.from(table).insert([
       {
@@ -128,6 +127,52 @@ export default function useApi() {
     }
   }
 
+const upsertRegimeTributario = async (empresaId, contabilidadeId, novoRegimeId) => {
+  const hoje = new Date().toISOString().split('T')[0]
+
+  // Pega o último regime da empresa
+const { data: regimes, error } = await supabase
+  .from('empresa_regime_tributario')
+  .select('*')
+  .eq('empresa_id', empresaId)
+  .is('saida_regime', null) // ⬅ somente onde não houve saída
+  .order('entrada_regime', { ascending: false }) // mais recente primeiro
+  .limit(1)
+
+ if (error) throw error
+
+  const ultimo = regimes[0]
+
+  if (!ultimo) {
+    // Nenhum regime anterior — cria o primeiro
+    const { error: insertError } = await supabase.from('empresa_regime_tributario').insert({
+      empresa_id: empresaId,
+      contabilidade_id: contabilidadeId,
+      regime_id: novoRegimeId,
+      entrada_regime: hoje,
+      user_id: user.value.id, // ← salva o usuário logado
+    })
+    if (insertError) throw insertError
+  } else if (ultimo.regime_id !== novoRegimeId) {
+    // Regime mudou — atualiza o último com saída e insere novo
+    const { error: updateError } = await supabase
+      .from('empresa_regime_tributario')
+      .update({ saida_regime: hoje })
+      .eq('id', ultimo.id)
+    if (updateError) throw updateError
+
+    const { error: insertError } = await supabase.from('empresa_regime_tributario').insert({
+      empresa_id: empresaId,
+      contabilidade_id: contabilidadeId,
+      regime_id: novoRegimeId,
+      entrada_regime: hoje,
+      user_id: user.value.id, // ← novamente, registra o usuário
+    })
+    if (insertError) throw insertError
+  }
+}
+
+
   return {
     list,
     listPublic,
@@ -140,5 +185,6 @@ export default function useApi() {
     uploadImg,
     getBrand,
     brand,
+    upsertRegimeTributario,
   }
 }
