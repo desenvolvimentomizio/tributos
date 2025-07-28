@@ -30,6 +30,19 @@
             v-model="form.inscricao_estadual"
             :rules="[(val) => (val && val.length > 0) || 'Inscrição é obrigatória']"
           />
+
+           <q-select
+            v-model="form.regime_id"
+            label="Regime Tributário"
+            :options="regimeOptions"
+            emit-value
+            map-options
+            option-label="label"
+            option-value="value"
+            filled
+            :rules="[(val) => !!val || 'Regime é obrigatório']"
+          />
+
           <div class="row q-col-gutter-md">
             <div class="col-md-3 col-sm-12">
               <q-input
@@ -89,12 +102,19 @@ export default defineComponent({
     const form = ref({
       identificacao: '',
       contabilidade_id: '',
+      regime_id: '',
       cnpj: '',
       inscricao_estadual: '',
       cnae: '',
       user_id: '',
     })
 
+
+        const regimeOptions = [
+        { label: 'Simples Nacional', value: 1 },
+        { label: 'Simples Nacional - excesso de sublimite da receita bruta', value: 2 },
+        { label: 'Regime Normal', value: 3 }
+      ]
 
 
     const descricaoCnae = ref('')
@@ -196,7 +216,8 @@ function isValidCNPJ(cnpj) {
       buscarDescricaoCnae,
       cnpjRef,
       formRef,
-      validaCnpjRule
+      validaCnpjRule,
+      regimeOptions
     }
   }
 })

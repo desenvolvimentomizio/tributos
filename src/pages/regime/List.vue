@@ -44,6 +44,13 @@
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-sm">
 
+          <q-btn
+            color="primary"
+            label="Regime"
+            size="sm"
+            @click="handleEdit(props.row)">
+            <q-tooltip> Regime </q-tooltip>
+          </q-btn>
 
           <q-btn
             color="info"
@@ -129,10 +136,6 @@ export default defineComponent({
       } finally {
         loading.value = false
       }
-   }
-
-    const handleRegime = (empresa) => {
-      router.push({ name: 'form-regime', params: { id: empresa.id } })
     }
 
     const handleEdit = (empresa) => {
@@ -169,8 +172,7 @@ export default defineComponent({
       identificacaoContabilidade,
       idContabilidade,
       handleEdit,
-      handleRemoveEmpresa,
-      handleRegime
+      handleRemoveEmpresa
     }
   }
 })

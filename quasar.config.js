@@ -92,7 +92,7 @@ export default defineConfig((/* ctx */) => {
       config: {
 
         brand: {
-          primary: '#051d36',
+          primary: '#042d59ff',
           secondary: '#26A69A',
           accent: '#9C27B0',
 
@@ -101,7 +101,7 @@ export default defineConfig((/* ctx */) => {
 
           positive: '#21BA45',
           negative: '#C10015',
-          info: '#31CCEC',
+          info: '#09772dff',
           warning: '#F2C037',
 
         },
