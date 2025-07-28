@@ -12,7 +12,7 @@
           <q-input
             label="Razão Social"
             v-model="form.identificacao"
-            :rules="[(val) => (val && val.length > 0) || 'Identificação é obrigatória']"
+            :rules="[(val) => (val && val.length > 5) || 'Identificação é obrigatória e maior que 5 caracteres']"
           />
 
            <q-input
