@@ -119,10 +119,10 @@
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import { useRoute } from 'vue-router'
-import { defineComponent, ref, onMounted, watch } from 'vue'
+import { defineComponent, ref, onMounted, computed } from 'vue'
 
 
-const { getById, computed } = useApi()
+// const { getById, computed } = useApi()
 
 export default defineComponent({
   name: 'PageFormRegra',
@@ -132,7 +132,7 @@ export default defineComponent({
     const route = useRoute()
     const { notifyError } = useNotify()
     const isUpdate = computed(() => route.params.id)
-    const table = 'regra'
+    const table = 'regra_tributaria'
 
     const cstCsosnOptions = ref([])
     const descricaocst_Icm = ref('')
@@ -178,7 +178,7 @@ export default defineComponent({
 
 
     onMounted(async () => {
-      if (form.value.regime_id === 'simples') {
+      if (form.value.regime_id === '1') {
         mapaCSTIcm.value = await import('src/assets/data/db_csosn_icm.json')
       } else {
         mapaCSTIcm.value = await import('src/assets/data/db_cst_icm.json')
@@ -186,6 +186,7 @@ export default defineComponent({
     })
 
     const carregarCSTouCSOSN = async () => {
+       /* @vite-ignore */
       try {
         const data = await import(
           form.value.regime_id === '1'
@@ -199,34 +200,24 @@ export default defineComponent({
     }
 
 
-    // buscarDescricaoCSTIcm
 
-    const handleGetRegra = async (id) => {
-      try {
-        const regra = await getById(table, id)
-        Object.assign(form.value, regra)
-
-      } catch (error) {
-        notifyError(error.message)
+    onMounted(async () => {
+      carregarCSTouCSOSN()
+      if (isUpdate.value) {
+        try {
+          const response = await useApi().getById(table, route.params.id)
+          Object.assign(form.value, response.data)
+         // descricaocst_Icm.value = mapaCSTIcm.value[form.value.cst_icm] || ''
+         // descricaocfop_interno.value = mapaCSTIcm.value[form.value.cfop_interno] || ''
+         // descricaocfop_externo.value = mapaCSTIcm.value[form.value.cfop_externo] || ''
+         // descricaocst_pis.value = mapaCSTIcm.value[form.value.cst_pis] || ''
+         // descricaocst_cofins.value = mapaCSTIcm.value[form.value.cst_cofins] || ''
+        } catch (error) {
+          notifyError('Erro ao carregar os dados da regra tributária.' + error.message)
+        }
       }
-    }
-
-    watch(() => form.value.cst_icm, (val) => {
-      if (!val) {
-        form.value.descricaocst_Icm = ''
-        return
-      }
-
-      const encontrado = cstCsosnOptions.value.find(item => item.codigo === val)
-      form.value.descricaocst_Icm = encontrado?.descricao || 'Código não encontrado'
     })
 
-
-    onMounted(() => {
-      if (isUpdate.value) handleGetRegra(isUpdate.value)
-      else
-        carregarCSTouCSOSN()
-    })
 
     return {
       form,

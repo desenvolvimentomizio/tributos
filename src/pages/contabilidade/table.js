@@ -1,4 +1,7 @@
+
 const columnsContabilidade = [
+
+
   {
     name: 'identificacao',
     align: 'left',
@@ -17,4 +20,7 @@ const columnsContabilidade = [
   { name: 'actions', align: 'right', label: 'Funções', field: 'actions', sortable: false },
 ]
 
+
 export { columnsContabilidade }
+
+
