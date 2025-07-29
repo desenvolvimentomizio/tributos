@@ -49,6 +49,19 @@ export default function useApi() {
     }
   }
 
+  const fetchLastDate = async (table, userId, dateField) => {
+    const { data, error } = await supabase
+      .from(table)
+      .select(dateField)
+      .eq('user_id', userId)
+      .order(dateField, { ascending: false })
+      .limit(1)
+
+    if (error) throw error
+      return data?.[0]?.[dateField] || null
+  }
+
+
   const getById = async (table, id) => {
     const { data, error } = await supabase.from(table).select('*').eq('id', id).single() // ⬅ isso garante que vem só 1 item
     if (error) throw error
@@ -173,10 +186,12 @@ const { data: regimes, error } = await supabase
 }
 
 
+
   return {
     list,
     listPublic,
     fetchCount,
+    fetchLastDate,
     getById,
     getByUserId,
     post,

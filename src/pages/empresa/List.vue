@@ -58,11 +58,19 @@
             label="Excluir"
             size="sm"
             @click="handleRemoveEmpresa(props.row)"
-          >
-          <q-tooltip> Excluir </q-tooltip>
-
-
+            >
+            <q-tooltip> Excluir </q-tooltip>
           </q-btn>
+          <q-btn
+            color="primary"
+            label="Regra"
+            size="sm"
+            @click="handleRegra(props.row)"
+            >
+            <q-tooltip> Regra </q-tooltip>
+          </q-btn>
+
+
         </q-td>
       </template>
     </q-table>
@@ -131,6 +139,10 @@ export default defineComponent({
       }
    }
 
+   const handleRegra = (empresa) => {
+      router.push({ name: 'form-regra', params: { id: empresa.id } })
+    }
+
     const handleRegime = (empresa) => {
       router.push({ name: 'form-regime', params: { id: empresa.id } })
     }
@@ -170,7 +182,8 @@ export default defineComponent({
       idContabilidade,
       handleEdit,
       handleRemoveEmpresa,
-      handleRegime
+      handleRegime,
+      handleRegra,
     }
   }
 })
