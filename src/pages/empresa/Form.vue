@@ -3,57 +3,35 @@
     <div class="row justify-center">
       <q-card class="col-md-4 col-xs-12 col-sm-12 q-pa-lg shadow-2 bg-white" style="border-radius: 16px;">
         <div class="text-h5 text-white text-center text-bold q-mb-lg q-pa-sm"
-             style="background-color: var(--q-primary); border-radius: 8px;">
+          style="background-color: var(--q-primary); border-radius: 8px;">
           Empresa
         </div>
 
         <q-form ref="formRef" class="q-gutter-y-md" @submit.prevent="handleSubmit">
 
+          <q-input label="Razão Social" v-model="form.identificacao"
+            :rules="[(val) => (val && val.length > 5) || 'Identificação é obrigatória e maior que 5 caracteres']" />
+
+          <q-input label="CNPJ" v-model="form.cnpj" :rules="[
+            (val) => (val && val.length > 0) || 'CNPJ é obrigatória',
+            validaCnpjRule
+          ]" />
+
+          <q-input label="Inscrição Estadual" v-model="form.inscricao_estadual"
+            :rules="[(val) => (val && val.length > 0) || 'Inscrição é obrigatória']" />
+
+          <q-input label="Email" v-model="form.email"
+            :rules="[(val) => (val && val.length > 0) || 'Email da empresa é obrigatório']" />
 
 
-          <q-input
-            label="Razão Social"
-            v-model="form.identificacao"
-            :rules="[(val) => (val && val.length > 5) || 'Identificação é obrigatória e maior que 5 caracteres']"
-          />
-
-           <q-input
-            label="CNPJ"
-            v-model="form.cnpj"
-            :rules="[
-              (val) => (val && val.length > 0) || 'CNPJ é obrigatória',
-               validaCnpjRule
-            ]"
-          />
-
-
-          <q-input
-            label="Inscrição Estadual"
-            v-model="form.inscricao_estadual"
-            :rules="[(val) => (val && val.length > 0) || 'Inscrição é obrigatória']"
-          />
-
-           <q-select
-            v-model="form.regime_id"
-            label="Regime Tributário"
-            :options="regimeOptions"
-            emit-value
-            map-options
-            option-label="label"
-            option-value="value"
-            filled
-            :rules="[(val) => !!val || 'Regime é obrigatório']"
-          />
+          <q-select v-model="form.regime_id" label="Regime Tributário" :options="regimeOptions" emit-value map-options
+            option-label="label" option-value="value" filled :rules="[(val) => !!val || 'Regime é obrigatório']" />
 
           <div class="row q-col-gutter-md">
             <div class="col-md-3 col-sm-12">
-              <q-input
-                label="CNAE"
-                v-model="form.cnae"
-                :rules="[(val) => (val && val.length > 0) || 'CNAE é obrigatório']"
-                unmasked-value
-                @blur="buscarDescricaoCnae"
-              />
+              <q-input label="CNAE" v-model="form.cnae"
+                :rules="[(val) => (val && val.length > 0) || 'CNAE é obrigatório']" unmasked-value
+                @blur="buscarDescricaoCnae" />
             </div>
             <div class="col-md-9 col-sm-12 flex items-center">
               <div class="text-caption text-grey q-mt-sm">
@@ -65,7 +43,8 @@
           <div class="q-my-md"></div>
           <div class="row q-col-gutter-md">
             <div class="col">
-              <q-btn :label="isUpdate ? 'Atualiza' : 'Salva'" color="primary" class="full-width" rounded type="submit" />
+              <q-btn :label="isUpdate ? 'Atualiza' : 'Salva'" color="primary" class="full-width" rounded
+                type="submit" />
             </div>
             <div class="col">
               <q-btn label="Cancela" color="primary" class="full-width" rounded flat :to="{ name: 'contabilidade' }" />
@@ -83,13 +62,13 @@ import { useRouter, useRoute } from 'vue-router'
 import useAuthUser from 'src/composables/UseAuthUser'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
+import { v4 as uuidv4 } from 'uuid'
 
 
 export default defineComponent({
   name: 'PageFormEmpresa',
 
   setup() {
-    let empresaSalva = null
 
     const formRef = ref(null)
     const table = 'empresa'
@@ -103,7 +82,7 @@ export default defineComponent({
     const cnpjRef = ref(null)
 
     const form = ref({
-      id: '',
+      id: isUpdate.value || uuidv4(),
       identificacao: '',
       contabilidade_id: '',
       regime_id: '',
@@ -111,15 +90,17 @@ export default defineComponent({
       inscricao_estadual: '',
       cnae: '',
       user_id: '',
+      email: '',
+
     })
 
 
 
-        const regimeOptions = [
-        { label: 'Simples Nacional', value: 1 },
-        { label: 'Simples Nacional - excesso de sublimite da receita bruta', value: 2 },
-        { label: 'Regime Normal', value: 3 }
-      ]
+    const regimeOptions = [
+      { label: 'Simples Nacional', value: 1 },
+      { label: 'Simples Nacional - excesso de sublimite da receita bruta', value: 2 },
+      { label: 'Regime Normal', value: 3 }
+    ]
 
 
     const descricaoCnae = ref('')
@@ -133,37 +114,44 @@ export default defineComponent({
       descricaoCnae.value = mapaCnae[form.value.cnae] || ''
     }
 
-       const handleSubmit = async () => {
-        const formValid = await formRef.value?.validate()
+    const handleSubmit = async () => {
 
-        if (!formValid ) {
-          notifyError('Verifique os campos obrigatórios')
-          return
+      const formValid = await formRef.value?.validate()
+
+      if (!formValid) {
+        notifyError('Verifique os campos obrigatórios')
+        return
+      }
+
+      try {
+        if (isUpdate.value) {
+          await update(table, form.value)
+          notifySuccess('Registro atualizado com sucesso')
+
+        } else {
+          await post(table, form.value)
+          notifySuccess('Registro incluído com sucesso')
         }
 
         try {
-          if (isUpdate.value) {
-            await update(table, form.value)
-            empresaSalva = form.value
-            notifySuccess('Registro atualizado com sucesso')
-          } else {
-            await post(table, form.value)
-            empresaSalva = form.value
-            notifySuccess('Registro incluído com sucesso')
-          }
-
-          // Atualiza ou cria regime tributário
           await upsertRegimeTributario(
-            empresaSalva.id,
-            empresaSalva.contabilidade_id,
-            empresaSalva.regime_id
+            form.value.id,
+            form.value.contabilidade_id,
+            form.value.regime_id,
           )
-
-          router.push({ name: 'empresa' })
         } catch (error) {
-          notifyError(error.message)
+          notifyError({
+            type: 'negative',
+            message: 'Falha ao salvar regime tributário ' + error.message
+          })
         }
+
+        router.push({ name: 'contabilidade' })
+
+      } catch (error) {
+        notifyError(error.message)
       }
+    }
 
 
     const handleGetEmpresa = async (id) => {

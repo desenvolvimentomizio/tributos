@@ -1,49 +1,63 @@
+
 <template>
   <q-page padding>
     <div class="row justify-center">
-      <div class="col-12 text-center">
-        <p class="text-h6">Contabilidades</p>
-      </div>
+      <q-card
+        class="col-md-6 col-xs-12 col-sm-12 q-pa-lg shadow-2 bg-white"
+        style="border-radius: 16px;"
+      >
+        <!-- Título destacado com fundo padrão do sistema -->
+        <div class="text-h5 text-white text-center text-bold q-mb-lg q-pa-sm"
+             style="background-color: var(--q-primary); border-radius: 8px;">
+          Contabilidade
+        </div>
 
-      <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md" @submit.prevent="handleSubmit">
-        <q-input
-          label="Identificação"
-          v-model="form.identificacao"
-          :rules="[
+        <q-form class="q-gutter-y-md" @submit.prevent="handleSubmit">
+          <q-input
+            label="Identificação"
+            v-model="form.identificacao"
+            :rules="[
               val => !!val || 'Identificação é obrigatória',
               val => val.length >= 3 || 'Mínimo de 3 caracteres',
               val => val.length <= 100 || 'Máximo de 100 caracteres'
             ]"
-        />
+          />
 
-        <q-input
-          label="Telefone"
-          v-model="form.telefone"
-          mask="(##) #####-####"
-            unmasked-value
-            :rules="[
-              val => !!val || 'Telefone é obrigatório',
-              val => /^\d{10,11}$/.test(val) || 'Telefone deve conter 10 ou 11 dígitos numéricos'
-            ]"
-        />
+          <q-input
+            label="Telefone"
+            v-model="form.telefone"
 
-        <q-btn
-          :label="isUpdate ? 'Atualiza' : 'Salva'"
-          color="primary"
-          class="full-width"
-          rounded
-          type="submit"
-        />
+          />
 
-        <q-btn
-          label="Cancela"
-          color="primary"
-          class="full-width"
-          rounded
-          flat
-          :to="{ name: 'contabilidade' }"
-        />
-      </q-form>
+          <q-input
+            label="Email"
+            v-model="form.email"
+          />
+
+          <div class="row q-col-gutter-sm">
+            <div class="col-6">
+              <q-btn
+                :label="isUpdate ? 'Atualiza' : 'Salva'"
+                color="primary"
+                class="full-width"
+                rounded
+                type="submit"
+              />
+            </div>
+
+            <div class="col-6">
+              <q-btn
+                label="Cancela"
+                color="primary"
+                class="full-width"
+                rounded
+                flat
+                :to="{ name: 'contabilidade' }"
+              />
+            </div>
+          </div>
+        </q-form>
+      </q-card>
     </div>
   </q-page>
 </template>
@@ -56,10 +70,8 @@ import useNotify from 'src/composables/UseNotify'
 
 export default defineComponent({
   name: 'PageFormContabilidade',
-  setup()
-   {
+  setup() {
     const userName = ref('')
-
     const table = 'contabilidade'
     const router = useRouter()
     const route = useRoute()
@@ -67,9 +79,16 @@ export default defineComponent({
     const { notifyError, notifySuccess } = useNotify()
 
     const isUpdate = computed(() => route.params.id)
-
     let contabilidade = {}
+
+    const getTelefoneMask = computed(() => {
+      const len = form.value.telefone.replace(/\D/g, '').length
+      return len > 10 ? '(##) #####-####' : '(##) ####-####'
+    })
+
+
     const form = ref({
+      email: '',
       identificacao: '',
       telefone: '',
       nome_usuario: '',
@@ -108,12 +127,11 @@ export default defineComponent({
       }
     }
 
-
     return {
+      getTelefoneMask,
       handleSubmit,
       form,
       isUpdate
-
     }
   },
 })

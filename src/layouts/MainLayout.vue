@@ -64,12 +64,12 @@ const linksList = [
     icon: 'mdi-shape-outline',
     routeName: 'contabilidade',
   },
- // {
- //   title: 'Empresa',
- //   caption: '',
- //   icon: 'mdi-archive',
- //   routeName: 'empresa',
- // },
+  {
+    title: 'Empresa',
+    caption: '',
+    icon: 'mdi-archive',
+    routeName: 'empresa',
+  },
   {
     title: 'Regras Tributárias',
     caption: '',

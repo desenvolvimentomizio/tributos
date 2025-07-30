@@ -1,7 +1,5 @@
 
 const columnsContabilidade = [
-
-
   {
     name: 'identificacao',
     align: 'left',
@@ -15,6 +13,13 @@ const columnsContabilidade = [
     label: 'Telefone',
     field: 'telefone',
     sortable: true,
+  },
+  {
+    name: 'email',
+    align: 'left',
+    label: 'Email',
+    field: 'email',
+    sortable: false,
   },
 
   { name: 'actions', align: 'right', label: 'Funções', field: 'actions', sortable: false },

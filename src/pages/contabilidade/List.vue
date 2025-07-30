@@ -1,13 +1,8 @@
 <template>
   <q-page padding>
     <div class="row">
-      <q-table :rows="contabilidades"
-                :columns="columnsContabilidade"
-                row-key="id"
-                class="col-12"
-                :loading="loading"
-                @row-click="handleContabilidadeClick"
-                >
+      <q-table :rows="contabilidades" :columns="columnsContabilidade" row-key="id" class="col-12" :loading="loading"
+        @row-click="handleContabilidadeClick">
 
 
         <template v-slot:top>
@@ -23,28 +18,54 @@
         <template v-slot:body-cell-actions="props">
 
           <q-td :props="props" class="q-gutter-x-sm">
-            <q-btn icon="mdi-pencil-outline" color="info" size="sm" @click="handleEdit(props.row)">
+            <q-btn color="info" size="sm" @click="handleEdit(props.row)" label="Editar">
               <q-tooltip> Editar </q-tooltip>
             </q-btn>
 
-
-            <q-btn icon="mdi-domain" color="primary" size="sm" @click="handleLisEmpresas(props.row)">
-              <q-tooltip> Empresas </q-tooltip>
-            </q-btn>
           </q-td>
         </template>
       </q-table>
 
+      <!-- Espaço vertical entre as tabelas -->
+      <div class="col-12 q-my-md">
+        <q-separator spaced />
+      </div>
+
+
 
       <!-- Abaixo lista de empresas -->
-      <q-separator />
       <q-table :rows="empresas" :columns="columnsEmpresa" row-key="id" class="col-12" :loading="loading">
-
         <template v-slot:top>
-          <!-- Conteúdo do slot top aqui, como botões ou título -->
-          <div class="q-pa-sm">
-            <span class="text-h6"> Empresas </span>
+
+          <div class="q-pa-sm row items-center justify-between full-width">
+            <!---- <div class="q-pa-sm row items-center"> -->
+            <span class="text-h6">Empresas</span>
+            <q-space />
+            <q-btn v-if="$q.platform.is.desktop" label="Incluir Empresa" color="primary"
+              :to="{ name: 'form-empresa' }" />
           </div>
+        </template>
+
+
+
+
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props" class="q-gutter-x-sm">
+
+
+            <q-btn color="info" label="Editar" size="sm" @click="handleEditEmpresa(props.row)">
+              <q-tooltip> Editar </q-tooltip>
+            </q-btn>
+
+            <q-btn color="negative" label="Excluir" size="sm" @click="handleRemoveEmpresa(props.row)">
+              <q-tooltip> Excluir </q-tooltip>
+            </q-btn>
+            <q-btn color="primary" label="Regras Tributárias" size="sm" @click="handleRegra(props.row)">
+              <q-tooltip> Regras Tributárias </q-tooltip>
+            </q-btn>
+
+
+          </q-td>
         </template>
 
       </q-table>
@@ -96,6 +117,20 @@ export default defineComponent({
         }
 
         loading.value = false
+        // Simula clique se houver só um
+
+        if (contabilidades.value.length === 1) {
+          const unicaContabilidade = contabilidades.value[0]
+          const id = unicaContabilidade.id
+
+          console.log('Simulando clique na única contabilidade. ID:', id)
+
+          handleContabilidadeClick(null, unicaContabilidade)
+        }
+
+
+
+
       } catch (error) {
         notifyError(error.message)
       }
@@ -108,6 +143,28 @@ export default defineComponent({
     const handleLisEmpresas = async () => {
       router.replace({ name: 'empresa' })
     }
+
+    const handleEditEmpresa = (empresa) => {
+      router.push({ name: 'form-empresa', params: { id: empresa.id } })
+    }
+
+    const handleRemoveEmpresa = async (empresa) => {
+      $q.dialog({
+        title: 'Confirmação',
+        message: `Deseja excluir a empresa "${empresa.identificacao}"?`,
+        cancel: true,
+        persistent: true
+      }).onOk(async () => {
+        try {
+          await remove(tableempresa, empresa.id)
+          notifySuccess('Exclusão realizada com sucesso')
+          handleListContabilidades()
+        } catch (error) {
+          notifyError(error.message)
+        }
+      })
+    }
+
 
     const handleRemoveContabilidade = async (contabilidade) => {
       try {
@@ -126,20 +183,16 @@ export default defineComponent({
       }
     }
 
-   function handleContabilidadeClick(evt, row) {
-     console.log('ID da contabilidade selecionada:', row.id)
-     handleListEmpresas(row.id)
+    function handleContabilidadeClick(evt, row) {
+      console.log('ID da contabilidade selecionada:', row.id)
+      handleListEmpresas(row.id)
     }
 
     const handleListEmpresas = async (id) => {
       try {
-        if (!Number.isInteger(id)) {
-            console.warn('ID inválido para listar empresas:', id)
-            return
-          }
 
         loading.value = true
-        empresas.value = await listPublic(tableempresa, user.value.id, 'contabilidade_id',id)
+        empresas.value = await listPublic(tableempresa, user.value.id, 'contabilidade_id', id)
         loading.value = false
 
       } catch (error) {
@@ -171,6 +224,8 @@ export default defineComponent({
       handleEdit,
       handleRemoveContabilidade,
       handleLisEmpresas,
+      handleEditEmpresa,
+      handleRemoveEmpresa,
       handleContabilidadeClick,
       handleListEmpresas,
       podeIncluirContabilidade,

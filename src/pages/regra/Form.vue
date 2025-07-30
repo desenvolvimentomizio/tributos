@@ -25,28 +25,39 @@
                       :rules="[(val) => (val && val.length >= 2) || 'CST do ICM é obrigatório']" unmasked-value />
                   </div>
                   <div class="col-md-9 col-12">
-                    <q-input label="Descrição" v-model="form.descricaocst_Icm" readonly />
-                  </div>
-                </div>
-
-
-                <div class="row q-col-gutter-md">
-                  <div class="col-md-9 col-12">
-                    <q-input label="CFOP Interno" v-model="form.cfop_interno" />
-                  </div>
-                  <div class="col-md-3 col-12">
-                    <q-input label="ICM Interno" v-model="form.icm_interno" />
+                    <q-input label=":" v-model="form.descricaocst_Icm" readonly />
                   </div>
                 </div>
 
                 <div class="row q-col-gutter-md">
-                  <div class="col-md-9 col-12">
-                    <q-input label="CFOP Externo" v-model="form.cfop_externo" />
+                  <div class="col-md-3 col-12">
+                    <q-input label="CFOP Interno" v-model="form.cfop_interno"
+                      :rules="[(val) => (val && val.length >= 2) || 'CFOP para vendas no estado é obrigatório']"
+                      unmasked-value />
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <q-input label=":" v-model="form.descricaocfop_interno" readonly />
                   </div>
                   <div class="col-md-3 col-12">
-                    <q-input label="ICM Externo" v-model="form.icm_externo" />
+                    <q-input label="% ICM Interno" v-model="form.icm_interno" />
                   </div>
                 </div>
+
+                <div class="row q-col-gutter-md">
+                  <div class="col-md-3 col-12">
+                    <q-input label="CFOP Externo" v-model="form.cfop_externo"
+                      :rules="[(val) => (val && val.length >= 2) || 'CFOP para vendas para fora do estado é obrigatório']"
+                      unmasked-value />
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <q-input label=":" v-model="form.descricaocfop_externo" readonly />
+                  </div>
+                  <div class="col-md-3 col-12">
+                    <q-input label="% ICM Externo" v-model="form.icm_externo" />
+                  </div>
+                </div>
+
+
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-6 col-12">
@@ -60,28 +71,42 @@
 
 
                 <div class="row q-col-gutter-md">
-                  <div class="col-md-9 col-12">
-                    <q-input label="CST PIS" v-model="form.cst_pis" />
+                  <div class="col-md-3 col-12">
+                    <q-input label="CST PIS" v-model="form.cst_pis"
+                      :rules="[(val) => (val && val.length >= 2) || 'CST do PIS é obrigatório']" unmasked-value />
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <q-input label=":" v-model="form.descricaocst_pis" readonly />
                   </div>
                   <div class="col-md-3 col-12">
-                    <q-input label="Alíquota PIS" v-model="form.pis_aliquota" />
+                    <q-input label="% PIS" v-model="form.pis_aliquota" />
+                  </div>
+                </div>
+
+
+                <div class="row q-col-gutter-md">
+                  <div class="col-md-3 col-12">
+                    <q-input label="CST COFINS" v-model="form.cst_cofins"
+                      :rules="[(val) => (val && val.length >= 2) || 'CST do COFINS é obrigatório']" unmasked-value />
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <q-input label=":" v-model="form.descricaocst_cofins" readonly />
+                  </div>
+                  <div class="col-md-3 col-12">
+                    <q-input label="% COFINS" v-model="form.cofins_aliquota" />
                   </div>
                 </div>
 
                 <div class="row q-col-gutter-md">
-                  <div class="col-md-9 col-12">
-                    <q-input label="CST COFINS" v-model="form.cst_cofins" />
-                  </div>
                   <div class="col-md-3 col-12">
-                    <q-input label="Alíquota COFINS" v-model="form.cofins_aliquota" />
+                    <q-input label="CST IPI" v-model="form.cst_icm"
+                      :rules="[(val) => (val && val.length >= 2) || 'CST do IPI é obrigatório']" unmasked-value />
+                  </div>
+                  <div class="col-md-9 col-12">
+                    <q-input label=":" v-model="form.descricaocst_ipi" readonly />
                   </div>
                 </div>
 
-
-                <q-input label="CST IPI" v-model="form.cst_ipi" />
-
-
-                <q-input label="Observações" type="textarea" v-model="form.observacoes" />
               </q-card>
             </div>
 
@@ -186,7 +211,7 @@ export default defineComponent({
     })
 
     const carregarCSTouCSOSN = async () => {
-       /* @vite-ignore */
+      /* @vite-ignore */
       try {
         const data = await import(
           form.value.regime_id === '1'
@@ -207,11 +232,11 @@ export default defineComponent({
         try {
           const response = await useApi().getById(table, route.params.id)
           Object.assign(form.value, response.data)
-         // descricaocst_Icm.value = mapaCSTIcm.value[form.value.cst_icm] || ''
-         // descricaocfop_interno.value = mapaCSTIcm.value[form.value.cfop_interno] || ''
-         // descricaocfop_externo.value = mapaCSTIcm.value[form.value.cfop_externo] || ''
-         // descricaocst_pis.value = mapaCSTIcm.value[form.value.cst_pis] || ''
-         // descricaocst_cofins.value = mapaCSTIcm.value[form.value.cst_cofins] || ''
+          // descricaocst_Icm.value = mapaCSTIcm.value[form.value.cst_icm] || ''
+          // descricaocfop_interno.value = mapaCSTIcm.value[form.value.cfop_interno] || ''
+          // descricaocfop_externo.value = mapaCSTIcm.value[form.value.cfop_externo] || ''
+          // descricaocst_pis.value = mapaCSTIcm.value[form.value.cst_pis] || ''
+          // descricaocst_cofins.value = mapaCSTIcm.value[form.value.cst_cofins] || ''
         } catch (error) {
           notifyError('Erro ao carregar os dados da regra tributária.' + error.message)
         }

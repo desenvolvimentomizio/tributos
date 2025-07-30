@@ -5,7 +5,7 @@ const columnsEmpresa = [
     label: 'Identificacao',
     field: 'identificacao',
     sortable: true,
-    style: 'width: 40%;'
+    style: 'width: 25%;'
   },
   {
     name: 'cnpj',
@@ -18,7 +18,7 @@ const columnsEmpresa = [
       if (!val) return ''
       return val.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
     },
-    style: 'width: 15%;'
+    style: 'width: 10%;'
   },
 
   {
@@ -27,7 +27,7 @@ const columnsEmpresa = [
     label: 'Inscrição Estadula',
     field: 'inscricao_estadual',
     sortable: true,
-    style: 'width: 20%;'
+    style: 'width: 15%;'
   },
 
   {
@@ -43,7 +43,7 @@ const columnsEmpresa = [
       }
       return map[val] || 'Desconhecido'
     },
-     style: 'width: 25%;'
+     style: 'width: 15%;'
   },
 
   {
@@ -52,7 +52,16 @@ const columnsEmpresa = [
     label: 'CNAE',
     field: 'cnae',
     sortable: true,
-    style: 'width: 10%;'
+    style: 'width: 5%;'
+  },
+
+  {
+    name: 'email',
+    align: 'left',
+    label: 'Email',
+    field: 'email',
+    sortable: false,
+    style: 'width: 20%;'
   },
 
   { name: 'actions', align: 'right', label: 'Funções', field: 'actions', sortable: false },

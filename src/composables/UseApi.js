@@ -85,6 +85,7 @@ export default function useApi() {
         user_id: user.value.id,
       },
     ])
+    .select() // ⬅ necessário para retornar os dados inseridos
     if (error) throw error
     return data
   }
