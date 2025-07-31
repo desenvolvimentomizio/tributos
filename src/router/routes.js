@@ -56,7 +56,12 @@ const routes = [
         component: () => import('pages/empresa/Form.vue'),
       },
       {
-        path: 'form-regra/:id?',
+        path: 'regra/:id?',
+        name: 'regra',
+        component: () => import('pages/regra/List.vue'),
+      },
+      {
+        path: 'form-regra/:id?/:regime_id?/:empresa_id?',
         name: 'form-regra',
         component: () => import('pages/regra/Form.vue'),
       },

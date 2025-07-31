@@ -60,8 +60,9 @@
             <q-btn color="negative" label="Excluir" size="sm" @click="handleRemoveEmpresa(props.row)">
               <q-tooltip> Excluir </q-tooltip>
             </q-btn>
-            <q-btn color="primary" label="Regras Tributárias" size="sm" @click="handleRegra(props.row)">
-              <q-tooltip> Regras Tributárias </q-tooltip>
+
+            <q-btn color="primary" label="Regra" size="sm" @click="handleRegra(props.row)">
+              <q-tooltip> Regra </q-tooltip>
             </q-btn>
 
 
@@ -85,6 +86,7 @@ import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import useAuthUser from 'src/composables/UseAuthUser'
 import { useRouter } from 'vue-router'
+
 import { useQuasar } from 'quasar'
 import { columnsContabilidade } from './table'
 import { columnsEmpresa } from './tableEmpresas'
@@ -104,6 +106,15 @@ export default defineComponent({
     const { list, listPublic, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
 
+
+
+
+   const handleRegra = (empresa) => {
+      router.push({ name: 'regra', params: { id: empresa.id } })
+    }
+
+
+
     const handleListContabilidades = async () => {
       try {
         loading.value = true
@@ -113,7 +124,6 @@ export default defineComponent({
         } else {
           contabilidades.value = await listPublic(table, user.value.id)
           nome_usuario.value = contabilidades.value[0]?.nome_usuario || ''
-          console.log(nome_usuario)
         }
 
         loading.value = false
@@ -121,10 +131,7 @@ export default defineComponent({
 
         if (contabilidades.value.length === 1) {
           const unicaContabilidade = contabilidades.value[0]
-          const id = unicaContabilidade.id
-
-          console.log('Simulando clique na única contabilidade. ID:', id)
-
+         // const id = unicaContabilidade.id
           handleContabilidadeClick(null, unicaContabilidade)
         }
 
@@ -148,6 +155,8 @@ export default defineComponent({
       router.push({ name: 'form-empresa', params: { id: empresa.id } })
     }
 
+
+
     const handleRemoveEmpresa = async (empresa) => {
       $q.dialog({
         title: 'Confirmação',
@@ -164,7 +173,6 @@ export default defineComponent({
         }
       })
     }
-
 
     const handleRemoveContabilidade = async (contabilidade) => {
       try {
@@ -184,12 +192,14 @@ export default defineComponent({
     }
 
     function handleContabilidadeClick(evt, row) {
-      console.log('ID da contabilidade selecionada:', row.id)
       handleListEmpresas(row.id)
     }
 
     const handleListEmpresas = async (id) => {
       try {
+        if (!id) {
+          return // ou return null, return [], etc. conforme o esperado
+        }
 
         loading.value = true
         empresas.value = await listPublic(tableempresa, user.value.id, 'contabilidade_id', id)
@@ -199,6 +209,7 @@ export default defineComponent({
         notifyError(error.message)
       }
     }
+
 
 
 
@@ -228,6 +239,7 @@ export default defineComponent({
       handleRemoveEmpresa,
       handleContabilidadeClick,
       handleListEmpresas,
+      handleRegra,
       podeIncluirContabilidade,
       nome_usuario
 

@@ -1,11 +1,11 @@
 <template>
   <q-page padding>
     <div class="row justify-center">
-      <q-card class="col-md-8 col-xs-12 col-sm-12 q-pa-lg shadow-2 bg-white" style="border-radius: 16px;">
+      <q-card class="col-md-10 col-xs-12 col-sm-12 q-pa-lg shadow-2 bg-white" style="border-radius: 16px;">
         <!-- Título com fundo na cor primária -->
         <div class="text-h5 text-white text-center text-bold q-mb-lg q-pa-sm"
           style="background-color: var(--q-primary); border-radius: 8px;">
-          Regra Tributária
+          Regra Tributária - Regime: {{ regime_identificacao }} - Empresa: {{ empresa_identificacao }}
         </div>
 
         <!-- Formulário -->
@@ -20,14 +20,16 @@
 
 
                 <div class="row q-col-gutter-md">
-                  <div class="col-md-3 col-12">
+                  <div class="col-md-2 col-12">
                     <q-input label="CST ICM" v-model="form.cst_icm"
-                      :rules="[(val) => (val && val.length >= 2) || 'CST do ICM é obrigatório']" unmasked-value />
+                      :rules="[(val) => (val && val.length >= 2) || 'CST do ICM é obrigatório', buscarDescricaoCSTICM ]"  />
+
                   </div>
-                  <div class="col-md-9 col-12">
-                    <q-input label=":" v-model="form.descricaocst_Icm" readonly />
+                  <div class="col-md-10 col-12">
+                    <q-input  v-model="form.descricaocst_Icm" readonly />
                   </div>
                 </div>
+
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
@@ -99,7 +101,7 @@
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
-                    <q-input label="CST IPI" v-model="form.cst_icm"
+                    <q-input label="CST IPI" v-model="form.cst_ipi"
                       :rules="[(val) => (val && val.length >= 2) || 'CST do IPI é obrigatório']" unmasked-value />
                   </div>
                   <div class="col-md-9 col-12">
@@ -127,8 +129,6 @@
             </div>
           </div>
 
-
-
           <div class="row justify-end">
             <q-btn label="Salvar" color="primary" type="submit" />
           </div>
@@ -144,6 +144,7 @@
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import { useRoute } from 'vue-router'
+import useAuthUser from 'src/composables/UseAuthUser'
 import { defineComponent, ref, onMounted, computed } from 'vue'
 
 
@@ -156,16 +157,27 @@ export default defineComponent({
 
     const route = useRoute()
     const { notifyError } = useNotify()
+    const { listPublic } = useApi()
+    const { user } = useAuthUser()
     const isUpdate = computed(() => route.params.id)
     const table = 'regra_tributaria'
 
-    const cstCsosnOptions = ref([])
+
     const descricaocst_Icm = ref('')
     const descricaocfop_interno = ref('')
     const descricaocfop_externo = ref('')
     const descricaocst_pis = ref('')
     const descricaocst_cofins = ref('')
+    const tableEmpresa = 'empresa'
+    const regime_identificacao = ref('')
+    const empresa_identificacao = ref('')
+    const empresas = ref([])
 
+    const regimeMap = {
+      1: 'Simples Nacional',
+      2: 'Simples Nacional - sublimite',
+      3: 'Lucro Presumido'
+    }
 
     const form = ref({
       id: '',
@@ -194,45 +206,51 @@ export default defineComponent({
 
     })
 
+     const mapCSTICM = {
+      "00": "Tributada integralmente",
+      "10": "Tributada e com cobrança do ICMS por substituição tributária",
+      "20": "Com redução de base de cálculo",
+      "30": "Isenta ou não tributada e com cobrança do ICMS por substituição tributária",
+      "40": "Isenta",
+      "41": "Não tributada",
+      "50": "Suspensão",
+      "51": "Diferimento",
+      "60": "ICMS cobrado anteriormente por substituição tributária",
+      "70": "Com redução de base de cálculo e cobrança do ICMS por substituição tributária",
+      "90": "Outras"
+    }
+
+
+
+    const buscarDescricaoCSTICM = () => {
+      form.value.descricaocst_Icm = mapCSTICM[form.value.cst_icm] || 'NÃO ACHOU'
+    }
+
     const handleSubmit = () => {
       console.log('Formulário enviado:', form.value)
       // aqui você pode chamar a API ou emitir evento
     }
 
 
+    const handleEmpresaIdentificacaoRegime = async (empresa_id) => {
+      empresas.value = await listPublic(tableEmpresa, user.value.id, 'id', empresa_id)
+      empresa_identificacao.value = empresas.value[0]?.identificacao || 'Desconhecida'
+      form.value.regime_id = empresas.value[0]?.regime_id
 
+      regime_identificacao.value = regimeMap[empresas.value[0]?.regime_id] || 'Desconhecido'
+      descricaocst_Icm.value = mapCSTICM.value[form.value.cst_icm] || ''
 
-    onMounted(async () => {
-      if (form.value.regime_id === '1') {
-        mapaCSTIcm.value = await import('src/assets/data/db_csosn_icm.json')
-      } else {
-        mapaCSTIcm.value = await import('src/assets/data/db_cst_icm.json')
-      }
-    })
-
-    const carregarCSTouCSOSN = async () => {
-      /* @vite-ignore */
-      try {
-        const data = await import(
-          form.value.regime_id === '1'
-            ? 'src/assets/data/db_csosn_icm.json'
-            : 'src/assets/data/db_cst_icm.json'
-        )
-        cstCsosnOptions.value = data.default
-      } catch (err) {
-        console.error('Erro ao carregar tabela tributária:', err)
-      }
     }
-
+    empresa_identificacao.value = empresas.value[0]?.identificacao || 'Desconhecida'
 
 
     onMounted(async () => {
-      carregarCSTouCSOSN()
+      handleEmpresaIdentificacaoRegime(route.params.empresa_id)
       if (isUpdate.value) {
         try {
           const response = await useApi().getById(table, route.params.id)
           Object.assign(form.value, response.data)
-          // descricaocst_Icm.value = mapaCSTIcm.value[form.value.cst_icm] || ''
+          descricaocst_Icm.value = mapaCSTIcm.value[form.value.cst_icm] || ''
           // descricaocfop_interno.value = mapaCSTIcm.value[form.value.cfop_interno] || ''
           // descricaocfop_externo.value = mapaCSTIcm.value[form.value.cfop_externo] || ''
           // descricaocst_pis.value = mapaCSTIcm.value[form.value.cst_pis] || ''
@@ -244,16 +262,23 @@ export default defineComponent({
     })
 
 
-    return {
-      form,
-      handleSubmit,
-      notifyError,
-      descricaocst_Icm,
-      descricaocfop_interno,
-      descricaocfop_externo,
-      descricaocst_pis,
-      descricaocst_cofins
+
+
+      return {
+        form,
+        handleSubmit,
+        notifyError,
+        descricaocst_Icm,
+        descricaocfop_interno,
+        descricaocfop_externo,
+        descricaocst_pis,
+        descricaocst_cofins,
+        regime_identificacao,
+        empresa_identificacao,
+        buscarDescricaoCSTICM,
+
+
+      }
     }
-  }
-})
+  })
 </script>
