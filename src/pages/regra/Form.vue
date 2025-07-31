@@ -146,6 +146,8 @@ import useNotify from 'src/composables/UseNotify'
 import { useRoute } from 'vue-router'
 import useAuthUser from 'src/composables/UseAuthUser'
 import { defineComponent, ref, onMounted, computed } from 'vue'
+import { mapCSTICM } from 'app/public/assets/data/mapCSTICM'
+import { mapRegime } from 'app/public/assets/data/mapRegime'
 
 
 // const { getById, computed } = useApi()
@@ -173,11 +175,6 @@ export default defineComponent({
     const empresa_identificacao = ref('')
     const empresas = ref([])
 
-    const regimeMap = {
-      1: 'Simples Nacional',
-      2: 'Simples Nacional - sublimite',
-      3: 'Lucro Presumido'
-    }
 
     const form = ref({
       id: '',
@@ -206,21 +203,6 @@ export default defineComponent({
 
     })
 
-     const mapCSTICM = {
-      "00": "Tributada integralmente",
-      "10": "Tributada e com cobrança do ICMS por substituição tributária",
-      "20": "Com redução de base de cálculo",
-      "30": "Isenta ou não tributada e com cobrança do ICMS por substituição tributária",
-      "40": "Isenta",
-      "41": "Não tributada",
-      "50": "Suspensão",
-      "51": "Diferimento",
-      "60": "ICMS cobrado anteriormente por substituição tributária",
-      "70": "Com redução de base de cálculo e cobrança do ICMS por substituição tributária",
-      "90": "Outras"
-    }
-
-
 
     const buscarDescricaoCSTICM = () => {
       form.value.descricaocst_Icm = mapCSTICM[form.value.cst_icm] || 'NÃO ACHOU'
@@ -237,7 +219,7 @@ export default defineComponent({
       empresa_identificacao.value = empresas.value[0]?.identificacao || 'Desconhecida'
       form.value.regime_id = empresas.value[0]?.regime_id
 
-      regime_identificacao.value = regimeMap[empresas.value[0]?.regime_id] || 'Desconhecido'
+      regime_identificacao.value = mapRegime[empresas.value[0]?.regime_id] || 'Desconhecido'
       descricaocst_Icm.value = mapCSTICM.value[form.value.cst_icm] || ''
 
     }
@@ -281,4 +263,6 @@ export default defineComponent({
       }
     }
   })
+
+
 </script>
