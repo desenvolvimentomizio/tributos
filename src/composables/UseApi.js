@@ -27,6 +27,7 @@ export default function useApi() {
     return data
   }
 
+
   const listPublic = async (table, userId, columnFilter = '', filter = '') => {
     const { data, error } = await supabase
       .from(table)
@@ -58,7 +59,7 @@ export default function useApi() {
       .limit(1)
 
     if (error) throw error
-      return data?.[0]?.[dateField] || null
+    return data?.[0]?.[dateField] || null
   }
 
 
@@ -85,7 +86,7 @@ export default function useApi() {
         user_id: user.value.id,
       },
     ])
-    .select() // ⬅ necessário para retornar os dados inseridos
+      .select() // ⬅ necessário para retornar os dados inseridos
     if (error) throw error
     return data
   }
@@ -141,56 +142,92 @@ export default function useApi() {
     }
   }
 
-const upsertRegimeTributario = async (empresaId, contabilidadeId, novoRegimeId) => {
-  const hoje = new Date().toISOString().split('T')[0]
+  const upsertRegimeTributario = async (empresaId, contabilidadeId, novoRegimeId) => {
+    const hoje = new Date().toISOString().split('T')[0]
 
-  // Pega o último regime da empresa
-const { data: regimes, error } = await supabase
-  .from('empresa_regime_tributario')
-  .select('*')
-  .eq('empresa_id', empresaId)
-  .is('saida_regime', null) // ⬅ somente onde não houve saída
-  .order('entrada_regime', { ascending: false }) // mais recente primeiro
-  .limit(1)
-
- if (error) throw error
-
-  const ultimo = regimes[0]
-
-  if (!ultimo) {
-    // Nenhum regime anterior — cria o primeiro
-    const { error: insertError } = await supabase.from('empresa_regime_tributario').insert({
-      empresa_id: empresaId,
-      contabilidade_id: contabilidadeId,
-      regime_id: novoRegimeId,
-      entrada_regime: hoje,
-      user_id: user.value.id, // ← salva o usuário logado
-    })
-    if (insertError) throw insertError
-  } else if (ultimo.regime_id !== novoRegimeId) {
-    // Regime mudou — atualiza o último com saída e insere novo
-    const { error: updateError } = await supabase
+    // Pega o último regime da empresa
+    const { data: regimes, error } = await supabase
       .from('empresa_regime_tributario')
-      .update({ saida_regime: hoje })
-      .eq('id', ultimo.id)
-    if (updateError) throw updateError
+      .select('*')
+      .eq('empresa_id', empresaId)
+      .is('saida_regime', null) // ⬅ somente onde não houve saída
+      .order('entrada_regime', { ascending: false }) // mais recente primeiro
+      .limit(1)
 
-    const { error: insertError } = await supabase.from('empresa_regime_tributario').insert({
-      empresa_id: empresaId,
-      contabilidade_id: contabilidadeId,
-      regime_id: novoRegimeId,
-      entrada_regime: hoje,
-      user_id: user.value.id, // ← novamente, registra o usuário
-    })
-    if (insertError) throw insertError
+    if (error) throw error
+
+    const ultimo = regimes[0]
+
+    if (!ultimo) {
+      // Nenhum regime anterior — cria o primeiro
+      const { error: insertError } = await supabase.from('empresa_regime_tributario').insert({
+        empresa_id: empresaId,
+        contabilidade_id: contabilidadeId,
+        regime_id: novoRegimeId,
+        entrada_regime: hoje,
+        user_id: user.value.id, // ← salva o usuário logado
+      })
+      if (insertError) throw insertError
+    } else if (ultimo.regime_id !== novoRegimeId) {
+      // Regime mudou — atualiza o último com saída e insere novo
+      const { error: updateError } = await supabase
+        .from('empresa_regime_tributario')
+        .update({ saida_regime: hoje })
+        .eq('id', ultimo.id)
+      if (updateError) throw updateError
+
+      const { error: insertError } = await supabase.from('empresa_regime_tributario').insert({
+        empresa_id: empresaId,
+        contabilidade_id: contabilidadeId,
+        regime_id: novoRegimeId,
+        entrada_regime: hoje,
+        user_id: user.value.id, // ← novamente, registra o usuário
+      })
+      if (insertError) throw insertError
+    }
   }
-}
 
+  const upsertEmpresaRegra = async (empresaId, contabilidadeId, regraTributariaId) => {
+    try {
+      const hoje = new Date().toISOString().split('T')[0];
+
+      const { error } = await supabase.from('empresa_regra_tributaria').insert({
+        empresa_id: empresaId,
+        contabilidade_id: contabilidadeId,
+        regra_tributaria_id: regraTributariaId,
+        data_criacao: hoje,
+        ativa: true,
+        user_id: user.value.id,
+      });
+
+      if (error) throw error;
+    } catch (err) {
+      console.error('Erro ao inserir empresa_regra_tributaria:', err);
+      // Você pode optar por lançar novamente, ou tratar aqui
+      throw err;
+    }
+  };
+
+
+const listRegrasPorEmpresa = async (empresaId) => {
+  const { data, error } = await supabase
+    .from('regras_por_empresa')
+    .select('*')
+    .eq('empresa_id', empresaId)
+
+  if (error) {
+    console.error('Erro ao buscar regras:', error)
+    return []
+  }
+
+  return data
+}
 
 
   return {
     list,
     listPublic,
+    listRegrasPorEmpresa,
     fetchCount,
     fetchLastDate,
     getById,
@@ -202,5 +239,6 @@ const { data: regimes, error } = await supabase
     getBrand,
     brand,
     upsertRegimeTributario,
+    upsertEmpresaRegra,
   }
 }
