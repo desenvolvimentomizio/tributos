@@ -22,23 +22,22 @@
                 <div class="row q-col-gutter-md">
                   <div class="col-md-2 col-12">
                     <q-input label="CST ICM" v-model="form.cst_icm"
-                      :rules="[(val) => (val && val.length >= 2) || 'CST do ICM é obrigatório', buscarDescricaoCSTICM ]"  />
+                      :rules="[(val) => (val && val.length >= 2) || 'CST do ICM é obrigatório', buscarDescricaoCSTICM]" />
 
                   </div>
                   <div class="col-md-10 col-12">
-                    <q-input  v-model="form.descricaocst_Icm" readonly />
+                    <q-input v-model="form.descricaocst_Icm" readonly />
                   </div>
                 </div>
 
 
                 <div class="row q-col-gutter-md">
-                  <div class="col-md-3 col-12">
-                    <q-input label="CFOP Interno" v-model="form.cfop_interno"
-                      :rules="[(val) => (val && val.length >= 2) || 'CFOP para vendas no estado é obrigatório']"
-                      unmasked-value />
+                  <div class="col-md-2 col-12">
+                    <q-input label="CFOP Interno" v-model="form.cfop_interno" mask="#.###"
+                      :rules="[(val) => (val && val.length >= 2) || 'CFOP para vendas no estado é obrigatório', buscarDescricaoCFOPInterno]" />
                   </div>
-                  <div class="col-md-6 col-12">
-                    <q-input label=":" v-model="form.descricaocfop_interno" readonly />
+                  <div class="col-md-7 col-12">
+                    <q-input v-model="form.descricaocfop_interno" readonly />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-input label="% ICM Interno" v-model="form.icm_interno" />
@@ -46,13 +45,12 @@
                 </div>
 
                 <div class="row q-col-gutter-md">
-                  <div class="col-md-3 col-12">
-                    <q-input label="CFOP Externo" v-model="form.cfop_externo"
-                      :rules="[(val) => (val && val.length >= 2) || 'CFOP para vendas para fora do estado é obrigatório']"
-                      unmasked-value />
+                  <div class="col-md-2 col-12">
+                    <q-input label="CFOP Externo" v-model="form.cfop_externo" mask="#.###"
+                      :rules="[(val) => (val && val.length >= 2) || 'CFOP para vendas para fora do estado é obrigatório', buscarDescricaoCFOPExterno]" />
                   </div>
-                  <div class="col-md-6 col-12">
-                    <q-input label=":" v-model="form.descricaocfop_externo" readonly />
+                  <div class="col-md-7 col-12">
+                    <q-input v-model="form.descricaocfop_externo" readonly />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-input label="% ICM Externo" v-model="form.icm_externo" />
@@ -75,10 +73,11 @@
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
                     <q-input label="CST PIS" v-model="form.cst_pis"
-                      :rules="[(val) => (val && val.length >= 2) || 'CST do PIS é obrigatório']" unmasked-value />
+                      :rules="[(val) => (val && val.length >= 1) || 'CST do PIS é obrigatório', buscarDescricaoPIS]"
+                      unmasked-value />
                   </div>
                   <div class="col-md-6 col-12">
-                    <q-input label=":" v-model="form.descricaocst_pis" readonly />
+                    <q-input v-model="form.descricaocst_pis" readonly />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-input label="% PIS" v-model="form.pis_aliquota" />
@@ -89,10 +88,11 @@
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
                     <q-input label="CST COFINS" v-model="form.cst_cofins"
-                      :rules="[(val) => (val && val.length >= 2) || 'CST do COFINS é obrigatório']" unmasked-value />
+                      :rules="[(val) => (val && val.length >= 1) || 'CST do COFINS é obrigatório', buscarDescricaoCOFINS]"
+                      unmasked-value />
                   </div>
                   <div class="col-md-6 col-12">
-                    <q-input label=":" v-model="form.descricaocst_cofins" readonly />
+                    <q-input v-model="form.descricaocst_cofins" readonly />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-input label="% COFINS" v-model="form.cofins_aliquota" />
@@ -102,10 +102,10 @@
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
                     <q-input label="CST IPI" v-model="form.cst_ipi"
-                      :rules="[(val) => (val && val.length >= 2) || 'CST do IPI é obrigatório']" unmasked-value />
+                      :rules="[(val) => (val && val.length >= 1) || 'CST do IPI é obrigatório',buscarDescricaoIPI ]" unmasked-value />
                   </div>
                   <div class="col-md-9 col-12">
-                    <q-input label=":" v-model="form.descricaocst_ipi" readonly />
+                    <q-input v-model="form.descricaocst_ipi" readonly />
                   </div>
                 </div>
 
@@ -146,8 +146,6 @@ import useNotify from 'src/composables/UseNotify'
 import { useRoute } from 'vue-router'
 import useAuthUser from 'src/composables/UseAuthUser'
 import { defineComponent, ref, onMounted, computed } from 'vue'
-import { mapCSTICM } from 'app/public/assets/data/mapCSTICM'
-import { mapRegime } from 'app/public/assets/data/mapRegime'
 
 
 // const { getById, computed } = useApi()
@@ -155,7 +153,8 @@ import { mapRegime } from 'app/public/assets/data/mapRegime'
 export default defineComponent({
   name: 'PageFormRegra',
   setup() {
-    const mapaCSTIcm = ref({})
+
+
 
     const route = useRoute()
     const { notifyError } = useNotify()
@@ -170,10 +169,134 @@ export default defineComponent({
     const descricaocfop_externo = ref('')
     const descricaocst_pis = ref('')
     const descricaocst_cofins = ref('')
+    const descricaocst_ipi = ref('')
     const tableEmpresa = 'empresa'
     const regime_identificacao = ref('')
     const empresa_identificacao = ref('')
     const empresas = ref([])
+
+    const mapRegime = {
+      1: 'Simples Nacional',
+      2: 'Simples Nacional - sublimite',
+      3: 'Lucro Presumido',
+      4: 'Lucro Real'
+    }
+
+    const mapCSTICM = {
+      "00": "Tributada integralmente",
+      "10": "Tributada e com cobrança do ICMS por substituição tributária",
+      "20": "Com redução de base de cálculo",
+      "30": "Isenta ou não tributada e com cobrança do ICMS por substituição tributária",
+      "40": "Isenta",
+      "41": "Não tributada",
+      "50": "Suspensão",
+      "51": "Diferimento",
+      "60": "ICMS cobrado anteriormente por substituição tributária",
+      "70": "Com redução de base de cálculo e cobrança do ICMS por substituição tributária",
+      "90": "Outras"
+    };
+
+    const mapCFOP = {
+      "1.101": "Compra para industrialização",
+      "1.102": "Compra para comercialização",
+      "1.106": "Compra para utilização na prestação de serviço",
+      "1.108": "Compra de mercadoria para uso ou consumo",
+      "1.109": "Aquisição de ativo imobilizado",
+      "1.110": "Compra para utilização em processo de industrialização por encomenda",
+      "1.115": "Compra de mercadoria adquirida em operação com mercadoria sujeita à ST",
+      "1.201": "Devolução de venda de produção do estabelecimento",
+      "1.202": "Devolução de venda de mercadoria adquirida ou recebida de terceiros",
+      "2.101": "Compra para industrialização",
+      "2.102": "Compra para comercialização",
+      "2.108": "Compra para uso ou consumo",
+      "2.109": "Aquisição de ativo imobilizado",
+      "2.115": "Compra de mercadoria sujeita à substituição tributária",
+      "2.201": "Devolução de venda de produção do estabelecimento",
+      "2.202": "Devolução de venda de mercadoria adquirida de terceiros",
+      "3.101": "Compra para industrialização",
+      "3.102": "Compra para comercialização",
+      "3.108": "Compra para uso ou consumo",
+      "3.109": "Aquisição de ativo imobilizado",
+      "5.101": "Venda de produção do estabelecimento",
+      "5.102": "Venda de mercadoria adquirida ou recebida de terceiros",
+      "5.103": "Venda de produção efetuada fora do estabelecimento",
+      "5.104": "Venda de mercadoria adquirida efetuada fora do estabelecimento",
+      "5.110": "Venda de produção para utilização na prestação de serviço",
+      "6.101": "Venda de produção do estabelecimento",
+      "6.102": "Venda de mercadoria adquirida ou recebida de terceiros",
+      "6.108": "Venda de produção para Zona Franca de Manaus",
+      "7.101": "Venda de produção do estabelecimento",
+      "7.102": "Venda de mercadoria adquirida ou recebida de terceiros",
+      "7.108": "Venda de produção do estabelecimento à Zona Franca de Manaus",
+      "7.949": "Outra saída de mercadoria ou prestação de serviço não especificado"
+    }
+
+    const mapCSTCSOSN = {
+      "101": "Tributada pelo Simples Nacional com permissão de crédito",
+      "102": "Tributada pelo Simples Nacional sem permissão de crédito",
+      "103": "Isenção do ICMS no Simples Nacional para faixa de receita bruta",
+      "201": "Tributada pelo Simples Nacional com permissão de crédito e com cobrança do ICMS por ST",
+      "202": "Tributada pelo Simples Nacional sem permissão de crédito e com cobrança do ICMS por ST",
+      "203": "Isenção do ICMS no Simples Nacional para faixa de receita bruta e com cobrança do ICMS por ST",
+      "300": "Imune",
+      "400": "Não tributada pelo Simples Nacional",
+      "500": "ICMS cobrado anteriormente por ST (substituição tributária ou antecipação)",
+      "900": "Outros"
+    }
+
+
+    const mapPISCOFINS = {
+      "1": "cperação Tributável com Alíquota Básica",
+      "2": "Operação Tributável com Alíquota Diferenciada",
+      "3": "Operação Tributável com Alíquota por Unidade de Medida de Produto",
+      "4": "Operação Tributável Monofásica  Revenda a Alíquota Zero",
+      "5": "Operação Tributável por Substituição Tributária",
+      "6": "Operação Tributável a Alíquota Zero",
+      "7": "Operação Isenta da Contribuição",
+      "8": "Operação sem Incidência da Contribuição",
+      "9": "Operação com Suspensão da Contribuição",
+      "49": "Outras Operações de Saída",
+      "50": "Operação com Direito a Crédito  Vinculada Exclusivamente a Receita Tributada no Mercado Interno",
+      "51": "Operação com Direito a Crédito  Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno",
+      "52": "Operação com Direito a Crédito  Vinculada Exclusivamente a Receita de Exportação",
+      "53": "Operação com Direito a Crédito  Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno",
+      "54": "Operação com Direito a Crédito  Vinculada a Receitas Tributadas no Mercado Interno e de Exportação",
+      "55": "Operação com Direito a Crédito  Vinculada a Receitas Não Tributadas no Mercado Interno e de Exportação",
+      "56": "Operação com Direito a Crédito  Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação",
+      "60": "Crédito Presumido  Operação de Aquisição Vinculada Exclusivamente a Receita Tributada no Mercado Interno",
+      "61": "Crédito Presumido  Operação de Aquisição Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno",
+      "62": "Crédito Presumido  Operação de Aquisição Vinculada Exclusivamente a Receita de Exportação",
+      "63": "Crédito Presumido  Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno",
+      "64": "Crédito Presumido  Operação de Aquisição Vinculada a Receitas Tributadas no Mercado Interno e de Exportação",
+      "65": "Crédito Presumido  Operação de Aquisição Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação",
+      "66": "Crédito Presumido  Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação",
+      "67": "Crédito Presumido  Outras Operações",
+      "70": "Operação de Aquisição sem Direito a Crédito",
+      "71": "Operação de Aquisição com Isenção",
+      "72": "Operação de Aquisição com Suspensão",
+      "73": "Operação de Aquisição a Alíquota Zero",
+      "74": "Operação de Aquisição sem Incidência da Contribuição",
+      "75": "Operação de Aquisição por Substituição Tributária",
+      "98": "Outras Operações de Entrada",
+      "99": "Outras Operações"
+    }
+
+    const mapIPI = {
+      "0": "Entrada com Recuperação de Crédito",
+      "1": "Entrada Tributável com Alíquota Zero",
+      "2": "Entrada Isenta",
+      "3": "Entrada Não-Tributada",
+      "4": "Entrada Imune",
+      "5": "Entrada com Suspensão",
+      "49": "Outras Entradas",
+      "50": "Saída Tributada",
+      "51": "Saída Tributável com Alíquota Zero",
+      "52": "Saída Isenta",
+      "53": "Saída Não-Tributada",
+      "54": "Saída Imune",
+      "55": "Saída com Suspensão",
+      "99": "Outras Saídas"
+    }
 
 
     const form = ref({
@@ -208,9 +331,32 @@ export default defineComponent({
       form.value.descricaocst_Icm = mapCSTICM[form.value.cst_icm] || 'NÃO ACHOU'
     }
 
+    const buscarDescricaoCSTCSOSN = () => {
+      form.value.descricaocst_Icm = mapCSTCSOSN[form.value.cst_icm] || 'NÃO ACHOU'
+    }
+
+    const buscarDescricaoCFOPExterno = () => {
+      form.value.descricaocfop_externo = mapCFOP[form.value.cfop_externo] || 'NÃO ACHOU'
+    }
+
+    const buscarDescricaoCFOPInterno = () => {
+      form.value.descricaocfop_interno = mapCFOP[form.value.cfop_interno] || 'NÃO ACHOU'
+    }
+
+    const buscarDescricaoPIS = () => {
+      form.value.descricaocst_pis = mapPISCOFINS[form.value.cst_pis] || 'NÃO ACHOU'
+    }
+
+    const buscarDescricaoCOFINS = () => {
+      form.value.descricaocst_cofins = mapPISCOFINS[form.value.cst_cofins] || 'NÃO ACHOU'
+    }
+
+    const buscarDescricaoIPI = () => {
+      form.value.descricaocst_ipi = mapIPI[form.value.cst_ipi] || 'NÃO ACHOU'
+    }
+
     const handleSubmit = () => {
       console.log('Formulário enviado:', form.value)
-      // aqui você pode chamar a API ou emitir evento
     }
 
 
@@ -227,12 +373,13 @@ export default defineComponent({
 
 
     onMounted(async () => {
+      console.log('Rota atual:', mapCSTICM.value)
       handleEmpresaIdentificacaoRegime(route.params.empresa_id)
       if (isUpdate.value) {
         try {
           const response = await useApi().getById(table, route.params.id)
           Object.assign(form.value, response.data)
-          descricaocst_Icm.value = mapaCSTIcm.value[form.value.cst_icm] || ''
+          descricaocst_Icm.value = mapCSTICM.value[form.value.cst_icm] || ''
           // descricaocfop_interno.value = mapaCSTIcm.value[form.value.cfop_interno] || ''
           // descricaocfop_externo.value = mapaCSTIcm.value[form.value.cfop_externo] || ''
           // descricaocst_pis.value = mapaCSTIcm.value[form.value.cst_pis] || ''
@@ -246,23 +393,29 @@ export default defineComponent({
 
 
 
-      return {
-        form,
-        handleSubmit,
-        notifyError,
-        descricaocst_Icm,
-        descricaocfop_interno,
-        descricaocfop_externo,
-        descricaocst_pis,
-        descricaocst_cofins,
-        regime_identificacao,
-        empresa_identificacao,
-        buscarDescricaoCSTICM,
 
-
-      }
+    return {
+      form,
+      handleSubmit,
+      notifyError,
+      descricaocst_Icm,
+      descricaocfop_interno,
+      descricaocfop_externo,
+      descricaocst_pis,
+      descricaocst_cofins,
+      descricaocst_ipi,
+      regime_identificacao,
+      empresa_identificacao,
+      buscarDescricaoCSTICM,
+      buscarDescricaoCSTCSOSN,
+      buscarDescricaoCFOPExterno,
+      buscarDescricaoCFOPInterno,
+      buscarDescricaoPIS,
+      buscarDescricaoCOFINS,
+      buscarDescricaoIPI,
     }
-  })
+  }
+})
 
 
 </script>
