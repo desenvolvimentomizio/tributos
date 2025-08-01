@@ -1,5 +1,13 @@
+function aplicarMascaraData(val) {
+  if (!val) return ''
+  // espera formato 'aaaa-mm-dd' ou 'aaaa-mm-ddTHH:mm:ss'
+  const soData = val.split('T')[0] // remove hora, se existir
+  const [ano, mes, dia] = soData.split('-')
+  return `${dia}/${mes}/${ano}`
+}
+
 const columnsRegras = [
-   {
+  {
     name: 'identificacao',
     align: 'left',
     label: 'Identificacao',
@@ -20,17 +28,17 @@ const columnsRegras = [
       }
       return map[val] || 'Desconhecido'
     },
-     style: 'width: 10%;'
+    style: 'width: 10%;'
   },
   {
-    name: 'cst_csosn_icm',
+    name: 'cst_icm_csosn',
     align: 'left',
     label: 'CST/CSOSN ICM',
-    field: 'cst_csosn_icm',
+    field: 'cst_icm_csosn',
     sortable: true,
     style: 'width: 3%;'
   },
-   {
+  {
     name: 'cfop_interno',
     align: 'left',
     label: 'CFOP Int',
@@ -46,7 +54,7 @@ const columnsRegras = [
     sortable: true,
     style: 'width: 3%;'
   },
-   {
+  {
     name: 'cfop_externo',
     align: 'left',
     label: 'CFOP Ext',
@@ -54,7 +62,7 @@ const columnsRegras = [
     sortable: true,
     style: 'width: 3%;'
   },
-{
+  {
     name: 'icm_externo',
     align: 'left',
     label: 'ICM Ext',
@@ -62,7 +70,7 @@ const columnsRegras = [
     sortable: true,
     style: 'width: 3%;'
   },
-   {
+  {
     name: 'cst_ipi',
     align: 'left',
     label: 'CST IPI',
@@ -96,20 +104,22 @@ const columnsRegras = [
   },
 
   {
-   name:'data_inicio',
-   align:'left',
-   label:'Data Início',
-   field:'data_inicio',
-   sortable:true,
-   style:'width :5%;'
-  },
- {
-   name:'data_fim',
-   align:'left',
-   label:'Data Fim',
-   field:'data_fim',
-   sortable:true,
-   style:'width :5%;'
+    name: 'data_inicio',
+    align: 'left',
+    label: 'Data Início',
+    field: 'data_inicio',
+    sortable: true,
+    style: 'width :5%;',
+    format: aplicarMascaraData,
+    },
+  {
+    name: 'data_fim',
+    align: 'left',
+    label: 'Data Fim',
+    field: 'data_fim',
+    sortable: true,
+    style: 'width :5%;',
+    format: aplicarMascaraData,
   },
 
   { name: 'actions', align: 'right', label: 'Funções', field: 'actions', sortable: false },

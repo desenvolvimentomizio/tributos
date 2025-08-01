@@ -14,19 +14,32 @@
           <div class="row q-col-gutter-md">
 
             <!-- Coluna ICMS / PIS / COFINS -->
+
             <div class="col-md-8">
               <q-card class="q-pa-md">
                 <div class="text-h6">ICMS - PIS / COFINS</div>
 
 
                 <div class="row q-col-gutter-md">
+                  <div class="col-md-10 col-12">
+                    <q-input label="Identificação da Regra" v-model="form.identificacao"
+                      :rules="[(val) => (val && val.length >= 2) || 'A Identificação é obrigatória']" />
+
+                  </div>
                   <div class="col-md-2 col-12">
-                    <q-input label="CST ICM" v-model="form.cst_icm"
-                      :rules="[(val) => (val && val.length >= 2) || 'CST do ICM é obrigatório', buscarDescricaoCSTICM]" />
+                    <q-input label="Data Início" v-model="form.data_inicio" readonly />
+                  </div>
+                </div>
+
+
+                <div class="row q-col-gutter-md">
+                  <div class="col-md-2 col-12">
+                    <q-input label="CST ICM" v-model="form.cst_icm_csosn"
+                      :rules="[(val) => (val && val.length >= 2) || 'CST do ICM é obrigatório', buscarDescricaoCSTICMCSOSN]" />
 
                   </div>
                   <div class="col-md-10 col-12">
-                    <q-input v-model="form.descricaocst_Icm" readonly />
+                    <q-input v-model="descricaocst_icm_csosn" readonly />
                   </div>
                 </div>
 
@@ -37,7 +50,7 @@
                       :rules="[(val) => (val && val.length >= 2) || 'CFOP para vendas no estado é obrigatório', buscarDescricaoCFOPInterno]" />
                   </div>
                   <div class="col-md-7 col-12">
-                    <q-input v-model="form.descricaocfop_interno" readonly />
+                    <q-input v-model="descricaocfop_interno" readonly />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-input label="% ICM Interno" v-model="form.icm_interno" />
@@ -50,7 +63,7 @@
                       :rules="[(val) => (val && val.length >= 2) || 'CFOP para vendas para fora do estado é obrigatório', buscarDescricaoCFOPExterno]" />
                   </div>
                   <div class="col-md-7 col-12">
-                    <q-input v-model="form.descricaocfop_externo" readonly />
+                    <q-input v-model="descricaocfop_externo" readonly />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-input label="% ICM Externo" v-model="form.icm_externo" />
@@ -61,7 +74,7 @@
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-6 col-12">
-                    <q-input label="Redução Alíquota ICM" v-model="form.reducao_aliquota" />
+                    <q-input label="Redução Alíquota ICM" v-model="form.reducao_base_aliquota" />
                   </div>
 
                   <div class="col-md-6 col-12">
@@ -77,7 +90,7 @@
                       unmasked-value />
                   </div>
                   <div class="col-md-6 col-12">
-                    <q-input v-model="form.descricaocst_pis" readonly />
+                    <q-input v-model="descricaocst_pis" readonly />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-input label="% PIS" v-model="form.pis_aliquota" />
@@ -92,7 +105,7 @@
                       unmasked-value />
                   </div>
                   <div class="col-md-6 col-12">
-                    <q-input v-model="form.descricaocst_cofins" readonly />
+                    <q-input v-model="descricaocst_cofins" readonly />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-input label="% COFINS" v-model="form.cofins_aliquota" />
@@ -102,10 +115,11 @@
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
                     <q-input label="CST IPI" v-model="form.cst_ipi"
-                      :rules="[(val) => (val && val.length >= 1) || 'CST do IPI é obrigatório',buscarDescricaoIPI ]" unmasked-value />
+                      :rules="[(val) => (val && val.length >= 1) || 'CST do IPI é obrigatório', buscarDescricaoIPI]"
+                      unmasked-value />
                   </div>
                   <div class="col-md-9 col-12">
-                    <q-input v-model="form.descricaocst_ipi" readonly />
+                    <q-input v-model="descricaocst_ipi" readonly />
                   </div>
                 </div>
 
@@ -120,7 +134,7 @@
                 <q-input label="Classificação IS" v-model="form.classificacao_is" />
                 <q-input label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" />
                 <q-input label="Classificação Cpresumido" v-model="form.classificacao_cpresumido" />
-                <q-input label="Alíquota CBS" v-model="form.aliquota_cbs" />
+                <q-input label="Alíquota CBS" v-model="form.cbs_aliquota" />
                 <q-input label="Redução CBS" v-model="form.reducao_cbs" />
                 <q-input label="IBS Alíquota Estadual" v-model="form.ibs_aliquota_estadual" />
                 <q-input label="IBS Alíquota Municipal" v-model="form.ibs_aliquota_municipal" />
@@ -129,8 +143,17 @@
             </div>
           </div>
 
-          <div class="row justify-end">
-            <q-btn label="Salvar" color="primary" type="submit" />
+
+
+          <div class="row q-col-gutter-sm">
+            <div class="col-6">
+              <q-btn :label="isUpdate ? 'Atualiza' : 'Salva'" color="primary" class="full-width" rounded
+                type="submit" />
+            </div>
+
+            <div class="col-6">
+              <q-btn label="Cancela" color="primary" class="full-width" rounded flat :to="{ name: 'contabilidade' }" />
+            </div>
           </div>
         </q-form>
       </q-card>
@@ -143,7 +166,8 @@
 <script>
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+
 import useAuthUser from 'src/composables/UseAuthUser'
 import { defineComponent, ref, onMounted, computed } from 'vue'
 
@@ -154,22 +178,21 @@ export default defineComponent({
   name: 'PageFormRegra',
   setup() {
 
-
-
     const route = useRoute()
-    const { notifyError } = useNotify()
-    const { listPublic } = useApi()
+    const router = useRouter()
+    const { notifyError, notifySuccess } = useNotify()
+    const { post, listPublic, update } = useApi()
     const { user } = useAuthUser()
     const isUpdate = computed(() => route.params.id)
     const table = 'regra_tributaria'
 
 
-    const descricaocst_Icm = ref('')
-    const descricaocfop_interno = ref('')
-    const descricaocfop_externo = ref('')
-    const descricaocst_pis = ref('')
-    const descricaocst_cofins = ref('')
-    const descricaocst_ipi = ref('')
+    let descricaocst_icm_csosn = ref('')
+    let descricaocfop_interno = ref('')
+    let descricaocfop_externo = ref('')
+    let descricaocst_pis = ref('')
+    let descricaocst_cofins = ref('')
+    let descricaocst_ipi = ref('')
     const tableEmpresa = 'empresa'
     const regime_identificacao = ref('')
     const empresa_identificacao = ref('')
@@ -300,63 +323,73 @@ export default defineComponent({
 
 
     const form = ref({
-      id: '',
       regime_id: '',
-      cst_icm: '',
+      cst_icm_csosn: '',
       icm_interno: '',
       cfop_interno: '',
       icm_externo: '',
       cfop_externo: '',
-      reducao_aliquota: '',
+      reducao_base_aliquota: '',
       combate_pobreza_aliquota: '',
       cst_pis: '',
       pis_aliquota: '',
       cst_cofins: '',
       cofins_aliquota: '',
       cst_ipi: '',
-      observacoes: '',
-      classificacao_is: '',
-      classificacao_ibscbs: '',
-      classificacao_cpresumido: '',
-      aliquota_cbs: '',
-      reducao_cbs: '',
-      ibs_aliquota_estadual: '',
-      ibs_aliquota_municipal: '',
-      reducao_ibs: ''
+      classificacao_is: '1',
+      classificacao_ibscbs: '1',
+      classificacao_cpresumido: '1',
+      cbs_aliquota: '1',
+      reducao_cbs: '1',
+      ibs_aliquota_estadual: '1',
+      ibs_aliquota_municipal: '1',
+      reducao_ibs: '1',
+      data_inicio: ref(new Date().toISOString().substring(0, 10)),
 
     })
 
 
-    const buscarDescricaoCSTICM = () => {
-      form.value.descricaocst_Icm = mapCSTICM[form.value.cst_icm] || 'NÃO ACHOU'
+    const buscarDescricaoCSTICMCSOSN = () => {
+      descricaocst_icm_csosn.value = mapCSTICM[form.value.cst_icm_csosn] || 'NÃO ACHOU'
     }
 
     const buscarDescricaoCSTCSOSN = () => {
-      form.value.descricaocst_Icm = mapCSTCSOSN[form.value.cst_icm] || 'NÃO ACHOU'
+      descricaocst_icm_csosn.value = mapCSTCSOSN[form.value.cst_icm_csosn] || 'NÃO ACHOU'
     }
 
     const buscarDescricaoCFOPExterno = () => {
-      form.value.descricaocfop_externo = mapCFOP[form.value.cfop_externo] || 'NÃO ACHOU'
+      descricaocfop_externo.value = mapCFOP[form.value.cfop_externo] || 'NÃO ACHOU'
     }
 
     const buscarDescricaoCFOPInterno = () => {
-      form.value.descricaocfop_interno = mapCFOP[form.value.cfop_interno] || 'NÃO ACHOU'
+      descricaocfop_interno.value = mapCFOP[form.value.cfop_interno] || 'NÃO ACHOU'
     }
 
     const buscarDescricaoPIS = () => {
-      form.value.descricaocst_pis = mapPISCOFINS[form.value.cst_pis] || 'NÃO ACHOU'
+      descricaocst_pis.value = mapPISCOFINS[form.value.cst_pis] || 'NÃO ACHOU'
     }
 
     const buscarDescricaoCOFINS = () => {
-      form.value.descricaocst_cofins = mapPISCOFINS[form.value.cst_cofins] || 'NÃO ACHOU'
+      descricaocst_cofins.value = mapPISCOFINS[form.value.cst_cofins] || 'NÃO ACHOU'
     }
 
     const buscarDescricaoIPI = () => {
-      form.value.descricaocst_ipi = mapIPI[form.value.cst_ipi] || 'NÃO ACHOU'
+      descricaocst_ipi.value = mapIPI[form.value.cst_ipi] || 'NÃO ACHOU'
     }
 
-    const handleSubmit = () => {
-      console.log('Formulário enviado:', form.value)
+    const handleSubmit = async () => {
+      try {
+        if (isUpdate.value) {
+          await update(table, form.value)
+          notifySuccess('Registro atualizado com sucesso')
+        } else {
+          await post(table, form.value)
+          notifySuccess('Registro incluído com sucesso')
+        }
+        router.push({ name: 'contabilidade' })
+      } catch (error) {
+        notifyError('Erro ao salvar registro: ' + error.message)
+      }
     }
 
 
@@ -366,7 +399,7 @@ export default defineComponent({
       form.value.regime_id = empresas.value[0]?.regime_id
 
       regime_identificacao.value = mapRegime[empresas.value[0]?.regime_id] || 'Desconhecido'
-      descricaocst_Icm.value = mapCSTICM.value[form.value.cst_icm] || ''
+      descricaocst_icm_csosn.value = mapCSTICM.value[form.value.cst_icm_csosn] || ''
 
     }
     empresa_identificacao.value = empresas.value[0]?.identificacao || 'Desconhecida'
@@ -379,7 +412,7 @@ export default defineComponent({
         try {
           const response = await useApi().getById(table, route.params.id)
           Object.assign(form.value, response.data)
-          descricaocst_Icm.value = mapCSTICM.value[form.value.cst_icm] || ''
+          descricaocst_icm_csosn.value = mapCSTICM.value[form.value.cst_icm_csosn] || ''
           // descricaocfop_interno.value = mapaCSTIcm.value[form.value.cfop_interno] || ''
           // descricaocfop_externo.value = mapaCSTIcm.value[form.value.cfop_externo] || ''
           // descricaocst_pis.value = mapaCSTIcm.value[form.value.cst_pis] || ''
@@ -398,7 +431,7 @@ export default defineComponent({
       form,
       handleSubmit,
       notifyError,
-      descricaocst_Icm,
+      descricaocst_icm_csosn,
       descricaocfop_interno,
       descricaocfop_externo,
       descricaocst_pis,
@@ -406,7 +439,7 @@ export default defineComponent({
       descricaocst_ipi,
       regime_identificacao,
       empresa_identificacao,
-      buscarDescricaoCSTICM,
+      buscarDescricaoCSTICMCSOSN,
       buscarDescricaoCSTCSOSN,
       buscarDescricaoCFOPExterno,
       buscarDescricaoCFOPInterno,
