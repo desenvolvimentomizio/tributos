@@ -65,7 +65,7 @@ const linksList = [
     routeName: 'contabilidade',
   },
   {
-    title: 'Empresa',
+    title: 'Empresas',
     caption: '',
     icon: 'mdi-archive',
     routeName: 'empresa',
@@ -74,7 +74,7 @@ const linksList = [
     title: 'Regras Tributárias',
     caption: '',
     icon: 'mdi-cog',
-    routeName: 'form-config',
+    routeName: 'regra',
   },
 ]
 

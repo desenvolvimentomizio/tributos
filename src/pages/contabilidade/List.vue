@@ -110,7 +110,7 @@ export default defineComponent({
 
 
    const handleRegra = (empresa) => {
-      router.push({ name: 'regra', params: { id: empresa.id } })
+      router.push({ name: 'regra_empresa', params: { id: empresa.id } })
     }
 
 
