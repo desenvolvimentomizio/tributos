@@ -5,7 +5,7 @@
         <!-- Título com fundo na cor primária -->
         <div class="text-h5 text-white text-center text-bold q-mb-lg q-pa-sm"
           style="background-color: var(--q-primary); border-radius: 8px;">
-          Regra Tributária - Regime: {{ regime_identificacao }} - Empresa: {{ empresa_identificacao }}
+          Regra Tributária - Regime: {{ regime_identificacao }} - Empresa= {{ empresa_identificacao }}
         </div>
 
         <!-- Formulário -->
@@ -170,6 +170,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 import useAuthUser from 'src/composables/UseAuthUser'
 import { defineComponent, ref, onMounted, computed } from 'vue'
+import { v4 as uuidv4 } from 'uuid'
 
 
 // const { getById, computed } = useApi()
@@ -194,9 +195,134 @@ export default defineComponent({
     let descricaocst_cofins = ref('')
     let descricaocst_ipi = ref('')
     const tableEmpresa = 'empresa'
+    const tableEmpresaRegras = 'empresa_regra_tributaria'
     const regime_identificacao = ref('')
     const empresa_identificacao = ref('')
     const empresas = ref([])
+
+
+    const form = ref({
+      id: isUpdate.value || uuidv4(),
+      regime_id: '',
+      cst_icm_csosn: '00',
+      icm_interno: '17',
+      cfop_interno: '5.102',
+      icm_externo: '12',
+      cfop_externo: '6.102',
+      reducao_base_aliquota: '0',
+      combate_pobreza_aliquota: '0',
+      cst_pis: '1',
+      pis_aliquota: '0',
+      cst_cofins: '1',
+      cofins_aliquota: '0',
+      cst_ipi: '1',
+      classificacao_is: '1',
+      classificacao_ibscbs: '1',
+      classificacao_cpresumido: '1',
+      cbs_aliquota: '1',
+      reducao_cbs: '1',
+      ibs_aliquota_estadual: '1',
+      ibs_aliquota_municipal: '1',
+      reducao_ibs: '1',
+      data_inicio: ref(new Date().toISOString().substring(0, 10)),
+
+    })
+
+    const formEmpresaRegra = ref({
+      id: isUpdate.value || uuidv4(),
+      empresa_id: '',
+      contabilidade_id: '',
+      regra_tributaria_id: '',
+      data_inicio: ref(new Date().toISOString().substring(0, 10)),
+
+    })
+
+    const buscarDescricaoCSTICMCSOSN = () => {
+      descricaocst_icm_csosn.value = mapCSTICM[form.value.cst_icm_csosn] || 'NÃO ACHOU'
+    }
+
+    const buscarDescricaoCSTCSOSN = () => {
+      descricaocst_icm_csosn.value = mapCSTCSOSN[form.value.cst_icm_csosn] || 'NÃO ACHOU'
+    }
+
+    const buscarDescricaoCFOPExterno = () => {
+      descricaocfop_externo.value = mapCFOP[form.value.cfop_externo] || 'NÃO ACHOU'
+    }
+
+    const buscarDescricaoCFOPInterno = () => {
+      descricaocfop_interno.value = mapCFOP[form.value.cfop_interno] || 'NÃO ACHOU'
+    }
+
+    const buscarDescricaoPIS = () => {
+      descricaocst_pis.value = mapPISCOFINS[form.value.cst_pis] || 'NÃO ACHOU'
+    }
+
+    const buscarDescricaoCOFINS = () => {
+      descricaocst_cofins.value = mapPISCOFINS[form.value.cst_cofins] || 'NÃO ACHOU'
+    }
+
+    const buscarDescricaoIPI = () => {
+      descricaocst_ipi.value = mapIPI[form.value.cst_ipi] || 'NÃO ACHOU'
+    }
+
+    const handleSubmit = async () => {
+      try {
+        if (isUpdate.value) {
+          await update(table, form.value)
+          notifySuccess('Registro atualizado com sucesso')
+        } else {
+          await post(table, form.value)
+          handlePostEmpresaRegras()
+          notifySuccess('Registro incluído com sucesso')
+        }
+        router.push({ name: 'contabilidade' })
+      } catch (error) {
+        notifyError('Erro ao salvar registro: ' + error.message)
+      }
+    }
+
+    const handlePostEmpresaRegras = async () => {
+      try {
+        if (!isUpdate.value) {
+
+          formEmpresaRegra.value.empresa_id = route.params.empresa_id
+          formEmpresaRegra.value.contabilidade_id = empresas.value[0]?.contabilidade_id || ''
+          formEmpresaRegra.value.regra_tributaria_id = form.value.id
+          formEmpresaRegra.value.user_id = user.value.id
+          await post(tableEmpresaRegras, formEmpresaRegra.value)
+        }
+
+      } catch (error) {
+        notifyError('Erro ao salvar registro de regra paraa empresa: ' + error.message)
+      }
+    }
+
+    const handleEmpresaIdentificacaoRegime = async (empresa_id) => {
+      empresas.value = await listPublic(tableEmpresa, user.value.id, 'id', empresa_id)
+      empresa_identificacao.value = empresas.value[0]?.identificacao || 'Desconhecida'
+      form.value.regime_id = empresas.value[0]?.regime_id
+      regime_identificacao.value = mapRegime[empresas.value[0]?.regime_id] || 'Desconhecido'
+      descricaocst_icm_csosn.value = mapCSTICM.value[form.value.cst_icm_csosn] || ''
+
+    }
+
+    onMounted(async () => {
+      console.log('Rota atual:', mapCSTICM.value)
+      handleEmpresaIdentificacaoRegime(route.params.empresa_id)
+      if (isUpdate.value) {
+        try {
+          const response = await useApi().getById(table, route.params.id)
+          Object.assign(form.value, response.data)
+          descricaocst_icm_csosn.value = mapCSTICM.value[form.value.cst_icm_csosn] || ''
+          // descricaocfop_interno.value = mapaCSTIcm.value[form.value.cfop_interno] || ''
+          // descricaocfop_externo.value = mapaCSTIcm.value[form.value.cfop_externo] || ''
+          // descricaocst_pis.value = mapaCSTIcm.value[form.value.cst_pis] || ''
+          // descricaocst_cofins.value = mapaCSTIcm.value[form.value.cst_cofins] || ''
+        } catch (error) {
+          notifyError('Erro ao carregar os dados da regra tributária.' + error.message)
+        }
+      }
+    })
 
     const mapRegime = {
       1: 'Simples Nacional',
@@ -322,114 +448,13 @@ export default defineComponent({
     }
 
 
-    const form = ref({
-      regime_id: '',
-      cst_icm_csosn: '',
-      icm_interno: '',
-      cfop_interno: '',
-      icm_externo: '',
-      cfop_externo: '',
-      reducao_base_aliquota: '',
-      combate_pobreza_aliquota: '',
-      cst_pis: '',
-      pis_aliquota: '',
-      cst_cofins: '',
-      cofins_aliquota: '',
-      cst_ipi: '',
-      classificacao_is: '1',
-      classificacao_ibscbs: '1',
-      classificacao_cpresumido: '1',
-      cbs_aliquota: '1',
-      reducao_cbs: '1',
-      ibs_aliquota_estadual: '1',
-      ibs_aliquota_municipal: '1',
-      reducao_ibs: '1',
-      data_inicio: ref(new Date().toISOString().substring(0, 10)),
-
-    })
-
-
-    const buscarDescricaoCSTICMCSOSN = () => {
-      descricaocst_icm_csosn.value = mapCSTICM[form.value.cst_icm_csosn] || 'NÃO ACHOU'
-    }
-
-    const buscarDescricaoCSTCSOSN = () => {
-      descricaocst_icm_csosn.value = mapCSTCSOSN[form.value.cst_icm_csosn] || 'NÃO ACHOU'
-    }
-
-    const buscarDescricaoCFOPExterno = () => {
-      descricaocfop_externo.value = mapCFOP[form.value.cfop_externo] || 'NÃO ACHOU'
-    }
-
-    const buscarDescricaoCFOPInterno = () => {
-      descricaocfop_interno.value = mapCFOP[form.value.cfop_interno] || 'NÃO ACHOU'
-    }
-
-    const buscarDescricaoPIS = () => {
-      descricaocst_pis.value = mapPISCOFINS[form.value.cst_pis] || 'NÃO ACHOU'
-    }
-
-    const buscarDescricaoCOFINS = () => {
-      descricaocst_cofins.value = mapPISCOFINS[form.value.cst_cofins] || 'NÃO ACHOU'
-    }
-
-    const buscarDescricaoIPI = () => {
-      descricaocst_ipi.value = mapIPI[form.value.cst_ipi] || 'NÃO ACHOU'
-    }
-
-    const handleSubmit = async () => {
-      try {
-        if (isUpdate.value) {
-          await update(table, form.value)
-          notifySuccess('Registro atualizado com sucesso')
-        } else {
-          await post(table, form.value)
-          notifySuccess('Registro incluído com sucesso')
-        }
-        router.push({ name: 'contabilidade' })
-      } catch (error) {
-        notifyError('Erro ao salvar registro: ' + error.message)
-      }
-    }
-
-
-    const handleEmpresaIdentificacaoRegime = async (empresa_id) => {
-      empresas.value = await listPublic(tableEmpresa, user.value.id, 'id', empresa_id)
-      empresa_identificacao.value = empresas.value[0]?.identificacao || 'Desconhecida'
-      form.value.regime_id = empresas.value[0]?.regime_id
-
-      regime_identificacao.value = mapRegime[empresas.value[0]?.regime_id] || 'Desconhecido'
-      descricaocst_icm_csosn.value = mapCSTICM.value[form.value.cst_icm_csosn] || ''
-
-    }
-    empresa_identificacao.value = empresas.value[0]?.identificacao || 'Desconhecida'
-
-
-    onMounted(async () => {
-      console.log('Rota atual:', mapCSTICM.value)
-      handleEmpresaIdentificacaoRegime(route.params.empresa_id)
-      if (isUpdate.value) {
-        try {
-          const response = await useApi().getById(table, route.params.id)
-          Object.assign(form.value, response.data)
-          descricaocst_icm_csosn.value = mapCSTICM.value[form.value.cst_icm_csosn] || ''
-          // descricaocfop_interno.value = mapaCSTIcm.value[form.value.cfop_interno] || ''
-          // descricaocfop_externo.value = mapaCSTIcm.value[form.value.cfop_externo] || ''
-          // descricaocst_pis.value = mapaCSTIcm.value[form.value.cst_pis] || ''
-          // descricaocst_cofins.value = mapaCSTIcm.value[form.value.cst_cofins] || ''
-        } catch (error) {
-          notifyError('Erro ao carregar os dados da regra tributária.' + error.message)
-        }
-      }
-    })
-
-
 
 
 
     return {
       form,
       handleSubmit,
+      handlePostEmpresaRegras,
       notifyError,
       descricaocst_icm_csosn,
       descricaocfop_interno,

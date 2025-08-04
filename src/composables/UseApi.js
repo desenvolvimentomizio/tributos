@@ -131,9 +131,7 @@ export default function useApi() {
 
     try {
       const { data, error } = await supabase.from('config').select('*').eq('user_id', id).single()
-
       if (error) throw error
-
       brand.value = data
       setBrand(data.primary, data.secondary)
       return brand
@@ -208,26 +206,40 @@ export default function useApi() {
     }
   };
 
+  const listRegrasPorEmpresa = async (empresaId) => {
+    const { data, error } = await supabase
+      .from('regras_por_empresa')
+      .select('*')
+      .eq('empresa_id', empresaId)
 
-const listRegrasPorEmpresa = async (empresaId) => {
-  const { data, error } = await supabase
-    .from('regras_por_empresa')
-    .select('*')
-    .eq('empresa_id', empresaId)
+    if (error) {
+      console.error('Erro ao buscar regras:', error)
+      return []
+    }
 
-  if (error) {
-    console.error('Erro ao buscar regras:', error)
-    return []
+    return data
   }
 
-  return data
-}
+ const listRegrasDiferenteEmpresa = async (empresaId, regimeId) => {
+    const { data, error } = await supabase
+      .from('regras_por_empresa')
+      .select('*')
+      .eq('regime_id', regimeId)
+      .or(`empresa_id.is.null,empresa_id.neq.${empresaId}`)
+    if (error) {
+      console.error('Erro ao buscar regras:', error)
+      return []
+    }
+
+    return data
+  }
 
 
   return {
     list,
     listPublic,
     listRegrasPorEmpresa,
+    listRegrasDiferenteEmpresa,
     fetchCount,
     fetchLastDate,
     getById,

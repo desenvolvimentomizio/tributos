@@ -15,21 +15,7 @@ const columnsRegras = [
     sortable: true,
     style: 'width: 15%;'
   },
-  {
-    name: 'regime_id',
-    label: 'Regime Tributário',
-    field: 'regime_id',
-    align: 'left',
-    format: val => {
-      const map = {
-        1: 'Simples Nacional',
-        2: 'Simples com Sub-limite',
-        3: 'Regime Normal'
-      }
-      return map[val] || 'Desconhecido'
-    },
-    style: 'width: 10%;'
-  },
+
   {
     name: 'cst_icm_csosn',
     align: 'left',
