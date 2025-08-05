@@ -130,7 +130,11 @@ export default defineComponent({
         empresa_identificacao.value = empresas.value[0]?.identificacao || 'Desconhecida'
 
         regras.value = await listRegrasPorEmpresa(empresa_id.value)
-        regrasDiferenteEmpresa.value = await listRegrasDiferenteEmpresa(empresa_id.value, regime_id.value)
+
+         regrasDiferenteEmpresa.value = await listRegrasDiferenteEmpresa(empresa_id.value, regime_id.value)
+
+
+
 
       } catch (error) {
         notifyError('Erro ao lista '+  error.message)

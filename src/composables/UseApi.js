@@ -220,12 +220,31 @@ export default function useApi() {
     return data
   }
 
+const listRegrasDisponiveis = async (empresaId) => {
+  try {
+    const { data, error } = await supabase
+      .rpc('regras_disponiveis_para_empresa', {
+        empresa_id: empresaId
+      });
+
+    if (error) {
+      console.error('Erro ao buscar regras disponíveis:', error.message);
+      return [];
+    }
+
+    return data || [];
+  } catch (e) {
+    console.error('Erro inesperado ao buscar regras:', e);
+    return [];
+  }
+};
+
  const listRegrasDiferenteEmpresa = async (empresaId, regimeId) => {
     const { data, error } = await supabase
-      .from('regras_por_empresa')
+      .from('regras_disponiveis')
       .select('*')
       .eq('regime_id', regimeId)
-      .or(`empresa_id.is.null,empresa_id.neq.${empresaId}`)
+    //  .neq('empresa_id', empresaId)
     if (error) {
       console.error('Erro ao buscar regras:', error)
       return []
@@ -240,6 +259,7 @@ export default function useApi() {
     listPublic,
     listRegrasPorEmpresa,
     listRegrasDiferenteEmpresa,
+    listRegrasDisponiveis,
     fetchCount,
     fetchLastDate,
     getById,
