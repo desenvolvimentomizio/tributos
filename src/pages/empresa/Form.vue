@@ -6,30 +6,30 @@
           style="background-color: var(--q-primary); border-radius: 8px;">
           Empresa
         </div>
-
+        <div class="q-pa-sm"></div>
         <q-form ref="formRef" class="q-gutter-y-md" @submit.prevent="handleSubmit">
 
-          <q-input label="Razão Social" v-model="form.identificacao"
+          <q-input outlined label="Razão Social" v-model="form.identificacao"
             :rules="[(val) => (val && val.length > 5) || 'Identificação é obrigatória e maior que 5 caracteres']" />
 
-          <q-input label="CNPJ" v-model="form.cnpj" :rules="[
+          <q-input outlined label="CNPJ" v-model="form.cnpj" :rules="[
             (val) => (val && val.length > 0) || 'CNPJ é obrigatória',
             validaCnpjRule
           ]" />
 
-          <q-input label="Inscrição Estadual" v-model="form.inscricao_estadual"
+          <q-input outlined label="Inscrição Estadual" v-model="form.inscricao_estadual"
             :rules="[(val) => (val && val.length > 0) || 'Inscrição é obrigatória']" />
 
-          <q-input label="Email" v-model="form.email"
+          <q-input outlined label="Email" v-model="form.email"
             :rules="[(val) => (val && val.length > 0) || 'Email da empresa é obrigatório']" />
 
 
-          <q-select v-model="form.regime_id" label="Regime Tributário" :options="regimeOptions" emit-value map-options
+          <q-select outlined v-model="form.regime_id" label="Regime Tributário" :options="regimeOptions" emit-value map-options
             option-label="label" option-value="value" filled :rules="[(val) => !!val || 'Regime é obrigatório']" />
 
           <div class="row q-col-gutter-md">
             <div class="col-md-3 col-sm-12">
-              <q-input label="CNAE" v-model="form.cnae"
+              <q-input outlined label="CNAE" v-model="form.cnae"
                 :rules="[(val) => (val && val.length > 0) || 'CNAE é obrigatório']" unmasked-value
                 @blur="buscarDescricaoCnae" />
             </div>
@@ -40,7 +40,9 @@
               </div>
             </div>
           </div>
+
           <div class="q-my-md"></div>
+
           <div class="row q-col-gutter-md">
             <div class="col">
               <q-btn :label="isUpdate ? 'Atualiza' : 'Salva'" color="primary" class="full-width" rounded

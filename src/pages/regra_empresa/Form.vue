@@ -22,7 +22,7 @@
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-10 col-12">
-                    <q-input label="Identificação da Regra" v-model="form.identificacao"
+                    <q-input outlined label="Identificação da Regra" v-model="form.identificacao"
                       :rules="[(val) => (val && val.length >= 2) || 'A Identificação é obrigatória']" />
 
                   </div>

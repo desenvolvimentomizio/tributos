@@ -11,9 +11,11 @@
              style="background-color: var(--q-primary); border-radius: 8px;">
           Contabilidade
         </div>
+        <div class="q-pa-sm"></div>
 
         <q-form class="q-gutter-y-md" @submit.prevent="handleSubmit">
-          <q-input
+        <div class="q-gutter-y-md">
+          <q-input outlined
             label="Identificação"
             v-model="form.identificacao"
             :rules="[
@@ -23,15 +25,24 @@
             ]"
           />
 
-          <q-input
+          <q-input outlined
             label="Telefone"
             v-model="form.telefone"
-
+            :mask="getTelefoneMask"
+            :rules="[
+              val => !!val || 'Telefone é obrigatório',
+              val => val.length >= 10 || 'Telefone deve ter pelo menos 10 caracteres'
+            ]"
+            unmasked-value
           />
 
-          <q-input
+          <q-input outlined
             label="Email"
             v-model="form.email"
+            :rules="[
+              val => !!val || 'Email é obrigatório',
+              val => /.+@.+\..+/.test(val) || 'Email inválido'
+            ]"
           />
 
           <div class="row q-col-gutter-sm">
@@ -56,7 +67,9 @@
               />
             </div>
           </div>
+        </div>
         </q-form>
+
       </q-card>
     </div>
   </q-page>
