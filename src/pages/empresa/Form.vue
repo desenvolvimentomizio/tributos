@@ -151,7 +151,7 @@ export default defineComponent({
         router.push({ name: 'empresa' })
 
       } catch (error) {
-        notifyError(error.message)
+        notifyError(error, error.message)
       }
     }
 
