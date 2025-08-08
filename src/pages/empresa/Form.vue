@@ -2,10 +2,12 @@
   <q-page padding>
     <div class="row justify-center">
       <q-card class="col-md-4 col-xs-12 col-sm-12 q-pa-lg shadow-2 bg-white" style="border-radius: 16px;">
+
         <div class="text-h5 text-white text-center text-bold q-mb-lg q-pa-sm"
           style="background-color: var(--q-primary); border-radius: 8px;">
           Empresa
         </div>
+
         <div class="q-pa-sm"></div>
         <q-form ref="formRef" class="q-gutter-y-md" @submit.prevent="handleSubmit">
 
@@ -150,7 +152,7 @@ export default defineComponent({
           })
         }
 
-        router.push({ name: 'empresa' })
+        router.push({ name: 'contabilidade' })
 
       } catch (error) {
         notifyError(error, error.message)
