@@ -77,8 +77,7 @@ export default defineComponent({
           query: { email },
         })
       } catch (error) {
-        console.error('Erro ao registrar usuário:', error)
-        notifyError( error.message || 'Erro desconhecido ao registrar')
+        notifyError(error.message)
       }
     }
 

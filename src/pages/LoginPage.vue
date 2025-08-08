@@ -100,8 +100,8 @@ export default defineComponent({
         await login(form.value)
         notifySuccess('Login realizado com sucesso!')
         router.push({ name: 'me' })
-      } catch (error) {
-        notifyError(error.message || 'Erro ao realizar login')
+      } catch  {
+        notifyError('Erro ao realizar login')
       }
     }
 

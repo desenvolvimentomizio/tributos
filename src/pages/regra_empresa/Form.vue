@@ -27,30 +27,30 @@
 
                   </div>
                   <div class="col-md-2 col-12">
-                    <q-input label="Data Início" v-model="form.data_inicio" readonly />
+                    <q-input outlined label="Data Início" v-model="form.data_inicio" readonly />
                   </div>
                 </div>
 
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-2 col-12">
-                    <q-input label="CST ICM" v-model="form.cst_icm_csosn"
+                    <q-input outlined label="CST ICM" v-model="form.cst_icm_csosn"
                       :rules="[(val) => (val && val.length >= 2) || 'CST do ICM é obrigatório', buscarDescricaoCSTICMCSOSN]" />
 
                   </div>
                   <div class="col-md-10 col-12">
-                    <q-input v-model="descricaocst_icm_csosn" readonly />
+                    <q-input outlined v-model="descricaocst_icm_csosn" readonly />
                   </div>
                 </div>
 
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-2 col-12">
-                    <q-input label="CFOP Interno" v-model="form.cfop_interno" mask="#.###"
+                    <q-input outlined label="CFOP Interno" v-model="form.cfop_interno" mask="#.###"
                       :rules="[(val) => (val && val.length >= 2) || 'CFOP para vendas no estado é obrigatório', buscarDescricaoCFOPInterno]" />
                   </div>
                   <div class="col-md-7 col-12">
-                    <q-input v-model="descricaocfop_interno" readonly />
+                    <q-input outlined v-model="descricaocfop_interno" readonly />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-input label="% ICM Interno" v-model="form.icm_interno" />
@@ -59,11 +59,11 @@
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-2 col-12">
-                    <q-input label="CFOP Externo" v-model="form.cfop_externo" mask="#.###"
+                    <q-input outlined label="CFOP Externo" v-model="form.cfop_externo" mask="#.###"
                       :rules="[(val) => (val && val.length >= 2) || 'CFOP para vendas para fora do estado é obrigatório', buscarDescricaoCFOPExterno]" />
                   </div>
                   <div class="col-md-7 col-12">
-                    <q-input v-model="descricaocfop_externo" readonly />
+                    <q-input outlined v-model="descricaocfop_externo" readonly />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-input label="% ICM Externo" v-model="form.icm_externo" />
@@ -74,18 +74,18 @@
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-6 col-12">
-                    <q-input label="Redução Alíquota ICM" v-model="form.reducao_base_aliquota" />
+                    <q-input outlined label="Redução Alíquota ICM" v-model="form.reducao_base_aliquota" />
                   </div>
 
                   <div class="col-md-6 col-12">
-                    <q-input label="Aliq.Combate Pobreza Alíquota" v-model="form.combate_pobreza_aliquota" />
+                    <q-input outlined label="Aliq.Combate Pobreza Alíquota" v-model="form.combate_pobreza_aliquota" />
                   </div>
                 </div>
 
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
-                    <q-input label="CST PIS" v-model="form.cst_pis"
+                    <q-input outlined label="CST PIS" v-model="form.cst_pis"
                       :rules="[(val) => (val && val.length >= 1) || 'CST do PIS é obrigatório', buscarDescricaoPIS]"
                       unmasked-value />
                   </div>
@@ -93,14 +93,14 @@
                     <q-input v-model="descricaocst_pis" readonly />
                   </div>
                   <div class="col-md-3 col-12">
-                    <q-input label="% PIS" v-model="form.pis_aliquota" />
+                    <q-input outlined label="% PIS" v-model="form.pis_aliquota" />
                   </div>
                 </div>
 
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
-                    <q-input label="CST COFINS" v-model="form.cst_cofins"
+                    <q-input outlined label="CST COFINS" v-model="form.cst_cofins"
                       :rules="[(val) => (val && val.length >= 1) || 'CST do COFINS é obrigatório', buscarDescricaoCOFINS]"
                       unmasked-value />
                   </div>
@@ -108,18 +108,18 @@
                     <q-input v-model="descricaocst_cofins" readonly />
                   </div>
                   <div class="col-md-3 col-12">
-                    <q-input label="% COFINS" v-model="form.cofins_aliquota" />
+                    <q-input outlined label="% COFINS" v-model="form.cofins_aliquota" />
                   </div>
                 </div>
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
-                    <q-input label="CST IPI" v-model="form.cst_ipi"
+                    <q-input outlined label="CST IPI" v-model="form.cst_ipi"
                       :rules="[(val) => (val && val.length >= 1) || 'CST do IPI é obrigatório', buscarDescricaoIPI]"
                       unmasked-value />
                   </div>
                   <div class="col-md-9 col-12">
-                    <q-input v-model="descricaocst_ipi" readonly />
+                    <q-input outlined v-model="descricaocst_ipi" readonly />
                   </div>
                 </div>
 
@@ -131,14 +131,14 @@
               <q-card class="q-pa-md">
                 <div class="text-h6">ICS / IBS</div>
 
-                <q-input label="Classificação IS" v-model="form.classificacao_is" />
-                <q-input label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" />
-                <q-input label="Classificação Cpresumido" v-model="form.classificacao_cpresumido" />
-                <q-input label="Alíquota CBS" v-model="form.cbs_aliquota" />
-                <q-input label="Redução CBS" v-model="form.reducao_cbs" />
-                <q-input label="IBS Alíquota Estadual" v-model="form.ibs_aliquota_estadual" />
-                <q-input label="IBS Alíquota Municipal" v-model="form.ibs_aliquota_municipal" />
-                <q-input label="Redução IBS" v-model="form.reducao_ibs" />
+                <q-input outlined label="Classificação IS" v-model="form.classificacao_is" />
+                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" />
+                <q-input outlined label="Classificação Cpresumido" v-model="form.classificacao_cpresumido" />
+                <q-input outlined label="Alíquota CBS" v-model="form.cbs_aliquota" />
+                <q-input outlined label="Redução CBS" v-model="form.reducao_cbs" />
+                <q-input outlined label="IBS Alíquota Estadual" v-model="form.ibs_aliquota_estadual" />
+                <q-input outlined label="IBS Alíquota Municipal" v-model="form.ibs_aliquota_municipal" />
+                <q-input outlined label="Redução IBS" v-model="form.reducao_ibs" />
               </q-card>
             </div>
           </div>
@@ -204,26 +204,26 @@ export default defineComponent({
     const form = ref({
       id: isUpdate.value || uuidv4(),
       regime_id: '',
-      cst_icm_csosn: '00',
-      icm_interno: '17',
-      cfop_interno: '5.102',
-      icm_externo: '12',
-      cfop_externo: '6.102',
-      reducao_base_aliquota: '0',
-      combate_pobreza_aliquota: '0',
-      cst_pis: '1',
-      pis_aliquota: '0',
-      cst_cofins: '1',
-      cofins_aliquota: '0',
-      cst_ipi: '1',
-      classificacao_is: '1',
-      classificacao_ibscbs: '1',
-      classificacao_cpresumido: '1',
-      cbs_aliquota: '1',
-      reducao_cbs: '1',
-      ibs_aliquota_estadual: '1',
-      ibs_aliquota_municipal: '1',
-      reducao_ibs: '1',
+      cst_icm_csosn: '',
+      icm_interno: '',
+      cfop_interno: '',
+      icm_externo: '',
+      cfop_externo: '',
+      reducao_base_aliquota: '',
+      combate_pobreza_aliquota: '',
+      cst_pis: '',
+      pis_aliquota: '',
+      cst_cofins: '',
+      cofins_aliquota: '',
+      cst_ipi: '',
+      classificacao_is: '',
+      classificacao_ibscbs: '',
+      classificacao_cpresumido: '',
+      cbs_aliquota: '',
+      reducao_cbs: '',
+      ibs_aliquota_estadual: '',
+      ibs_aliquota_municipal: '',
+      reducao_ibs: '',
       data_inicio: ref(new Date().toISOString().substring(0, 10)),
 
     })
