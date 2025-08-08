@@ -1,8 +1,16 @@
 <template>
   <q-page padding>
     <q-form class="row justify-center" @submit.prevent="handleForgotPassowrd">
-      <p class="col-12 text-h5 text-center">Recuperar senha</p>
+
+
       <div class="col-md-4 col-sm-6 col-xs-10 q-gutter-y-md">
+
+        <p class="col-12 text-h5 text-center text-white text-center text-bold q-mb-lg q-pa-sm "
+            style="background-color: var(--q-primary); border-radius: 8px;">
+          Recuperar Senha
+        </p>
+
+
         <q-input outlined label="Email" v-model="email" lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Email is required']" type="email" />
 
