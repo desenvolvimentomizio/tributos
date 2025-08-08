@@ -1,35 +1,25 @@
 <template>
   <q-page padding>
     <q-form class="row justify-center" @submit.prevent="handleForgotPassowrd">
-      <p class="col-12 text-h5 text-center">Reset Password</p>
+      <p class="col-12 text-h5 text-center">Recuperar senha</p>
       <div class="col-md-4 col-sm-6 col-xs-10 q-gutter-y-md">
-        <q-input
-          label="Email"
-          v-model="email"
-          lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Email is required']"
-          type="email"
-        />
+        <q-input outlined label="Email" v-model="email" lazy-rules
+          :rules="[(val) => (val && val.length > 0) || 'Email is required']" type="email" />
 
-        <div class="full-width q-pt-md q-gutter-y-sm">
-          <q-btn
-            label="Send Reset Email"
-            color="primary"
-            class="full-width"
-            outline
-            rounded
-            type="submit"
-          />
 
-          <q-btn
-            label="Back"
-            color="dark"
-            class="full-width"
-            rounded
-            flat
-            :to="{ name: 'login' }"
-          />
+        <div class="q-my-md"></div>
+        <div class="row q-col-gutter-md">
+          <div class="col">
+            <q-btn label="Recuperar Senha" color="primary" class="full-width" rounded type="submit" />
+          </div>
+          <div class="col">
+            <q-btn label="Voltar" color="primary" class="full-width" rounded flat :to="{ name: 'login' }" />
+          </div>
         </div>
+
+
+
+
       </div>
     </q-form>
   </q-page>
