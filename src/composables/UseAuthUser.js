@@ -1,12 +1,14 @@
 import { ref } from 'vue'
 import useSupabase from 'boot/supabase'
+import useNotify from 'src/composables/UseNotify'
+import {translateSupabaseError} from 'src/utils/translateSupabaseError.ts'
 // user is set outside of the useAuthUser function
 // so that it will act as global state and always refer to a single user
 
 // o usuário é definido fora da função useAuthUser para que atue como um estado global
 // e sempre se refira a um único usuário
 const user = ref(null)
-
+    const { notifyError } = useNotify()
 export default function useAuthUser() {
   const { supabase } = useSupabase()
   /**
@@ -67,6 +69,17 @@ export default function useAuthUser() {
      //   redirectTo: `${window.location.origin}/me?fromEmail=registrationConfirmation`,
       },
     )
+    if (error) {
+    const friendlyMessage = translateSupabaseError(error)
+    notifyError.create({
+      type: 'negative',
+      message: friendlyMessage,
+      position: 'top',
+    })
+    throw new Error('Erro ao registrar suaário')
+  }
+
+
     if (error) throw error
     return user
   }

@@ -14,10 +14,10 @@
 
       <!-- Mensagem explicativa -->
       <p class="text-body1 text-center text-grey-8">
-        Enviamos um link de confirmação para o e-mail:
+        Cadastro realizado com sucesso:
         <strong>{{ $route.query.email }}</strong
         ><br />
-        Confirme seu e-mail para concluir seu cadastro no sistema.
+        Só realizar o login no sistema Mizio Tributos.
       </p>
 
       <!-- Botão de voltar -->

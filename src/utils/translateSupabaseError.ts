@@ -28,6 +28,8 @@ const PG_CODE_MAP: Record<string, string> = {
 // Mapeamento por nome de constraint (fino e 100% personalizado)
 const CONSTRAINT_MAP: Array<{ pattern: RegExp; message: string }> = [
 
+
+
   { pattern: /contabilidade_identificacao_unique/i, message: "Já existe uma contabilidade com essa identificação." },
 
   { pattern: /contabilidade_email_unique/i, message: "Já existe uma contabilidade com este e-mail." },
@@ -44,7 +46,9 @@ const CONSTRAINT_MAP: Array<{ pattern: RegExp; message: string }> = [
 const AUTH_MAP: Array<{ test: (e: AnySupabaseError) => boolean; message: string }> = [
   { test: e => /email.*exists|already.*registered/i.test(e.message), message: "E-mail já cadastrado." },
   { test: e => /invalid login|invalid credentials/i.test(e.message), message: "E-mail ou senha inválidos." },
+  { test: e => /.*exists|.*registered/i.test(e.message), message: "Usuário ja registrado." },
   { test: e => e.status === 429, message: "Muitas tentativas. Tente novamente em alguns minutos." },
+
 ];
 
 export function translateSupabaseError(err: AnySupabaseError): string {
@@ -67,7 +71,7 @@ export function translateSupabaseError(err: AnySupabaseError): string {
   if (/duplicate key value|unique constraint/i.test(raw)) return "Registro duplicado.";
   if (/foreign key/i.test(raw)) return "Há dependências que impedem essa ação.";
   if (/not-null/i.test(raw)) return "Preencha todos os campos obrigatórios.";
-
+  if (/user already registred/i.test(raw)) return "Usuário já cadastrado.";
   // 5) Último recurso: mostra algo genérico + (opcional) detalhes no console
   console.error("[Supabase error]", err);
   return "Não foi possível concluir a operação. Tente novamente.";
