@@ -20,12 +20,14 @@
           <q-input outlined label="Inscrição Estadual" v-model="form.inscricao_estadual"
             :rules="[(val) => (val && val.length > 0) || 'Inscrição é obrigatória']" />
 
-          <q-input outlined label="Email" v-model="form.email"
-            :rules="[(val) => (val && val.length > 0) || 'Email da empresa é obrigatório']" />
+          <q-input outlined label="Email" v-model="form.email" :rules="[
+            val => !!val || 'Email é obrigatório',
+            val => /.+@.+\..+/.test(val) || 'Email inválido'
+          ]" />
 
-
-          <q-select outlined v-model="form.regime_id" label="Regime Tributário" :options="regimeOptions" emit-value map-options
-            option-label="label" option-value="value" filled :rules="[(val) => !!val || 'Regime é obrigatório']" />
+          <q-select outlined v-model="form.regime_id" label="Regime Tributário" :options="regimeOptions" emit-value
+            map-options option-label="label" option-value="value" filled
+            :rules="[(val) => !!val || 'Regime é obrigatório']" />
 
           <div class="row q-col-gutter-md">
             <div class="col-md-3 col-sm-12">
