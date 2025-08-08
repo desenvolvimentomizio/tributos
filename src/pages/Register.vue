@@ -1,24 +1,31 @@
 <template>
   <q-page padding>
     <q-form class="row justify-center" @submit.prevent="handleRegister">
-      <p class="col-12 text-h5 text-center">Cadastro de Conta</p>
+
       <div class="col-md-4 col-sm-6 col-xs-10 q-gutter-y-md">
-        <q-input
+        <p class="col-12 text-h5 text-center text-white text-center text-bold q-mb-lg q-pa-sm "
+         style="background-color: var(--q-primary); border-radius: 8px;">
+        Cadastro de Conta
+      </p>
+        <q-input outlined
           label="Nome"
           v-model="form.name"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Informe o Nome']"
         />
 
-        <q-input
+        <q-input outlined
           label="Email"
           v-model="form.email"
           lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Informe o email']"
-          type="email"
+          :rules="[
+            val => !!val || 'Email é obrigatório',
+            val => /.+@.+\..+/.test(val) || 'Email inválido'
+          ]"
+
         />
 
-        <q-input
+        <q-input outlined
           label="Senha de Acesso"
           v-model="form.password"
           lazy-rules
@@ -27,25 +34,22 @@
           ]"
         />
 
-        <div class="full-width q-pt-md q-gutter-y-sm">
-          <q-btn
-            label="Cadastro de Conta"
-            color="primary"
-            class="full-width"
-            outline
-            rounded
-            type="submit"
-          />
 
-          <q-btn
-            label="Voltar"
-            color="dark"
-            class="full-width"
-            rounded
-            flat
-            :to="{ name: 'login' }"
-          />
-        </div>
+
+
+          <div class="q-my-md"></div>
+            <div class="row q-col-gutter-md">
+            <div class="col">
+              <q-btn :label="isUpdate ? 'Cadastro de Conta' : 'Cadastro de Conta'" color="primary" class="full-width" rounded
+                type="submit" />
+            </div>
+            <div class="col">
+              <q-btn label="Voltar" color="primary" class="full-width" rounded flat
+                :to="{ name: 'login' }" />
+            </div>
+          </div>
+
+
       </div>
     </q-form>
   </q-page>
