@@ -40,14 +40,14 @@ import useNotify from 'src/composables/UseNotify'
 
 export default defineComponent({
   setup() {
-    const { sendPasswordRestEmail } = useAuthUser()
+    const { sendPasswordResetEmail } = useAuthUser()
     const { notifyError, notifySuccess } = useNotify()
 
     const email = ref('')
 
     const handleForgotPassowrd = async () => {
       try {
-        await sendPasswordRestEmail(email.value)
+        await sendPasswordResetEmail(email.value)
         notifySuccess(`Password reset email sent to: ${email.value}`)
       } catch (error) {
         notifyError(error.message)

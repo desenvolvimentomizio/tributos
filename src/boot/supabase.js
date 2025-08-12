@@ -14,6 +14,16 @@ supabase.auth.onAuthStateChange((event, session) => {
 
 supabase.auth.signIn
 
-export default function useSupabase() {
+
+ export default function useSupabase() {
   return { supabase }
-}
+ }
+
+
+
+
+
+
+
+
+
