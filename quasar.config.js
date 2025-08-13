@@ -50,8 +50,8 @@ export default defineConfig((/* ctx */) => {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
         node: 'node20',
       },
-
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history',   // <-- troque para 'history'
+      publicPath: '/',            // <-- geralmente '/' no domínio raiz
       env: {
         SUPABASE_URL: 'https://pejpkieipmfwjroqkkyu.supabase.co',
         SUPABASE_KEY:
@@ -64,7 +64,6 @@ export default defineConfig((/* ctx */) => {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      // publicPath: '/',
       // analyze: true,
       // env: {},
       // rawDefine: {}
