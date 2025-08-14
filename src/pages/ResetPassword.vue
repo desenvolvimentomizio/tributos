@@ -36,6 +36,7 @@
   </q-page>
 </template>
 
+
 <script>
 import { defineComponent, ref } from 'vue'
 import useAuthUser from 'src/composables/UseAuthUser'
@@ -54,7 +55,7 @@ export default defineComponent({
 
     const handlePasswordReset = async () => {
       try {
-        await updatePassword(password.value)
+        await updatePassword(password.value) // chama supabase.auth.updateUser({ password })
         notifySuccess('Senha atualizada com sucesso')
         router.push({ name: 'login' })
       } catch (error) {
@@ -62,11 +63,8 @@ export default defineComponent({
       }
     }
 
-    return {
-      password,
-      isPwd,
-      handlePasswordReset
-    }
+    return { password, isPwd, handlePasswordReset }
   }
 })
 </script>
+
