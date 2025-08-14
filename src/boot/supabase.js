@@ -1,23 +1,28 @@
+// src/boot/supabase.js
 import { createClient } from '@supabase/supabase-js'
-import useAuthUser from 'src/composables/UseAuthUser'
+import useAuthUser from 'src/composables/UseAuthUser' // opcional, se você controla usuário reativo
 
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_KEY
 
-const supabase = createClient(supabaseUrl, supabaseKey)
+export const supabase = createClient(supabaseUrl, supabaseKey)
 
-supabase.auth.onAuthStateChange((event, session) => {
-  const { user } = useAuthUser()
+// Mantém o usuário reativo (se você tiver esse composable)
+try {
+  const { user } = useAuthUser?.() || {}
+  supabase.auth.onAuthStateChange((_event, session) => {
+    if (user) user.value = session?.user ?? null
+  })
+} catch  {
+  // se não tiver o composable, tudo bem
+}
 
-  user.value = session?.user || null
-})
-
-supabase.auth.signIn
-
-
- export default function useSupabase() {
+export default function useSupabase () {
   return { supabase }
- }
+}
+
+
+
 
 
 
