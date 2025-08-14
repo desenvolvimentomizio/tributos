@@ -1,55 +1,71 @@
 // src/composables/UseAuthUser.js
-import { ref } from 'vue'
-import useSupabase from 'boot/supabase' // deve exportar { supabase }
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { supabase, onAuthStateChange } from 'boot/supabase' // ✅ sem ciclo
 import useNotify from 'src/composables/UseNotify'
-import { translateSupabaseError } from 'src/utils/translateSupabaseError.ts'
+import { translateSupabaseError } from 'src/utils/translateSupabaseError' // sem .ts
 
-const user = ref(null) // estado global
+// Estado compartilhado
+const user = ref(null)
 
 export default function useAuthUser () {
-  const { supabase } = useSupabase()
   const { notifyError } = useNotify()
 
-  // --- manter user sincronizado ---
-  // pega sessão atual ao carregar
-  supabase.auth.getSession().then(({ data }) => {
-    user.value = data?.session?.user ?? null
+  // Listener de auth (removido no unmount)
+  let off = null
+
+  onMounted(async () => {
+    try {
+      const { data, error } = await supabase.auth.getUser()
+      if (!error) user.value = data.user || null
+    } catch  {
+      /* ignore */
+    }
+
+    // registra um callback (o boot garante apenas uma assinatura real no SDK)
+    off = onAuthStateChange((_event, session) => {
+      user.value = session?.user || null
+    })
   })
-  // escuta mudanças de auth (login/logout/reset)
-  supabase.auth.onAuthStateChange((_event, session) => {
-    user.value = session?.user ?? null
+
+  onBeforeUnmount(() => {
+    if (typeof off === 'function') {
+      off()
+      off = null
+    }
   })
 
   // --- login email/senha ---
-  const login = async ({ email, password }) => {
+  async function login ({ email, password }) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
     return data.user
   }
 
-  // --- login social (Google/GitHub etc) ---
-  const loginWithSocialProvider = async (provider) => {
+  // --- login social (OAuth) ---
+  async function loginWithSocialProvider (provider) {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/me` // ajuste sua rota pós-login
+        redirectTo: `${window.location.origin}/me`
       }
     })
     if (error) throw error
-    return data // contém url para redirecionamento
+    return data // contém a url de redirecionamento
   }
 
   // --- logout ---
-  const logout = async () => {
+  async function logout () {
     const { error } = await supabase.auth.signOut()
     if (error) throw error
   }
 
-  // --- checar login (rápido, via estado local) ---
-  const isLoggedIn = () => !!user.value
+  // --- checar login rapidamente ---
+  function isLoggedIn () {
+    return !!user.value
+  }
 
   // --- registrar ---
-  const register = async ({ email, password, ...meta }) => {
+  async function register ({ email, password, ...meta }) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -60,24 +76,23 @@ export default function useAuthUser () {
     })
 
     if (error) {
-      const friendlyMessage = translateSupabaseError(error)
-      notifyError(friendlyMessage)
+      const friendly = translateSupabaseError(error)
+      notifyError(friendly)
       throw new Error('Erro ao registrar usuário')
     }
 
     return data.user
   }
 
-  // --- atualizar dados do usuário (email, senha, metadata) ---
-  // Use updateUser do v2. Ex.: update({ password: 'nova' }) ou update({ data: { nome: '...' }})
-  const update = async (payload) => {
+  // --- atualizar dados do usuário (email/senha/metadata) ---
+  async function update (payload) {
     const { data, error } = await supabase.auth.updateUser(payload)
     if (error) throw error
     return data.user
   }
 
   // --- enviar email de reset de senha (etapa 1) ---
-  const sendPasswordResetEmail = async (email) => {
+  async function sendPasswordResetEmail (email) {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`
     })
@@ -85,9 +100,9 @@ export default function useAuthUser () {
     return true
   }
 
-  // --- definir nova senha após o link (etapa 2) ---
-  // No v2 não precisa de token manual aqui: o usuário volta autenticado temporariamente
-  const resetPassword = async (newPassword) => {
+  // --- definir nova senha após clicar no link (etapa 2) ---
+  // Requer que o boot auth-hash já tenha feito setSession() com os tokens do #...
+  async function resetPassword (newPassword) {
     const { data, error } = await supabase.auth.updateUser({ password: newPassword })
     if (error) throw error
     return data.user
@@ -95,13 +110,13 @@ export default function useAuthUser () {
 
   return {
     user,
+    isLoggedIn,
     login,
     loginWithSocialProvider,
-    isLoggedIn,
     logout,
     register,
     update,
-    sendPasswordResetEmail, // (corrigido nome)
+    sendPasswordResetEmail,
     resetPassword
   }
 }
