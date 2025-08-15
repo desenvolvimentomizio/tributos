@@ -9,9 +9,9 @@
           label="Nova Senha"
           :type="isPwd ? 'password' : 'text'"
           lazy-rules
-          :rules="[(val) => (val && val.length >= 6) || 'Informe a senha (mín. 6)']"
+          :rules="[(val) => (val && val.length >= 6) || 'Informe uma senha com pelo menos 6 caracteres']"
         >
-          <template v-slot:append>
+          <template #append>
             <q-icon
               :name="isPwd ? 'visibility_off' : 'visibility'"
               class="cursor-pointer"
@@ -39,34 +39,48 @@
 <script>
 import { ref, defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
-import useSupabase from 'boot/supabase'          // ✅ pega o client pelo composable
-import useNotify from 'src/composables/UseNotify' // seu composable de toasts
+import useSupabase from 'boot/supabase'           // ✅ IMPORT DEFAULT (NÃO { useSupabase })
+import useNotify from 'src/composables/UseNotify' // seus toasts
 
 export default defineComponent({
   name: 'ResetPassword',
   setup () {
     const router = useRouter()
-    const { supabase } = useSupabase()          // ✅ importante: desestruturar o client
     const { notifyError, notifySuccess } = useNotify()
+
+    // ✅ pegue o client corretamente
+    const { supabase } = useSupabase()
+
+    // Logs de diagnóstico (remova em produção)
+    console.log('[ResetPassword] supabase:', supabase)
+    console.log('[ResetPassword] supabase?.auth existe?', !!(supabase && supabase.auth))
 
     const password = ref('')
     const isPwd = ref(true)
     const loading = ref(false)
 
     const handlePasswordReset = async () => {
-      if (!password.value || password.value.length < 6) {
-        notifyError('Informe uma senha com pelo menos 6 caracteres.')
-        return
-      }
-      loading.value = true
       try {
-        // ✅ chamada correta ao client:
+        if (!supabase || !supabase.auth) {
+          // Esse é o caso que gera "auth is undefined"
+          throw new Error('Client Supabase não inicializado. Verifique import e boot/supabase.')
+        }
+
+        if (!password.value || password.value.length < 6) {
+          notifyError('Informe uma senha com pelo menos 6 caracteres.')
+          return
+        }
+
+        loading.value = true
+
+        // ✅ chamada correta no v2 do supabase-js:
         const { error } = await supabase.auth.updateUser({ password: password.value })
         if (error) throw error
 
         notifySuccess('Senha atualizada com sucesso.')
-        router.push({ name: 'login' }) // ajuste para a rota de login do seu app
+        router.push({ name: 'login' }) // ajuste para sua rota de login
       } catch (err) {
+        console.error('[ResetPassword] erro ao atualizar senha:', err)
         notifyError(err?.message || 'Falha ao atualizar a senha.')
       } finally {
         loading.value = false
@@ -77,5 +91,3 @@ export default defineComponent({
   }
 })
 </script>
-
-
