@@ -28,7 +28,7 @@ export default function useAuthUser () {
     try {
       const { data, error } = await supabase.auth.getUser()
       if (!error) user.value = data.user || null
-    } catch (_) {
+    } catch  {
       /* ignore */
     }
     off = onAuthStateChange((_event, session) => {
