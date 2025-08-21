@@ -55,11 +55,11 @@
 
           <q-btn
             color="negative"
-            label="Excluir"
+            label="Desativar"
             size="sm"
-            @click="handleRemoveEmpresa(props.row)"
+            @click="handleDesativaEmpresa(props.row)"
             >
-            <q-tooltip> Excluir </q-tooltip>
+            <q-tooltip> Desativar </q-tooltip>
           </q-btn>
 
 
@@ -104,7 +104,7 @@ export default defineComponent({
     const table = 'empresa'
     const tableContabilidade = 'contabilidade'
     const { user } = useAuthUser()
-    const { listPublic, remove } = useApi()
+    const { listPublic, updateFim } = useApi()
     const { notifyError, notifySuccess } = useNotify()
 
     const handleListContabilidades = async () => {
@@ -137,16 +137,17 @@ export default defineComponent({
       router.push({ name: 'form-empresa', params: { id: empresa.id } })
     }
 
-    const handleRemoveEmpresa = async (empresa) => {
+    const handleDesativaEmpresa = async (empresa) => {
       $q.dialog({
         title: 'Confirmação',
-        message: `Deseja excluir a empresa "${empresa.identificacao}"?`,
+        message: `Deseja desativar a empresa "${empresa.identificacao}"?`,
         cancel: true,
         persistent: true
       }).onOk(async () => {
         try {
-          await remove(table, empresa.id)
-          notifySuccess('Exclusão realizada com sucesso')
+
+          await updateFim(table, empresa.id)
+          notifySuccess('Destaivação realizada com sucesso')
           handleListEmpresas()
         } catch (error) {
           notifyError(error.message)
@@ -167,7 +168,7 @@ export default defineComponent({
       identificacaoContabilidade,
       idContabilidade,
       handleEdit,
-      handleRemoveEmpresa,
+      handleDesativaEmpresa,
 
     }
   }

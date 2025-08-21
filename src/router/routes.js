@@ -21,11 +21,6 @@ const routes = [
         name: 'reset-password',
         component: () => import('pages/ResetPassword.vue'),
       },
-      {
-        path: 'product-public/:id',
-        name: 'product-public',
-        component: () => import('pages/product/Public.vue'),
-      },
     ],
   },
   {
@@ -74,12 +69,6 @@ const routes = [
         path: 'form-regra-empresa/:id?/:regime_id?/:empresa_id?',
         name: 'form-regra-empresa',
         component: () => import('src/pages/regra_empresa/Form.vue'),
-      },
-      { path: 'product', name: 'product', component: () => import('pages/product/List.vue') },
-      {
-        path: 'form-product/:id?',
-        name: 'form-product',
-        component: () => import('pages/product/Form.vue'),
       },
       {
         path: 'form-config/:id?',

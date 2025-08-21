@@ -57,8 +57,8 @@
               <q-tooltip> Editar </q-tooltip>
             </q-btn>
 
-            <q-btn color="negative" label="Excluir" size="sm" @click="handleRemoveEmpresa(props.row)">
-              <q-tooltip> Excluir </q-tooltip>
+            <q-btn color="negative" label="Desativar" size="sm" @click="handleDesativaEmpresa(props.row)">
+              <q-tooltip> Desativar </q-tooltip>
             </q-btn>
 
             <q-btn color="primary" label="Regra" size="sm" @click="handleRegra(props.row)">
@@ -103,7 +103,7 @@ export default defineComponent({
     const table = 'contabilidade'
     const tableempresa = 'empresa'
     const { user } = useAuthUser()
-    const { list, listPublic, remove } = useApi()
+    const { list, listPublic, updateFim } = useApi()
     const { notifyError, notifySuccess } = useNotify()
 
 
@@ -157,16 +157,16 @@ export default defineComponent({
 
 
 
-    const handleRemoveEmpresa = async (empresa) => {
+    const handleDesativaEmpresa = async (empresa) => {
       $q.dialog({
         title: 'Confirmação',
-        message: `Deseja excluir a empresa "${empresa.identificacao}"?`,
+        message: `Deseja desativar a empresa "${empresa.identificacao}"?`,
         cancel: true,
         persistent: true
       }).onOk(async () => {
         try {
-          await remove(tableempresa, empresa.id)
-          notifySuccess('Exclusão realizada com sucesso')
+          await  updateFim(tableempresa, empresa.id)
+          notifySuccess('Desativção realizada com sucesso')
           handleListContabilidades()
         } catch (error) {
           notifyError(error.message)
@@ -178,12 +178,12 @@ export default defineComponent({
       try {
         $q.dialog({
           title: 'Confirmação',
-          message: `Realmente deseja excluir a ${contabilidade.identificacao} ?`,
+          message: `Realmente deseja desativar a ${contabilidade.identificacao} ?`,
           cancel: true,
           persistent: true,
         }).onOk(async () => {
-          await remove(table, contabilidade.id)
-          notifySuccess('Exclusão realizada com sucesso')
+          await updateFim(table, contabilidade.id)
+          notifySuccess('Desativação realizada com sucesso')
           handleListContabilidades()
         })
       } catch (error) {
@@ -236,7 +236,7 @@ export default defineComponent({
       handleRemoveContabilidade,
       handleLisEmpresas,
       handleEditEmpresa,
-      handleRemoveEmpresa,
+      handleDesativaEmpresa,
       handleContabilidadeClick,
       handleListEmpresas,
       handleRegra,

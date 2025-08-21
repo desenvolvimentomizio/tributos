@@ -259,7 +259,7 @@ export default defineComponent({
           await post(table, form.value)
           notifySuccess('Registro incluído com sucesso')
         }
-        router.push({ name: 'contabilidade' })
+        router.push({ name: 'regra' })
       } catch (error) {
         notifyError('Erro ao salvar registro: ' + error.message)
       }

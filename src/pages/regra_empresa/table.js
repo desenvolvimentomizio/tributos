@@ -59,6 +59,16 @@ const columnsRegras = [
     sortable: true,
     style: 'width: 3%;'
   },
+   {
+    name: 'data_fim',
+    align: 'left',
+    label: 'Desativação',
+    field: 'data_fim',
+    sortable: true,
+    style: 'width: 3%;'
+  },
+
+
 
 
 

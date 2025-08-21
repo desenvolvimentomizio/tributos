@@ -93,6 +93,16 @@ export default function useApi() {
     return data
   }
 
+
+  const updateFim = async (table, id) => {
+  const { data, error } = await supabase
+    .from(table)
+    .update({ data_fim: new Date().toISOString() })
+    .match({ id })
+  if (error) throw error
+  return data
+}
+
   const update = async (table, form) => {
     const { data, error } = await supabase
       .from(table)
@@ -101,6 +111,15 @@ export default function useApi() {
     if (error) throw error
     return data
   }
+
+
+
+  const disable = async (table,id) => {
+  const { data, error } = await supabase.rpc('desativar_registro', {p_id: id, p_table: table })
+  if (error) throw error
+  return data // aqui vem a linha atualizada
+}
+
 
   const remove = async (table, id) => {
     const { data, error } = await supabase.from(table).delete().match({ id })
@@ -269,6 +288,8 @@ const listRegrasDisponiveis = async (empresaId) => {
     post,
     update,
     remove,
+    disable,
+    updateFim,
     uploadImg,
     getBrand,
     brand,

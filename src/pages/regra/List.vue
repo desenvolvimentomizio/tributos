@@ -26,8 +26,8 @@
             <q-tooltip> Editar</q-tooltip>
           </q-btn>
 
-          <q-btn color="negative" label="Excluir" size="sm" @click="handleRemoveEmpresa(props.row)">
-            <q-tooltip> Excluir </q-tooltip>
+          <q-btn color="negative" label="Desativar" size="sm" @click="handleDesativaRegra(props.row)">
+            <q-tooltip> Desativar </q-tooltip>
           </q-btn>
 
 
@@ -42,6 +42,7 @@
 <script>
 import { defineComponent, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import useAuthUser from 'src/composables/UseAuthUser'
@@ -50,36 +51,22 @@ import { columnsRegras } from './table'
 export default defineComponent({
   name: 'PageRegraList',
   setup() {
-    const contabilidades = ref([])
+    const $q = useQuasar()
     const regras = ref([])
-    const identificacaoContabilidade = ref('')
-    const idContabilidade = ref('')
     const filtro = ref('')
     const loading = ref(true)
-    const tableContabilidade = 'contabilidade'
     const table = 'regra_tributaria'
     const { user } = useAuthUser()
     const router = useRouter()
-    const { listPublic } = useApi()
-    const { notifyError } = useNotify()
+    const { listPublic, updateFim } = useApi()
+    const { notifyError,notifySuccess } = useNotify()
 
-    const handleListContabilidades = async () => {
-      try {
-        loading.value = true
-        contabilidades.value = await listPublic(tableContabilidade, user.value.id)
-        identificacaoContabilidade.value = contabilidades.value[0]?.identificacao || ''
-        idContabilidade.value = contabilidades.value[0]?.id || ''
-      } catch (error) {
-        notifyError(error.message)
-      } finally {
-        loading.value = false
-      }
-    }
+
 
     const handleListRegras = async () => {
       try {
         loading.value = true
-        regras.value = await listPublic(table, user.value.id, idContabilidade.value)
+        regras.value = await listPublic(table, user.value.id)
 
       } catch (error) {
         notifyError('Erro ao lista ' + error.message)
@@ -89,13 +76,31 @@ export default defineComponent({
     }
 
 
+const handleDesativaRegra = async (regra_tributaria) => {
+      $q.dialog({
+        title: 'Confirmação',
+        message: `Deseja desativar a empresa "${regra_tributaria.identificacao}"?`,
+        cancel: true,
+        persistent: true
+      }).onOk(async () => {
+        try {
+
+          await updateFim(table, regra_tributaria.id)
+          notifySuccess('Destaivação realizada com sucesso')
+          handleListRegras()
+        } catch (error) {
+          notifyError(error.message)
+        }
+      })
+    }
+
 
     const handleEdit = (row) => {
       router.push({ name: 'form-regra', params: { id: row.id } })
     }
 
     onMounted(() => {
-      handleListContabilidades()
+
       handleListRegras()
 
     })
@@ -105,13 +110,9 @@ export default defineComponent({
       regras,
       filtro,
       loading,
-      identificacaoContabilidade,
-      idContabilidade,
       handleListRegras,
       handleEdit,
-      //  handleRemoveEmpresa,
-      //  handleRegime,
-      //  handleRegra,
+      handleDesativaRegra,
     }
   }
 })
