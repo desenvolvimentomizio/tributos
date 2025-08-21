@@ -53,16 +53,6 @@ const columnsEmpresa = [
     },
      style: 'width: 15%;'
   },
-
-  {
-    name: 'cnae',
-    align: 'left',
-    label: 'CNAE',
-    field: 'cnae',
-    sortable: true,
-    style: 'width: 5%;'
-  },
-
   {
     name: 'email',
     align: 'left',

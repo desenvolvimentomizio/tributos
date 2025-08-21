@@ -25,8 +25,9 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer :width="220" v-model="leftDrawerOpen" show-if-above bordered>
       <q-list dense>
+
 
         <q-item-label header> Menu </q-item-label>
 
