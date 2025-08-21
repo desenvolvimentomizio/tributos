@@ -26,7 +26,8 @@
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
+      <q-list dense>
+
         <q-item-label header> Menu </q-item-label>
 
         <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />

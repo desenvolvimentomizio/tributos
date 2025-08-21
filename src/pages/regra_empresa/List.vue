@@ -3,8 +3,10 @@
     <!-- Card de Lista de regras -->
     <q-card class="q-pa-md q-mb-md shadow-1">
       <div class="row items-center justify-between">
-        <div class="text-h6"> Lista de REGRAS - Regime: {{ regime_identificacao }} - Empresa : {{ empresa_identificacao
-          }}
+        <div class="text-h6"> Lista de REGRAS - Empresa:
+          <span class="text-primary text-weight-bold">{{ empresa_identificacao }}</span>
+          - Regime :
+          <span class="text-primary text-weight-bold">{{ regime_identificacao }}</span>
         </div>
         <q-btn v-if="$q.platform.is.desktop" label="Incluir Regra" color="primary" icon="mdi-plus" dense
           @click="handleEditRegra({ id: '', regime_id: regime_id, empresa_id: empresa_id })" />
@@ -59,7 +61,7 @@
 
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-sm">
-          <q-btn color="info" label="Selecionar" size="sm"   @click="handlePostEmpresaRegras(props.row.id)">
+          <q-btn color="info" label="Selecionar" size="sm" @click="handlePostEmpresaRegras(props.row.id)">
             <q-tooltip> Selecionar Regra para a empresa a cima</q-tooltip>
           </q-btn>
 
@@ -72,7 +74,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted,computed } from 'vue'
+import { defineComponent, ref, onMounted, computed } from 'vue'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import useAuthUser from 'src/composables/UseAuthUser'
@@ -97,7 +99,7 @@ export default defineComponent({
     const loading = ref(true)
     const isUpdate = computed(() => route.params.id)
 
-    const { notifyError,notifySuccess } = useNotify()
+    const { notifyError, notifySuccess } = useNotify()
     // const table = 'regra_tributaria'
     const tableEmpresa = 'empresa'
     const tableEmpresaRegras = 'empresa_regra_tributaria'
@@ -113,7 +115,7 @@ export default defineComponent({
     const formEmpresaRegra = ref({
       id: isUpdate.value || uuidv4(),
       empresa_id: '',
-  //    contabilidade_id: '',
+      //    contabilidade_id: '',
       regra_tributaria_id: '',
       data_inicio: ref(new Date().toISOString().substring(0, 10)),
 
@@ -131,13 +133,13 @@ export default defineComponent({
 
         regras.value = await listRegrasPorEmpresa(empresa_id.value)
 
-         regrasDiferenteEmpresa.value = await listRegrasDiferenteEmpresa(empresa_id.value, regime_id.value)
+        regrasDiferenteEmpresa.value = await listRegrasDiferenteEmpresa(empresa_id.value, regime_id.value)
 
 
 
 
       } catch (error) {
-        notifyError('Erro ao lista '+  error.message)
+        notifyError('Erro ao lista ' + error.message)
       } finally {
         loading.value = false
       }
@@ -155,8 +157,8 @@ export default defineComponent({
       }
       try {
         formEmpresaRegra.value.id = uuidv4()
-        formEmpresaRegra.value.empresa_id =empresa_id.value
-     //   formEmpresaRegra.value.contabilidade_id = empresas.value[0]?.contabilidade_id || ''
+        formEmpresaRegra.value.empresa_id = empresa_id.value
+        //   formEmpresaRegra.value.contabilidade_id = empresas.value[0]?.contabilidade_id || ''
         formEmpresaRegra.value.regra_tributaria_id = regraId
         formEmpresaRegra.value.user_id = user.value.id
 
