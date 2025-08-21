@@ -22,11 +22,9 @@
     </div>
 
     <!-- Tabela -->
-    <q-table :rows="regras" :columns="columnsRegras" row-key="id" :loading="loading" :filter="filtro" flat bordered
-      class="q-mb-xl">
+    <q-table :rows="regras" :columns="columnsRegras" row-key="id" :loading="loading" :filter="filtro" flat bordered  class="q-mb-xl">
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-sm">
-
 
           <q-btn color="info" label="Editar" size="sm" @click="handleEdit(props.row)">
             <q-tooltip> Editar </q-tooltip>
@@ -48,8 +46,8 @@
 
 
     <!-- Abaixo lista de regras disponiveis empresas -->
-    <q-table :rows="regrasDiferenteEmpresa" :columns="columnsRegrasEmpresa" row-key="id" class="col-12"
-      :loading="loading">
+    <q-table :rows="regrasDiferenteEmpresa" :columns="columnsRegrasEmpresa" row-key="id" :loading="loading"  flat bordered  class="q-mb-xl" >
+
       <template v-slot:top>
 
         <div class="q-pa-sm row items-center justify-between full-width">

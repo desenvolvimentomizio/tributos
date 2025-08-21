@@ -1,10 +1,4 @@
-function aplicarMascaraData(val) {
-  if (!val) return ''
-  // espera formato 'aaaa-mm-dd' ou 'aaaa-mm-ddTHH:mm:ss'
-  const soData = val.split('T')[0] // remove hora, se existir
-  const [ano, mes, dia] = soData.split('-')
-  return `${dia}/${mes}/${ano}`
-}
+
 
 const columnsRegrasEmpresa = [
   {
@@ -49,14 +43,7 @@ const columnsRegrasEmpresa = [
     sortable: true,
     style: 'width: 3%;'
   },
-  {
-    name: 'pis_aliquota',
-    align: 'left',
-    label: 'PIS Alíquota',
-    field: 'pis_aliquota',
-    sortable: true,
-    style: 'width: 3%;'
-  },
+
   {
     name: 'cst_cofins',
     align: 'left',
@@ -65,25 +52,16 @@ const columnsRegrasEmpresa = [
     sortable: true,
     style: 'width: 3%;'
   },
+   {
+    name: 'classificacao_ibscbs',
+    align: 'left',
+    label: 'IBS-CBS',
+    field: 'classificacao_ibscbs',
+    sortable: true,
+    style: 'width: 3%;'
+  },
 
-  {
-    name: 'data_inicio',
-    align: 'left',
-    label: 'Data Início',
-    field: 'data_inicio',
-    sortable: true,
-    style: 'width :5%;',
-    format: aplicarMascaraData,
-  },
-  {
-    name: 'data_fim',
-    align: 'left',
-    label: 'Data Fim',
-    field: 'data_fim',
-    sortable: true,
-    style: 'width :5%;',
-    format: aplicarMascaraData,
-  },
+
 
   { name: 'actions', align: 'right', label: 'Funções', field: 'actions', sortable: false },
 ]
