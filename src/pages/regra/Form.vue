@@ -124,7 +124,7 @@
               <q-card class="q-pa-md">
                 <div class="text-h6">IBS / ICS</div>
 
-                <q-input outlined label="CST IBSCST " v-model="form.cst_ibscbs" />
+                <q-input outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" />
                 <q-input outlined label="Alíquota CBS" v-model="form.cbs_aliquota" />
                 <q-input outlined label="IBS Alíquota Estadual" v-model="form.ibs_aliquota_estadual" />
                 <q-input outlined label="IBS Alíquota Municipal" v-model="form.ibs_aliquota_municipal" />
