@@ -66,11 +66,15 @@ const routes = [
         component: () => import('src/pages/regra/List.vue'),
       },
       {
-        path: 'form-regra/:id?/:regime_id?/:empresa_id?',
+        path: 'form-regra/:id?',
         name: 'form-regra',
+        component: () => import('src/pages/regra/Form.vue'),
+      },
+      {
+        path: 'form-regra-empresa/:id?/:regime_id?/:empresa_id?',
+        name: 'form-regra-empresa',
         component: () => import('src/pages/regra_empresa/Form.vue'),
       },
-
       { path: 'product', name: 'product', component: () => import('pages/product/List.vue') },
       {
         path: 'form-product/:id?',

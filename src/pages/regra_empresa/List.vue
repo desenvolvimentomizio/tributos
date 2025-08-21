@@ -144,7 +144,7 @@ export default defineComponent({
     }
 
     const handleEditRegra = (regra) => {
-      router.push({ name: 'form-regra', params: { id: regra.id, regime_id: regra.regime_id, empresa_id: regra.empresa_id } })
+      router.push({ name: 'form-regra-empresa', params: { id: regra.id, regime_id: regra.regime_id, empresa_id: regra.empresa_id } })
     }
 
 

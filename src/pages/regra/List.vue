@@ -23,7 +23,7 @@
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-sm">
           <q-btn color="info" label="Editar" size="sm" @click="handleEdit(props.row)">
-            <q-tooltip> Editar </q-tooltip>
+            <q-tooltip> Editar</q-tooltip>
           </q-btn>
 
           <q-btn color="negative" label="Excluir" size="sm" @click="handleRemoveEmpresa(props.row)">

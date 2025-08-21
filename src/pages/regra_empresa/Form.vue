@@ -112,27 +112,17 @@
                   </div>
                 </div>
 
-                <div class="row q-col-gutter-md">
-                  <div class="col-md-3 col-12">
-                    <q-input outlined label="CST IPI" v-model="form.cst_ipi"
-                      :rules="[(val) => (val && val.length >= 1) || 'CST do IPI é obrigatório', buscarDescricaoIPI]"
-                      unmasked-value />
-                  </div>
-                  <div class="col-md-9 col-12">
-                    <q-input outlined v-model="descricaocst_ipi" readonly />
-                  </div>
-                </div>
-
               </q-card>
             </div>
 
             <!-- Coluna ICS / IBS -->
             <div class="col-md-4">
               <q-card class="q-pa-md">
-                <div class="text-h6">ICS / IBS</div>
+                <div class="text-h6">IBS / ICS</div>
 
                 <q-input outlined label="Classificação IS" v-model="form.classificacao_is" />
                 <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" />
+                <q-input outlined label="CST IBSCST " v-model="form.cst_ibscbs" />
                 <q-input outlined label="Classificação Cpresumido" v-model="form.classificacao_cpresumido" />
                 <q-input outlined label="Alíquota CBS" v-model="form.cbs_aliquota" />
                 <q-input outlined label="Redução CBS" v-model="form.reducao_cbs" />
@@ -193,7 +183,6 @@ export default defineComponent({
     let descricaocfop_externo = ref('')
     let descricaocst_pis = ref('')
     let descricaocst_cofins = ref('')
-    let descricaocst_ipi = ref('')
     const tableEmpresa = 'empresa'
     const tableEmpresaRegras = 'empresa_regra_tributaria'
     const regime_identificacao = ref('')
@@ -215,9 +204,9 @@ export default defineComponent({
       pis_aliquota: '',
       cst_cofins: '',
       cofins_aliquota: '',
-      cst_ipi: '',
       classificacao_is: '',
       classificacao_ibscbs: '',
+      cst_ibscbs: '',
       classificacao_cpresumido: '',
       cbs_aliquota: '',
       reducao_cbs: '',
@@ -261,9 +250,6 @@ export default defineComponent({
       descricaocst_cofins.value = mapPISCOFINS[form.value.cst_cofins] || 'NÃO ACHOU'
     }
 
-    const buscarDescricaoIPI = () => {
-      descricaocst_ipi.value = mapIPI[form.value.cst_ipi] || 'NÃO ACHOU'
-    }
 
     const handleSubmit = async () => {
       try {
@@ -307,17 +293,15 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      console.log('Rota atual:', mapCSTICM.value)
+
+
       handleEmpresaIdentificacaoRegime(route.params.empresa_id)
+
       if (isUpdate.value) {
         try {
           const response = await useApi().getById(table, route.params.id)
           Object.assign(form.value, response.data)
           descricaocst_icm_csosn.value = mapCSTICM.value[form.value.cst_icm_csosn] || ''
-          // descricaocfop_interno.value = mapaCSTIcm.value[form.value.cfop_interno] || ''
-          // descricaocfop_externo.value = mapaCSTIcm.value[form.value.cfop_externo] || ''
-          // descricaocst_pis.value = mapaCSTIcm.value[form.value.cst_pis] || ''
-          // descricaocst_cofins.value = mapaCSTIcm.value[form.value.cst_cofins] || ''
         } catch (error) {
           notifyError('Erro ao carregar os dados da regra tributária.' + error.message)
         }
@@ -327,8 +311,7 @@ export default defineComponent({
     const mapRegime = {
       1: 'Simples Nacional',
       2: 'Simples Nacional - sublimite',
-      3: 'Lucro Presumido',
-      4: 'Lucro Real'
+      3: 'Lucro Presumido'
     }
 
     const mapCSTICM = {
@@ -430,24 +413,6 @@ export default defineComponent({
       "99": "Outras Operações"
     }
 
-    const mapIPI = {
-      "0": "Entrada com Recuperação de Crédito",
-      "1": "Entrada Tributável com Alíquota Zero",
-      "2": "Entrada Isenta",
-      "3": "Entrada Não-Tributada",
-      "4": "Entrada Imune",
-      "5": "Entrada com Suspensão",
-      "49": "Outras Entradas",
-      "50": "Saída Tributada",
-      "51": "Saída Tributável com Alíquota Zero",
-      "52": "Saída Isenta",
-      "53": "Saída Não-Tributada",
-      "54": "Saída Imune",
-      "55": "Saída com Suspensão",
-      "99": "Outras Saídas"
-    }
-
-
 
 
 
@@ -461,7 +426,6 @@ export default defineComponent({
       descricaocfop_externo,
       descricaocst_pis,
       descricaocst_cofins,
-      descricaocst_ipi,
       regime_identificacao,
       empresa_identificacao,
       buscarDescricaoCSTICMCSOSN,
@@ -470,7 +434,6 @@ export default defineComponent({
       buscarDescricaoCFOPInterno,
       buscarDescricaoPIS,
       buscarDescricaoCOFINS,
-      buscarDescricaoIPI,
     }
   }
 })

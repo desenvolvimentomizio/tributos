@@ -64,6 +64,8 @@ export default function useApi() {
 
 
   const getById = async (table, id) => {
+    console.log('tabela '+table.valuee)
+    console.log('id '+id.value)
     const { data, error } = await supabase.from(table).select('*').eq('id', id).single() // ⬅ isso garante que vem só 1 item
     if (error) throw error
     return data
