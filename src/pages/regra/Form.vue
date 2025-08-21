@@ -122,7 +122,7 @@
             <!-- Coluna ICS / IBS -->
             <div class="col-md-4">
               <q-card class="q-pa-md">
-                <div class="text-h6">IBS / ICS</div>
+                <div class="text-h6">IBS / CBS</div>
 
                 <q-input outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" />
                 <q-input outlined label="Alíquota CBS" v-model="form.cbs_aliquota" />
