@@ -33,14 +33,7 @@ const columnsRegras = [
     sortable: true,
     style: 'width: 3%;'
   },
-   {
-    name: 'cst_ipi',
-    align: 'left',
-    label: 'CST IPI',
-    field: 'cst_ipi',
-    sortable: true,
-    style: 'width: 3%;'
-  },
+
   {
     name: 'cst_pis',
     align: 'left',
