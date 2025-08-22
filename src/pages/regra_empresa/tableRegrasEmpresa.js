@@ -13,7 +13,7 @@ const columnsRegrasEmpresa = [
   {
     name: 'cst_icm_csosn',
     align: 'left',
-    label: 'CST/CSOSN ICM',
+    label: 'CST/CSOSN',
     field: 'cst_icm_csosn',
     sortable: true,
     style: 'width: 3%;'
@@ -29,7 +29,7 @@ const columnsRegrasEmpresa = [
   {
     name: 'icm_interno',
     align: 'left',
-    label: 'ICM Int',
+    label: '%',
     field: 'icm_interno',
     sortable: true,
     style: 'width: 3%;'
