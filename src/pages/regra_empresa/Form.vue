@@ -121,13 +121,13 @@
                 <div class="text-h6">IBS / CBS</div>
 
                 <q-input outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" />
-                <q-input outlined label="Alíquota CBS" v-model="form.cbs_aliquota" />
-                <q-input outlined label="IBS Alíquota Estadual" v-model="form.ibs_aliquota_estadual" />
-                <q-input outlined label="IBS Alíquota Municipal" v-model="form.ibs_aliquota_municipal" />
+                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" />
+                <q-input outlined label="% CBS" v-model="form.cbs_aliquota" />
+                <q-input outlined label="% IBS Estadual" v-model="form.ibs_aliquota_estadual" />
+                <q-input outlined label="% IBS Municipal" v-model="form.ibs_aliquota_municipal" />
                 <q-input outlined label="Redução CBS" v-model="form.reducao_cbs" />
                 <q-input outlined label="Redução IBS" v-model="form.reducao_ibs" />
                 <q-input outlined label="Classificação IS" v-model="form.classificacao_is" />
-                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" />
                 <q-input outlined label="Classificação Cpresumido" v-model="form.classificacao_cpresumido" />
               </q-card>
             </div>
