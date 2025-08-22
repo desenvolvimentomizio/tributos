@@ -53,12 +53,16 @@
             <q-tooltip> Editar </q-tooltip>
           </q-btn>
 
+            <q-btn color="primary" label="Regra" size="sm" @click="handleRegra(props.row)">
+              <q-tooltip> Regra </q-tooltip>
+            </q-btn>
+
+
           <q-btn
             color="negative"
             label="Desativar"
             size="sm"
-            @click="handleDesativaEmpresa(props.row)"
-            >
+            @click="handleDesativaEmpresa(props.row)">
             <q-tooltip> Desativar </q-tooltip>
           </q-btn>
 
@@ -132,6 +136,11 @@ export default defineComponent({
    }
 
 
+   const handleRegra = (empresa) => {
+      router.push({ name: 'regra_empresa', params: { id: empresa.id } })
+    }
+
+
 
     const handleEdit = (empresa) => {
       router.push({ name: 'form-empresa', params: { id: empresa.id } })
@@ -169,6 +178,7 @@ export default defineComponent({
       idContabilidade,
       handleEdit,
       handleDesativaEmpresa,
+      handleRegra,
 
     }
   }
