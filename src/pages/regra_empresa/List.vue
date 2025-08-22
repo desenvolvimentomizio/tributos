@@ -22,15 +22,16 @@
     </div>
 
     <!-- Tabela -->
-    <q-table :rows="regras" :columns="columnsRegras" row-key="id" :loading="loading" :filter="filtro" flat bordered  class="q-mb-xl">
+    <q-table :rows="regras" :columns="columnsRegras" row-key="id" :loading="loading" :filter="filtro" flat bordered
+      class="q-mb-xl">
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-sm">
 
-          <q-btn color="info" label="Editar" size="sm" @click="handleEdit(props.row)">
+          <q-btn color="info" label="Editar" size="sm" @click="handleEditRegra(props.row)">
             <q-tooltip> Editar </q-tooltip>
           </q-btn>
 
-          <q-btn color="negative" label="Desativar" size="sm" @click="handleRemove(props.row)">
+          <q-btn color="negative" label="Desativar" size="sm" @click="handleDisableRegra(props.row)">
             <q-tooltip> Destivar esta Regra para a Empresa </q-tooltip>
           </q-btn>
         </q-td>
@@ -46,7 +47,8 @@
 
 
     <!-- Abaixo lista de regras disponiveis empresas -->
-    <q-table :rows="regrasDiferenteEmpresa" :columns="columnsRegrasEmpresa" row-key="id" :loading="loading"  flat bordered  class="q-mb-xl" >
+    <q-table :rows="regrasDiferenteEmpresa" :columns="columnsRegrasEmpresa" row-key="id" :loading="loading" flat
+      bordered class="q-mb-xl">
 
       <template v-slot:top>
 
@@ -72,6 +74,8 @@
 </template>
 
 <script>
+
+import { useQuasar } from 'quasar'
 import { defineComponent, ref, onMounted, computed } from 'vue'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
@@ -96,13 +100,14 @@ export default defineComponent({
     const empresas = ref([])
     const loading = ref(true)
     const isUpdate = computed(() => route.params.id)
-
+    const $q = useQuasar()
     const { notifyError, notifySuccess } = useNotify()
-    // const table = 'regra_tributaria'
+    const table = 'regra_tributaria'
     const tableEmpresa = 'empresa'
     const tableEmpresaRegras = 'empresa_regra_tributaria'
     const { user } = useAuthUser()
-    const { listPublic, listRegrasPorEmpresa, listRegrasDiferenteEmpresa, post } = useApi()
+    const { listPublic, listRegrasPorEmpresa, listRegrasDiferenteEmpresa, post,updateFim } = useApi()
+
 
     const regimeMap = {
       1: 'Simples Nacional',
@@ -119,6 +124,23 @@ export default defineComponent({
 
     })
 
+    const handleDisableRegra = async (regra) => {
+      try {
+        $q.dialog({
+          title: 'Confirmação',
+          message: `Realmente deseja desativar a ${regra.identificacao} ?`,
+          cancel: true,
+          persistent: true,
+        }).onOk(async () => {
+          await updateFim(table, regra.id)
+          notifySuccess('Desativação realizada com sucesso')
+          handleListRegras()
+        })
+      } catch (error) {
+        notifyError(error.message)
+      }
+    }
+
     const handleListRegras = async () => {
       try {
         loading.value = true
@@ -132,9 +154,6 @@ export default defineComponent({
         regras.value = await listRegrasPorEmpresa(empresa_id.value)
 
         regrasDiferenteEmpresa.value = await listRegrasDiferenteEmpresa(empresa_id.value, regime_id.value)
-
-
-
 
       } catch (error) {
         notifyError('Erro ao lista ' + error.message)
@@ -185,6 +204,7 @@ export default defineComponent({
       regrasDiferenteEmpresa,
       empresas,
       handlePostEmpresaRegras,
+      handleDisableRegra,
       filtro,
       loading,
       regime_id,
