@@ -3,10 +3,8 @@
     <div class="row justify-center">
       <q-card class="col-md-10 col-xs-12 col-sm-12 q-pa-lg shadow-2 bg-white" style="border-radius: 16px;">
         <!-- Título com fundo na cor primária -->
-        <div
-          class="text-h5 text-white text-center text-bold q-mb-lg q-pa-sm"
-          style="background-color: var(--q-primary); border-radius: 8px;"
-        >
+        <div class="text-h5 text-white text-center text-bold q-mb-lg q-pa-sm"
+          style="background-color: var(--q-primary); border-radius: 8px;">
           Regra Tributária
         </div>
 
@@ -15,26 +13,16 @@
           <div class="row q-col-gutter-md">
             <!-- Coluna ICMS / PIS / COFINS -->
             <div class="col-md-8 col-12">
-              <q-select
-                v-model="form.regime_id"
-                :options="regimeOptions"
-                label="Selecione o regime"
-                emit-value
-                map-options
-                outlined
-              />
+              <q-select v-model="form.regime_id" :options="regimeOptions" label="Selecione o regime" emit-value
+                map-options outlined />
 
               <q-card class="q-pa-md q-mt-md">
                 <div class="text-h6 q-mb-md">ICMS - PIS / COFINS</div>
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-10 col-12">
-                    <q-input
-                      outlined
-                      label="Identificação da Regra"
-                      v-model="form.identificacao"
-                      :rules="[(val) => (val && val.length >= 2) || 'A Identificação é obrigatória']"
-                    />
+                    <q-input outlined label="Identificação da Regra" v-model="form.identificacao"
+                      :rules="[(val) => (val && val.length >= 2) || 'A Identificação é obrigatória']" />
                   </div>
                   <div class="col-md-2 col-12">
                     <q-input outlined label="Data Início" v-model="form.data_inicio" readonly />
@@ -43,15 +31,10 @@
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-2 col-12">
-                    <q-input
-                      outlined
-                      label="CST ICMS / CSOSN"
-                      v-model="form.cst_icm_csosn"
-                      :rules="[
-                        (val) => (val && val.length >= 2) || 'CST do ICMS/CSOSN é obrigatório',
-                        ruleBuscarDescricaoCSTICMCSOSN
-                      ]"
-                    />
+                    <q-input outlined label="CST ICMS / CSOSN" v-model="form.cst_icm_csosn" :rules="[
+                      (val) => (val && val.length >= 2) || 'CST do ICMS/CSOSN é obrigatório',
+                      ruleBuscarDescricaoCSTICMCSOSN
+                    ]" />
                   </div>
                   <div class="col-md-10 col-12">
                     <q-input outlined v-model="descricaocst_icm_csosn" readonly />
@@ -60,137 +43,81 @@
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-2 col-12">
-                    <q-input
-                      outlined
-                      label="CFOP Interno"
-                      v-model="form.cfop_interno"
-                      mask="#.###"
-                      :rules="[
-                        (val) => (val && val.length >= 2) || 'CFOP para vendas no estado é obrigatório',
-                        ruleBuscarDescricaoCFOPInterno
-                      ]"
-                    />
+                    <q-input outlined label="CFOP Interno" v-model="form.cfop_interno" mask="#.###" :rules="[
+                      (val) => (val && val.length >= 2) || 'CFOP para vendas no estado é obrigatório',
+                      ruleBuscarDescricaoCFOPInterno
+                    ]" />
                   </div>
                   <div class="col-md-7 col-12">
                     <q-input outlined v-model="descricaocfop_interno" readonly />
                   </div>
                   <div class="col-md-3 col-12">
-                    <q-select
-                      v-model="form.icm_interno"
-                      :options="aliquotaICMOptions"
-                      label="% ICMS Interno"
-                      emit-value
-                      map-options
-                      outlined
-                    />
+                    <q-select v-model="form.icm_interno" :options="aliquotaICMOptions" label="% ICMS Interno" emit-value
+                      map-options outlined />
                   </div>
                 </div>
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-2 col-12">
-                    <q-input
-                      outlined
-                      label="CFOP Externo"
-                      v-model="form.cfop_externo"
-                      mask="#.###"
-                      :rules="[
-                        (val) => (val && val.length >= 2) || 'CFOP para vendas fora do estado é obrigatório',
-                        ruleBuscarDescricaoCFOPExterno
-                      ]"
-                    />
+                    <q-input outlined label="CFOP Externo" v-model="form.cfop_externo" mask="#.###" :rules="[
+                      (val) => (val && val.length >= 2) || 'CFOP para vendas fora do estado é obrigatório',
+                      ruleBuscarDescricaoCFOPExterno
+                    ]" />
                   </div>
                   <div class="col-md-7 col-12">
                     <q-input outlined v-model="descricaocfop_externo" readonly />
                   </div>
                   <div class="col-md-3 col-12">
-                    <q-select
-                      v-model="form.icm_externo"
-                      :options="aliquotaICMOptions"
-                      label="% ICMS Externo"
-                      emit-value
-                      map-options
-                      outlined
-                    />
+                    <q-select v-model="form.icm_externo" :options="aliquotaICMOptions" label="% ICMS Externo" emit-value
+                      map-options outlined />
                   </div>
                 </div>
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-6 col-12">
-                    <q-select
-                      v-model="form.reducao_base_aliquota"
-                      :options="aliquotaREDUCAOOptions"
-                      label="Redução Base/Alíquota ICMS"
-                      emit-value
-                      map-options
-                      outlined
-                    />
+                    <q-select v-model="form.reducao_base_aliquota" :options="aliquotaREDUCAOOptions"
+                      label="Redução Base/Alíquota ICMS" emit-value map-options outlined :rules="[
+                        val => val !== null && val !== '' || 'Obrigatório',
+                      ]" />
                   </div>
 
                   <div class="col-md-6 col-12">
-                    <q-select
-                      v-model="form.combate_pobreza_aliquota"
-                      :options="aliquotaFCPOptions"
-                      label="Aliq. Combate à Pobreza (FCP)"
-                      emit-value
-                      map-options
-                      outlined
-                    />
+                    <q-select v-model="form.combate_pobreza_aliquota" :options="aliquotaFCPOptions"
+                      label="Aliq. Combate à Pobreza (FCP)" emit-value map-options outlined :rules="[
+                        val => val !== null && val !== '' || 'Obrigatório',
+                      ]" />
                   </div>
                 </div>
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
-                    <q-input
-                      outlined
-                      label="CST PIS"
-                      v-model="form.cst_pis"
-                      :rules="[
-                        (val) => (val && val.length >= 1) || 'CST do PIS é obrigatório',
-                        ruleBuscarDescricaoPIS
-                      ]"
-                      unmasked-value
-                    />
+                    <q-input outlined label="CST PIS" v-model="form.cst_pis" :rules="[
+                      (val) => (val && val.length >= 1) || 'CST do PIS é obrigatório',
+                      ruleBuscarDescricaoPIS
+                    ]" unmasked-value />
                   </div>
                   <div class="col-md-6 col-12">
                     <q-input outlined v-model="descricaocst_pis" readonly />
                   </div>
                   <div class="col-md-3 col-12">
-                    <q-select
-                      v-model="form.pis_aliquota"
-                      :options="aliquotaPISOptions"
-                      label="% PIS"
-                      emit-value
-                      map-options
-                      outlined
-                    />
+                    <q-select v-model="form.pis_aliquota" :options="aliquotaPISOptions" label="% PIS" emit-value
+                      map-options outlined />
                   </div>
                 </div>
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
-                    <q-input
-                      outlined
-                      label="CST COFINS"
-                      v-model="form.cst_cofins"
-                      :rules="[
-                        (val) => (val && val.length >= 1) || 'CST do COFINS é obrigatório',
-                        ruleBuscarDescricaoCOFINS
-                      ]"
-                      unmasked-value
-                    />
+                    <q-input outlined label="CST COFINS" v-model="form.cst_cofins" :rules="[
+                      (val) => (val && val.length >= 1) || 'CST do COFINS é obrigatório',
+                      ruleBuscarDescricaoCOFINS
+                    ]" unmasked-value />
                   </div>
                   <div class="col-md-6 col-12">
                     <q-input outlined v-model="descricaocst_cofins" readonly />
                   </div>
                   <div class="col-md-3 col-12">
-                    <q-select
-                      v-model="form.cofins_aliquota"
-                      :options="aliquotaCOFINSOptions"
-                      label="% COFINS"
-                      emit-value
-                      map-options
-                      outlined
-                    />
+                    <q-select v-model="form.cofins_aliquota" :options="aliquotaCOFINSOptions" label="% COFINS"
+                      emit-value map-options outlined />
                   </div>
                 </div>
               </q-card>
@@ -201,8 +128,16 @@
               <q-card class="q-pa-md">
                 <div class="text-h6 q-mb-md">IBS / CBS</div>
 
-                <q-input outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" />
-                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" />
+                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs"
+                :rules="[
+                  val => val !== null && val !== '' || 'Obrigatório',  ruleBuscarnomecClassTrib,
+                ]" />
+
+                <q-input outlined v-model="formcClassTrib.nomecclasstrib" readonly type="textarea" autogrow :rows="2" />
+
+                <q-input outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" :rules="[
+                  val => val !== null && val !== '' || 'Obrigatório',
+                ]" />
 
                 <q-input outlined label="% CBS" v-model="form.cbs_aliquota" type="number" :rules="[
                   val => val !== null && val !== '' || 'Obrigatório',
@@ -210,33 +145,55 @@
                   val => val <= 100 || 'O valor máximo é 100'
                 ]" step="1" min="0" max="100" />
 
+                <div class="row q-col-gutter-md">
+                  <div class="col">
+                    <q-input outlined label="% IBS Estadual" v-model="form.ibs_aliquota_estadual" type="number" :rules="[
+                      val => val !== null && val !== '' || 'Obrigatório',
+                      val => val >= 0 || 'O valor mínimo é 0',
+                      val => val <= 100 || 'O valor máximo é 100'
+                    ]" step="1" min="0" max="100" />
+                  </div>
 
-                <q-input outlined label="% IBS Estadual" v-model="form.ibs_aliquota_estadual" type="number" :rules="[
+                  <div class="col">
+                    <q-input outlined label="% IBS Municipal" v-model="form.ibs_aliquota_municipal" type="number"
+                      :rules="[
+                        val => val !== null && val !== '' || 'Obrigatório',
+                        val => val >= 0 || 'O valor mínimo é 0',
+                        val => val <= 100 || 'O valor máximo é 100'
+                      ]" step="1" min="0" max="100" />
+                  </div>
+                </div>
+
+                <div class="row q-col-gutter-md">
+                  <div class="col">
+                    <q-input outlined label="% Redução CBS" v-model="form.reducao_cbs" type="number" :rules="[
+                      val => val !== null && val !== '' || 'Obrigatório',
+                      val => val >= 0 || 'O valor mínimo é 0',
+                      val => val <= 100 || 'O valor máximo é 100'
+                    ]" step="1" min="0" max="100" />
+                  </div>
+
+                  <div class="col">
+                    <q-input outlined label="% Redução IBS" v-model="form.reducao_ibs" type="number" :rules="[
+                      val => val !== null && val !== '' || 'Obrigatório',
+                      val => val >= 0 || 'O valor mínimo é 0',
+                      val => val <= 100 || 'O valor máximo é 100'
+                    ]" step="1" min="0" max="100" />
+                  </div>
+                </div>
+
+                <q-input outlined label="Classificação IS" v-model="form.classificacao_is" :rules="[
                   val => val !== null && val !== '' || 'Obrigatório',
                   val => val >= 0 || 'O valor mínimo é 0',
                   val => val <= 100 || 'O valor máximo é 100'
                 ]" step="1" min="0" max="100" />
 
-                <q-input outlined label="% IBS Municipal" v-model="form.ibs_aliquota_municipal" type="number" :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório',
-                  val => val >= 0 || 'O valor mínimo é 0',
-                  val => val <= 100 || 'O valor máximo é 100'
-                ]" step="1" min="0" max="100" />
-
-                <q-input outlined label="% Redução CBS" v-model="form.reducao_cbs" type="number" :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório',
-                  val => val >= 0 || 'O valor mínimo é 0',
-                  val => val <= 100 || 'O valor máximo é 100'
-                ]" step="1" min="0" max="100" />
-
-                <q-input outlined label="% Redução IBS" v-model="form.reducao_ibs" type="number" :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório',
-                  val => val >= 0 || 'O valor mínimo é 0',
-                  val => val <= 100 || 'O valor máximo é 100'
-                ]" step="1" min="0" max="100" />
-
-                <q-input outlined label="Classificação IS" v-model="form.classificacao_is" />
-                <q-input outlined label="Classificação Crédito Presumido" v-model="form.classificacao_cpresumido" />
+                <q-input outlined label="Classificação Crédito Presumido" v-model="form.classificacao_cpresumido"
+                  :rules="[
+                    val => val !== null && val !== '' || 'Obrigatório',
+                    val => val >= 0 || 'O valor mínimo é 0',
+                    val => val <= 100 || 'O valor máximo é 100'
+                  ]" step="1" min="0" max="100" />
               </q-card>
             </div>
 
@@ -244,10 +201,11 @@
 
           <div class="row q-col-gutter-sm q-mt-md">
             <div class="col-6">
-              <q-btn :label="isUpdate ? 'Atualiza' : 'Salva'" color="primary" class="full-width" rounded type="submit" />
+              <q-btn :label="isUpdate ? 'Atualiza' : 'Salva'" color="primary" class="full-width" rounded
+                type="submit" />
             </div>
             <div class="col-6">
-              <q-btn label="Cancela" color="primary" class="full-width" rounded flat :to="{ name: 'contabilidade' }" />
+              <q-btn label="Cancela" color="primary" class="full-width" rounded flat :to="{ name: 'regra' }" />
             </div>
           </div>
         </q-form>
@@ -265,7 +223,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 export default defineComponent({
   name: 'PageFormRegra',
-  setup () {
+  setup() {
     const route = useRoute()
     const router = useRouter()
     const { notifyError, notifySuccess } = useNotify()
@@ -274,14 +232,19 @@ export default defineComponent({
     const isUpdate = computed(() => !!route.params.id)
     const idParam = route.params.id ? String(route.params.id) : null
     const table = 'regra_tributaria'
+    const tablecClassTrib = 'cclasstrib'
+
 
     const descricaocst_icm_csosn = ref('')
     const descricaocfop_interno = ref('')
     const descricaocfop_externo = ref('')
     const descricaocst_pis = ref('')
     const descricaocst_cofins = ref('')
+    const nomecclasstrib = ref('')
 
     let regra = {}
+    let cClassTrib = {}
+
 
     const regimeOptions = [
       { label: 'Simples Nacional', value: 1 },
@@ -348,6 +311,7 @@ export default defineComponent({
       { label: '75 % (redução base)', value: 75 }
     ]
 
+
     const form = ref({
       id: idParam || uuidv4(),
       regime_id: '',
@@ -373,6 +337,19 @@ export default defineComponent({
       ibs_aliquota_municipal: '',
       reducao_ibs: '',
       data_inicio: new Date().toISOString().substring(0, 10)
+    })
+
+
+    const formcClassTrib = ref({
+      id: idParam || uuidv4(),
+      cstibscbs:'',
+      nomecclasstrib:'',
+      predibs:'',
+      predcbs:0,
+      ibsestadual:0,
+      ibsmunicipal:0,
+      pcbs:0,
+      redutorbs:0,
     })
 
     // ------- Maps -------
@@ -439,15 +416,15 @@ export default defineComponent({
     }
 
     const mapPISCOFINS = {
-      '1':  'Operação Tributável com Alíquota Básica',
-      '2':  'Operação Tributável com Alíquota Diferenciada',
-      '3':  'Operação Tributável com Alíquota por Unidade de Medida de Produto',
-      '4':  'Operação Tributável Monofásica – Revenda a Alíquota Zero',
-      '5':  'Operação Tributável por Substituição Tributária',
-      '6':  'Operação Tributável a Alíquota Zero',
-      '7':  'Operação Isenta da Contribuição',
-      '8':  'Operação sem Incidência da Contribuição',
-      '9':  'Operação com Suspensão da Contribuição',
+      '1': 'Operação Tributável com Alíquota Básica',
+      '2': 'Operação Tributável com Alíquota Diferenciada',
+      '3': 'Operação Tributável com Alíquota por Unidade de Medida de Produto',
+      '4': 'Operação Tributável Monofásica – Revenda a Alíquota Zero',
+      '5': 'Operação Tributável por Substituição Tributária',
+      '6': 'Operação Tributável a Alíquota Zero',
+      '7': 'Operação Isenta da Contribuição',
+      '8': 'Operação sem Incidência da Contribuição',
+      '9': 'Operação com Suspensão da Contribuição',
       '49': 'Outras Operações de Saída',
       '50': 'Crédito vinculado exclusivamente a receita tributada no mercado interno',
       '51': 'Crédito vinculado exclusivamente a receita não-tributada no mercado interno',
@@ -485,6 +462,8 @@ export default defineComponent({
       return true
     }
 
+
+
     const ruleBuscarDescricaoCFOPInterno = (val) => {
       descricaocfop_interno.value = val ? (mapCFOP[val] || 'NÃO ACHOU') : ''
       return true
@@ -504,6 +483,7 @@ export default defineComponent({
       descricaocst_cofins.value = val ? (mapPISCOFINS[val] || 'NÃO ACHOU') : ''
       return true
     }
+
 
     // ------- Submit -------
     const handleSubmit = async () => {
@@ -527,6 +507,40 @@ export default defineComponent({
       }
     })
 
+   const ruleBuscarnomecClassTrib  = (val) => {
+      handleGetcClassTriba(val)
+      nomecclasstrib.value =formcClassTrib.value.nomecclasstrib
+      return true
+    }
+
+    const handleGetcClassTriba = async (id) => {
+      try {
+        cClassTrib = await getById(tablecClassTrib, id)
+        Object.assign(formcClassTrib.value, cClassTrib)
+       form.value.cst_ibscbs = formcClassTrib.value.cstibscbs
+
+
+       form.value.reducao_cbs=formcClassTrib.value.predcbs
+       form.value.reducao_ibs=formcClassTrib.value.predibs
+       form.value.ibs_aliquota_estadual= formcClassTrib.value.ibsestadual
+       form.value.ibs_aliquota_municipal=formcClassTrib.value.ibsmunicipal
+       form.value.cbs_aliquota=formcClassTrib.value.pcbs
+
+      } catch  {
+       formcClassTrib.value.nomecclasstrib = 'Código INVÁLIDO !'
+       form.value.cst_ibscbs =0
+       form.value.reducao_cbs=0
+       form.value.reducao_ibs=0
+       form.value.ibs_aliquota_estadual=0
+       form.value.ibs_aliquota_municipal=0
+       form.value.cbs_aliquota=0
+
+
+
+
+      }
+    }
+
     const handleGetRegra = async (id) => {
       try {
         regra = await getById(table, id)
@@ -538,12 +552,14 @@ export default defineComponent({
 
     return {
       form,
+      formcClassTrib,
       handleSubmit,
       descricaocst_icm_csosn,
       descricaocfop_interno,
       descricaocfop_externo,
       descricaocst_pis,
       descricaocst_cofins,
+      nomecclasstrib,
       regimeOptions,
       aliquotaICMOptions,
       aliquotaPISOptions,
@@ -556,7 +572,9 @@ export default defineComponent({
       ruleBuscarDescricaoCFOPExterno,
       ruleBuscarDescricaoCFOPInterno,
       ruleBuscarDescricaoPIS,
-      ruleBuscarDescricaoCOFINS
+      ruleBuscarDescricaoCOFINS,
+      ruleBuscarnomecClassTrib,
+
     }
   }
 })

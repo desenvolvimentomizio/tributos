@@ -121,8 +121,9 @@
               <q-card class="q-pa-md">
                 <div class="text-h6 q-mb-md">IBS / CBS</div>
 
-                <q-input outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" />
                 <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" />
+
+                <q-input outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" />
 
                 <q-input outlined label="% CBS" v-model="form.cbs_aliquota" type="number" :rules="[
                   val => val !== null && val !== '' || 'Obrigatório',
@@ -131,29 +132,46 @@
                 ]" step="1" min="0" max="100" />
 
 
-                <q-input outlined label="% IBS Estadual" v-model="form.ibs_aliquota_estadual" type="number" :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório',
-                  val => val >= 0 || 'O valor mínimo é 0',
-                  val => val <= 100 || 'O valor máximo é 100'
-                ]" step="1" min="0" max="100" />
 
-                <q-input outlined label="% IBS Municipal" v-model="form.ibs_aliquota_municipal" type="number" :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório',
-                  val => val >= 0 || 'O valor mínimo é 0',
-                  val => val <= 100 || 'O valor máximo é 100'
-                ]" step="1" min="0" max="100" />
+                <div class="row q-col-gutter-md">
+                  <div class="col">
+                    <q-input outlined label="% IBS Estadual" v-model="form.ibs_aliquota_estadual" type="number" :rules="[
+                      val => val !== null && val !== '' || 'Obrigatório',
+                      val => val >= 0 || 'O valor mínimo é 0',
+                      val => val <= 100 || 'O valor máximo é 100'
+                    ]" step="1" min="0" max="100" />
+                  </div>
 
-                <q-input outlined label="% Redução CBS" v-model="form.reducao_cbs" type="number" :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório',
-                  val => val >= 0 || 'O valor mínimo é 0',
-                  val => val <= 100 || 'O valor máximo é 100'
-                ]" step="1" min="0" max="100" />
+                  <div class="col">
+                    <q-input outlined label="% IBS Municipal" v-model="form.ibs_aliquota_municipal" type="number"
+                      :rules="[
+                        val => val !== null && val !== '' || 'Obrigatório',
+                        val => val >= 0 || 'O valor mínimo é 0',
+                        val => val <= 100 || 'O valor máximo é 100'
+                      ]" step="1" min="0" max="100" />
+                  </div>
+                </div>
 
-                <q-input outlined label="% Redução IBS" v-model="form.reducao_ibs" type="number" :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório',
-                  val => val >= 0 || 'O valor mínimo é 0',
-                  val => val <= 100 || 'O valor máximo é 100'
-                ]" step="1" min="0" max="100" />
+
+
+                <div class="row q-col-gutter-md">
+                  <div class="col">
+                    <q-input outlined label="% Redução CBS" v-model="form.reducao_cbs" type="number" :rules="[
+                      val => val !== null && val !== '' || 'Obrigatório',
+                      val => val >= 0 || 'O valor mínimo é 0',
+                      val => val <= 100 || 'O valor máximo é 100'
+                    ]" step="1" min="0" max="100" />
+                  </div>
+
+                  <div class="col">
+                    <q-input outlined label="% Redução IBS" v-model="form.reducao_ibs" type="number" :rules="[
+                      val => val !== null && val !== '' || 'Obrigatório',
+                      val => val >= 0 || 'O valor mínimo é 0',
+                      val => val <= 100 || 'O valor máximo é 100'
+                    ]" step="1" min="0" max="100" />
+                  </div>
+                </div>
+
 
                 <q-input outlined label="Classificação IS" v-model="form.classificacao_is" />
                 <q-input outlined label="Classificação Crédito Presumido" v-model="form.classificacao_cpresumido" />
@@ -167,7 +185,7 @@
                 type="submit" />
             </div>
             <div class="col-6">
-              <q-btn label="Cancela" color="primary" class="full-width" rounded flat :to="{ name: 'contabilidade' }" />
+              <q-btn label="Cancela" color="primary" class="full-width" rounded flat :to="{ name: 'regra_empresa' }" />
             </div>
           </div>
         </q-form>
