@@ -14,18 +14,25 @@
           <q-input outlined label="Razão Social" v-model="form.identificacao"
             :rules="[(val) => (val && val.length > 5) || 'Identificação é obrigatória e maior que 5 caracteres']" />
 
-          <q-input outlined label="CNPJ" v-model="form.cnpj" :rules="[
-            (val) => (val && val.length > 0) || 'CNPJ é obrigatória',
-            validaCnpjRule
-          ]" />
+          <q-input outlined label="CNPJ" v-model="form.cnpj" mask="##.###.###/####-##" fill-mask unmasked-value
+            inputmode="numeric" :rules="[
+              (val) => (val && val.length > 0) || 'CNPJ é obrigatória',
+              validaCnpjRule
+            ]" />
 
           <q-input outlined label="Inscrição Estadual" v-model="form.inscricao_estadual"
             :rules="[(val) => (val && val.length > 0) || 'Inscrição é obrigatória']" />
 
-          <q-input outlined label="Email" v-model="form.email" :rules="[
-            val => !!val || 'Email é obrigatório',
-            val => /.+@.+\..+/.test(val) || 'Email inválido'
-          ]" />
+          <q-input @update:model-value="onEmailUpdate" type="email" input-class="text-lowercase" autocomplete="email"
+            autocapitalize="off" autocorrect="off" spellcheck="false" outlined label="Email" v-model="form.email"
+            :rules="[
+              val => !!val || 'Email é obrigatório',
+              val => /.+@.+\..+/.test(val) || 'Email inválido'
+            ]" />
+
+
+
+
 
           <q-select outlined v-model="form.regime_id" label="Regime Tributário" :options="regimeOptions" emit-value
             map-options option-label="label" option-value="value" filled
@@ -81,11 +88,13 @@ export default defineComponent({
     const router = useRouter()
     const route = useRoute()
     const { user } = useAuthUser()
-    const { post, getById, getByUserId, update, upsertRegimeTributario } = useApi()
+    const { post, getById, getByUserId, update, upsertRegimeTributario, fetchCountCNPJ } = useApi()
     const { notifyError, notifySuccess } = useNotify()
 
     const isUpdate = computed(() => route.params.id)
     const cnpjRef = ref(null)
+    const count = ref(0)
+    const email = ref('')
 
     const form = ref({
       id: isUpdate.value || uuidv4(),
@@ -99,8 +108,6 @@ export default defineComponent({
       email: '',
 
     })
-
-
 
     const regimeOptions = [
       { label: 'Simples Nacional', value: 1 },
@@ -120,6 +127,15 @@ export default defineComponent({
       descricaoCnae.value = mapaCnae[form.value.cnae] || ''
     }
 
+
+
+    const onEmailUpdate = (val) => {
+      email.value = (val ?? '').toString().trim().toLowerCase()
+    }
+
+
+
+
     const handleSubmit = async () => {
 
       const formValid = await formRef.value?.validate()
@@ -135,8 +151,15 @@ export default defineComponent({
           notifySuccess('Registro atualizado com sucesso')
 
         } else {
-          await post(table, form.value)
-          notifySuccess('Registro incluído com sucesso')
+          try {
+            await post(table, form.value)
+            notifySuccess('Registro incluído com sucesso')
+          } catch (error) {
+            notifyError({
+              type: 'negative',
+              message: 'Falha ao salvar empresa tributário ' + error.message
+            })
+          }
         }
 
         try {
@@ -182,6 +205,7 @@ export default defineComponent({
 
     // Função para validar CNPJ (apenas números)
     function isValidCNPJ(cnpj) {
+
       cnpj = (cnpj || '').replace(/[^\d]+/g, '');
       if (cnpj.length !== 14) return false;
       // Elimina CNPJs inválidos conhecidos
@@ -210,8 +234,33 @@ export default defineComponent({
       return true;
     }
 
+
+    const ruleVerificaCNPJ = async (val) => {
+      const cleaned = (val || '').replace(/\D+/g, '')      // só dígitos
+      const eCNPJ = isValidCNPJ(cleaned)
+
+      // 1) formato inválido
+      if (!eCNPJ) {
+        return 'CNPJ inválido!'
+      }
+
+      // 2) checa existência no backend
+      try {
+        const { count: c } = await fetchCountCNPJ(table, cleaned)
+        count.value = c ?? 0
+      } catch {
+        // opcional: trate erro de rede/backend
+        return 'Erro ao verificar CNPJ. Tente novamente.'
+      }
+
+      // 3) regra de negócio: se já existir (count !== 0) -> erro; senão ok
+      return (count.value === 0) ? true : 'CNPJ já cadastrado!'
+    }
+
+
     // Regra para o campo CNPJ
-    const validaCnpjRule = val => isValidCNPJ((val || '').replace(/[^\d]+/g, '')) || 'CNPJ inválido';
+    const validaCnpjRule = val => ruleVerificaCNPJ(val) || 'CNPJ já cadastrado';
+
 
     onMounted(() => {
       if (isUpdate.value) handleGetEmpresa(isUpdate.value)
@@ -224,9 +273,11 @@ export default defineComponent({
       isUpdate,
       descricaoCnae,
       buscarDescricaoCnae,
+      onEmailUpdate,
       cnpjRef,
       formRef,
       validaCnpjRule,
+      ruleVerificaCNPJ,
       regimeOptions,
       upsertRegimeTributario
     }

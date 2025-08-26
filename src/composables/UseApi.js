@@ -38,6 +38,18 @@ export default function useApi() {
     return data
   }
 
+    const fetchCountCNPJ = async (table, cnpj) => {
+    const { data, error, count } = await supabase
+      .from(table)
+      .select('*', { count: 'exact' })
+      .eq('cnpj',cnpj )
+    if (error) throw error
+    return {
+      data,
+      count,
+    }
+  }
+
   const fetchCount = async (table, userId) => {
     const { data, error, count } = await supabase
       .from(table)
@@ -280,6 +292,7 @@ const listRegrasDisponiveis = async (empresaId) => {
     listRegrasDiferenteEmpresa,
     listRegrasDisponiveis,
     fetchCount,
+    fetchCountCNPJ,
     fetchLastDate,
     getById,
     getByUserId,
