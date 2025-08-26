@@ -275,10 +275,8 @@ export default defineComponent({
 
     const aliquotaPISOptions = [
       { label: '0 %', value: 0 },
-      { label: '0,65 %', value: 0.65 },
-      { label: '1 %', value: 1.0 },
-      { label: '1,65 %', value: 1.65 },
-      { label: '2,10 %', value: 2.10 }
+      { label: '0,65 %', value: 0.65 }
+
     ]
 
     const aliquotaCOFINSOptions = [

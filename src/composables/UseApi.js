@@ -38,11 +38,11 @@ export default function useApi() {
     return data
   }
 
-    const fetchCountCNPJ = async (table, cnpj) => {
+  const fetchCountCNPJ = async (table, cnpj) => {
     const { data, error, count } = await supabase
       .from(table)
       .select('*', { count: 'exact' })
-      .eq('cnpj',cnpj )
+      .eq('cnpj', cnpj)
     if (error) throw error
     return {
       data,
@@ -105,13 +105,13 @@ export default function useApi() {
 
 
   const updateFim = async (table, id) => {
-  const { data, error } = await supabase
-    .from(table)
-    .update({ data_fim: new Date().toISOString() })
-    .match({ id })
-  if (error) throw error
-  return data
-}
+    const { data, error } = await supabase
+      .from(table)
+      .update({ data_fim: new Date().toISOString() })
+      .match({ id })
+    if (error) throw error
+    return data
+  }
 
   const update = async (table, form) => {
     const { data, error } = await supabase
@@ -124,11 +124,11 @@ export default function useApi() {
 
 
 
-  const disable = async (table,id) => {
-  const { data, error } = await supabase.rpc('desativar_registro', {p_id: id, p_table: table })
-  if (error) throw error
-  return data // aqui vem a linha atualizada
-}
+  const disable = async (table, id) => {
+    const { data, error } = await supabase.rpc('desativar_registro', { p_id: id, p_table: table })
+    if (error) throw error
+    return data // aqui vem a linha atualizada
+  }
 
 
   const remove = async (table, id) => {
@@ -251,35 +251,48 @@ export default function useApi() {
     return data
   }
 
-const listRegrasDisponiveis = async (empresaId) => {
-  try {
-    const { data, error } = await supabase
-      .rpc('regras_disponiveis_para_empresa', {
-        empresa_id: empresaId
-      });
+  const listRegrasDisponiveis = async (empresaId) => {
+    try {
+      const { data, error } = await supabase
+        .rpc('regras_disponiveis_para_empresa', {
+          empresa_id: empresaId
+        });
 
-    if (error) {
-      console.error('Erro ao buscar regras disponíveis:', error.message);
+      if (error) {
+        console.error('Erro ao buscar regras disponíveis:', error.message);
+        return [];
+      }
+
+      return data || [];
+    } catch (e) {
+      console.error('Erro inesperado ao buscar regras:', e);
       return [];
     }
+  };
 
-    return data || [];
-  } catch (e) {
-    console.error('Erro inesperado ao buscar regras:', e);
-    return [];
+  const listRegrasDiferenteEmpresa = async (empresaId, regimeId) => {
+    const { data, error } = await supabase
+      .rpc('fn_regras_disponiveis', { p_empresa_id: empresaId, p_regime_id: regimeId });
+
+    if (error) {
+      console.error('Erro ao buscar regras disponíveis:', error);
+      return [];
+    }
+    return data;
+  };
+
+
+  const listRegrasJaExiste = async (empresa_id, regraId) => {
+    const { count, error: countErr } = await supabase
+      .from('empresa_regra_tributaria')
+      .select('id', { count: 'exact', head: true })
+      .eq('empresa_id', empresa_id.value)
+      .eq('regra_tributaria_id', regraId)
+
+    if (!countErr && count > 0) {
+      return true
+    } else { return false }
   }
-};
-
-const listRegrasDiferenteEmpresa = async (empresaId, regimeId) => {
-  const { data, error } = await supabase
-    .rpc('fn_regras_disponiveis', { p_empresa_id: empresaId, p_regime_id: regimeId });
-
-  if (error) {
-    console.error('Erro ao buscar regras disponíveis:', error);
-    return [];
-  }
-  return data;
-};
 
 
 
@@ -290,6 +303,7 @@ const listRegrasDiferenteEmpresa = async (empresaId, regimeId) => {
     listRegrasPorEmpresa,
     listRegrasDiferenteEmpresa,
     listRegrasDisponiveis,
+    listRegrasJaExiste,
     fetchCount,
     fetchCountCNPJ,
     fetchLastDate,
