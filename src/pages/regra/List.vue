@@ -56,12 +56,13 @@ export default defineComponent({
     const filtro = ref('')
     const loading = ref(true)
     const table = 'regra_tributaria'
+    const tableContabilidade = 'contabilidade'
     const { user } = useAuthUser()
     const router = useRouter()
     const { listPublic, updateFim } = useApi()
     const { notifyError,notifySuccess } = useNotify()
-
-
+    const identificacaoContabilidade = ref('')
+    const contabilidades = ref([])
 
     const handleListRegras = async () => {
       try {
@@ -94,13 +95,27 @@ const handleDesativaRegra = async (regra_tributaria) => {
       })
     }
 
+     const handleListContabilidades = async () => {
+      try {
+        loading.value = true
+        contabilidades.value = await listPublic(tableContabilidade, user.value.id)
+        identificacaoContabilidade.value = contabilidades.value[0]?.identificacao || ''
+        idContabilidade.value = contabilidades.value[0]?.id || ''
+      } catch (error) {
+        notifyError(error.message)
+      } finally {
+        loading.value = false
+      }
+    }
+
+
 
     const handleEdit = (row) => {
       router.push({ name: 'form-regra', params: { id: row.id } })
     }
 
     onMounted(() => {
-
+      handleListContabilidades()
       handleListRegras()
 
     })
@@ -113,6 +128,7 @@ const handleDesativaRegra = async (regra_tributaria) => {
       handleListRegras,
       handleEdit,
       handleDesativaRegra,
+      identificacaoContabilidade,
     }
   }
 })

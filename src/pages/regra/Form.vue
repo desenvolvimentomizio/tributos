@@ -22,6 +22,7 @@
                 <div class="row q-col-gutter-md">
                   <div class="col-md-10 col-12">
                     <q-input outlined label="Identificação da Regra" v-model="form.identificacao"
+                      :input-class="'text-bold text-h6'" class="label-strong"
                       :rules="[(val) => (val && val.length >= 2) || 'A Identificação é obrigatória']" />
                   </div>
                   <div class="col-md-2 col-12">
@@ -132,13 +133,14 @@
                   val => val !== null && val !== '' || 'Obrigatório', ruleBuscarnomecClassTrib,
                 ]" />
 
-                <q-input dense hide-bottom-space outlined v-model="formcClassTrib.nomecclasstrib" readonly type="textarea" autogrow :rows="2"
+                <q-input dense hide-bottom-space outlined v-model="formcClassTrib.nomecclasstrib" readonly
+                  type="textarea" autogrow :rows="2"
                   :input-class="formcClassTrib.nomecclasstrib === 'Código INVÁLIDO!' ? 'text-red' : ''" />
 
 
                 <q-input readonly outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" :rules="[
                   val => val !== null && val !== '' || 'Obrigatório',
-                ]"  class="q-mt-md" />
+                ]" class="q-mt-md" />
 
                 <q-input readonly outlined label="% CBS" v-model="form.cbs_aliquota" type="number" :rules="[
                   val => val !== null && val !== '' || 'Obrigatório',
@@ -146,18 +148,19 @@
                   val => val <= 100 || 'O valor máximo é 100'
                 ]" step="1" min="0" max="100" />
 
-                <div  class="row q-col-gutter-md">
+                <div class="row q-col-gutter-md">
                   <div class="col">
-                    <q-input readonly outlined label="% IBS Estadual" v-model="form.ibs_aliquota_estadual" type="number" :rules="[
-                      val => val !== null && val !== '' || 'Obrigatório',
-                      val => val >= 0 || 'O valor mínimo é 0',
-                      val => val <= 100 || 'O valor máximo é 100'
-                    ]" step="1" min="0" max="100" />
+                    <q-input readonly outlined label="% IBS Estadual" v-model="form.ibs_aliquota_estadual" type="number"
+                      :rules="[
+                        val => val !== null && val !== '' || 'Obrigatório',
+                        val => val >= 0 || 'O valor mínimo é 0',
+                        val => val <= 100 || 'O valor máximo é 100'
+                      ]" step="1" min="0" max="100" />
                   </div>
 
-                  <div  class="col">
-                    <q-input readonly outlined label="% IBS Municipal" v-model="form.ibs_aliquota_municipal" type="number"
-                      :rules="[
+                  <div class="col">
+                    <q-input readonly outlined label="% IBS Municipal" v-model="form.ibs_aliquota_municipal"
+                      type="number" :rules="[
                         val => val !== null && val !== '' || 'Obrigatório',
                         val => val >= 0 || 'O valor mínimo é 0',
                         val => val <= 100 || 'O valor máximo é 100'
@@ -189,8 +192,8 @@
                   val => val <= 100 || 'O valor máximo é 100'
                 ]" step="1" min="0" max="100" />
 
-                <q-input readonly outlined label="Classificação Crédito Presumido" v-model="form.classificacao_cpresumido"
-                  :rules="[
+                <q-input readonly outlined label="Classificação Crédito Presumido"
+                  v-model="form.classificacao_cpresumido" :rules="[
                     val => val !== null && val !== '' || 'Obrigatório',
                     val => val >= 0 || 'O valor mínimo é 0',
                     val => val <= 100 || 'O valor máximo é 100'
@@ -524,6 +527,8 @@ export default defineComponent({
         form.value.ibs_aliquota_estadual = formcClassTrib.value.ibsestadual
         form.value.ibs_aliquota_municipal = formcClassTrib.value.ibsmunicipal
         form.value.cbs_aliquota = formcClassTrib.value.pcbs
+        form.value.classificacao_cpresumido = 0
+        form.value.classificacao_is = 0
 
       } catch {
 
@@ -534,6 +539,8 @@ export default defineComponent({
         form.value.ibs_aliquota_estadual = 0
         form.value.ibs_aliquota_municipal = 0
         form.value.cbs_aliquota = 0
+        form.value.classificacao_cpresumido = 0
+        form.value.classificacao_is = 0
       }
     }
 
