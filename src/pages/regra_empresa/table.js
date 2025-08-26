@@ -59,6 +59,8 @@ const columnsRegras = [
     sortable: true,
     style: 'width: 3%;'
   },
+
+
    {
     name: 'data_fim',
     align: 'left',
@@ -67,9 +69,6 @@ const columnsRegras = [
     sortable: true,
     style: 'width: 3%;'
   },
-
-
-
 
 
 

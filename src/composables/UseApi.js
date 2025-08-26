@@ -270,19 +270,18 @@ const listRegrasDisponiveis = async (empresaId) => {
   }
 };
 
- const listRegrasDiferenteEmpresa = async (empresaId, regimeId) => {
-    const { data, error } = await supabase
-      .from('regras_por_cnpj')
-      .select('*')
-      .eq('regime_id', regimeId)
-      .neq('empresa_id', empresaId)
-    if (error) {
-      console.error('Erro ao buscar regras:', error)
-      return []
-    }
+const listRegrasDiferenteEmpresa = async (empresaId, regimeId) => {
+  const { data, error } = await supabase
+    .rpc('fn_regras_disponiveis', { p_empresa_id: empresaId, p_regime_id: regimeId });
 
-    return data
+  if (error) {
+    console.error('Erro ao buscar regras disponíveis:', error);
+    return [];
   }
+  return data;
+};
+
+
 
 
   return {

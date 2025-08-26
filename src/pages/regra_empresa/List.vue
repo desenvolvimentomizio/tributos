@@ -175,6 +175,7 @@ export default defineComponent({
         notifyError('Nenhuma empresa encontrada para associar a regra.')
         return
       }
+
       try {
         formEmpresaRegra.value.id = uuidv4()
         formEmpresaRegra.value.empresa_id = empresa_id.value
