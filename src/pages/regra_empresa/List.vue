@@ -180,7 +180,7 @@ export default defineComponent({
         formEmpresaRegra.value.regra_tributaria_id = regraId
         formEmpresaRegra.value.user_id = user.value.id
 
-        console.log('empresa_regra', formEmpresaRegra.value)
+
         await post(tableEmpresaRegras, formEmpresaRegra.value)
 
 

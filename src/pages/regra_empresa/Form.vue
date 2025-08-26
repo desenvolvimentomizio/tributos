@@ -210,9 +210,14 @@
               <q-btn :label="isUpdate ? 'Atualiza' : 'Salva'" color="primary" class="full-width" rounded
                 type="submit" />
             </div>
+
             <div class="col-6">
-              <q-btn label="Cancela" color="primary" class="full-width" rounded flat :to="{ name: 'regra_empresa' }" />
+              <q-btn label="Cancela" color="primary" class="full-width" rounded flat @click="handleRegra" />
             </div>
+
+
+
+
           </div>
         </q-form>
       </q-card>
@@ -244,6 +249,7 @@ export default defineComponent({
 
     const isUpdate = computed(() => !!route.params.id)
     const idParam = route.params.id ? String(route.params.id) : null
+    let empresa_id =''
 
     const table = 'regra_tributaria'
     const tableEmpresa = 'empresa'
@@ -482,6 +488,14 @@ export default defineComponent({
     }
 
     // -------- Rules helpers --------
+
+    const handleRegra = () => {
+      empresa_id = route.params.empresa_id
+
+      router.push({ name: 'regra_empresa', params: { id:empresa_id  } })
+    }
+
+
     const ruleBuscarDescricaoCSTICMCSOSN = (val) => {
       descricaocst_icm_csosn.value = val ? (mapCSTICM[val] || mapCSTCSOSN[val] || 'NÃO ACHOU') : ''
       return true
@@ -631,6 +645,7 @@ export default defineComponent({
       // ações
       handleSubmit,
       handlePostEmpresaRegras,
+      handleRegra,
 
       // rules
       ruleBuscarDescricaoCSTICMCSOSN,
