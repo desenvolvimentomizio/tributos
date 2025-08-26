@@ -128,34 +128,35 @@
               <q-card class="q-pa-md">
                 <div class="text-h6 q-mb-md">IBS / CBS</div>
 
-                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs"
-                :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório',  ruleBuscarnomecClassTrib,
+                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" :rules="[
+                  val => val !== null && val !== '' || 'Obrigatório', ruleBuscarnomecClassTrib,
                 ]" />
 
-                <q-input outlined v-model="formcClassTrib.nomecclasstrib" readonly type="textarea" autogrow :rows="2" />
+                <q-input dense hide-bottom-space outlined v-model="formcClassTrib.nomecclasstrib" readonly type="textarea" autogrow :rows="2"
+                  :input-class="formcClassTrib.nomecclasstrib === 'Código INVÁLIDO!' ? 'text-red' : ''" />
 
-                <q-input outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" :rules="[
+
+                <q-input readonly outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" :rules="[
                   val => val !== null && val !== '' || 'Obrigatório',
-                ]" />
+                ]"  class="q-mt-md" />
 
-                <q-input outlined label="% CBS" v-model="form.cbs_aliquota" type="number" :rules="[
+                <q-input readonly outlined label="% CBS" v-model="form.cbs_aliquota" type="number" :rules="[
                   val => val !== null && val !== '' || 'Obrigatório',
                   val => val >= 0 || 'O valor mínimo é 0',
                   val => val <= 100 || 'O valor máximo é 100'
                 ]" step="1" min="0" max="100" />
 
-                <div class="row q-col-gutter-md">
+                <div  class="row q-col-gutter-md">
                   <div class="col">
-                    <q-input outlined label="% IBS Estadual" v-model="form.ibs_aliquota_estadual" type="number" :rules="[
+                    <q-input readonly outlined label="% IBS Estadual" v-model="form.ibs_aliquota_estadual" type="number" :rules="[
                       val => val !== null && val !== '' || 'Obrigatório',
                       val => val >= 0 || 'O valor mínimo é 0',
                       val => val <= 100 || 'O valor máximo é 100'
                     ]" step="1" min="0" max="100" />
                   </div>
 
-                  <div class="col">
-                    <q-input outlined label="% IBS Municipal" v-model="form.ibs_aliquota_municipal" type="number"
+                  <div  class="col">
+                    <q-input readonly outlined label="% IBS Municipal" v-model="form.ibs_aliquota_municipal" type="number"
                       :rules="[
                         val => val !== null && val !== '' || 'Obrigatório',
                         val => val >= 0 || 'O valor mínimo é 0',
@@ -166,7 +167,7 @@
 
                 <div class="row q-col-gutter-md">
                   <div class="col">
-                    <q-input outlined label="% Redução CBS" v-model="form.reducao_cbs" type="number" :rules="[
+                    <q-input readonly outlined label="% Redução CBS" v-model="form.reducao_cbs" type="number" :rules="[
                       val => val !== null && val !== '' || 'Obrigatório',
                       val => val >= 0 || 'O valor mínimo é 0',
                       val => val <= 100 || 'O valor máximo é 100'
@@ -174,7 +175,7 @@
                   </div>
 
                   <div class="col">
-                    <q-input outlined label="% Redução IBS" v-model="form.reducao_ibs" type="number" :rules="[
+                    <q-input readonly outlined label="% Redução IBS" v-model="form.reducao_ibs" type="number" :rules="[
                       val => val !== null && val !== '' || 'Obrigatório',
                       val => val >= 0 || 'O valor mínimo é 0',
                       val => val <= 100 || 'O valor máximo é 100'
@@ -182,13 +183,13 @@
                   </div>
                 </div>
 
-                <q-input outlined label="Classificação IS" v-model="form.classificacao_is" :rules="[
+                <q-input readonly outlined label="Classificação IS" v-model="form.classificacao_is" :rules="[
                   val => val !== null && val !== '' || 'Obrigatório',
                   val => val >= 0 || 'O valor mínimo é 0',
                   val => val <= 100 || 'O valor máximo é 100'
                 ]" step="1" min="0" max="100" />
 
-                <q-input outlined label="Classificação Crédito Presumido" v-model="form.classificacao_cpresumido"
+                <q-input readonly outlined label="Classificação Crédito Presumido" v-model="form.classificacao_cpresumido"
                   :rules="[
                     val => val !== null && val !== '' || 'Obrigatório',
                     val => val >= 0 || 'O valor mínimo é 0',
@@ -342,14 +343,14 @@ export default defineComponent({
 
     const formcClassTrib = ref({
       id: idParam || uuidv4(),
-      cstibscbs:'',
-      nomecclasstrib:'',
-      predibs:'',
-      predcbs:0,
-      ibsestadual:0,
-      ibsmunicipal:0,
-      pcbs:0,
-      redutorbs:0,
+      cstibscbs: '',
+      nomecclasstrib: '',
+      predibs: '',
+      predcbs: 0,
+      ibsestadual: 0,
+      ibsmunicipal: 0,
+      pcbs: 0,
+      redutorbs: 0,
     })
 
     // ------- Maps -------
@@ -462,8 +463,6 @@ export default defineComponent({
       return true
     }
 
-
-
     const ruleBuscarDescricaoCFOPInterno = (val) => {
       descricaocfop_interno.value = val ? (mapCFOP[val] || 'NÃO ACHOU') : ''
       return true
@@ -507,9 +506,9 @@ export default defineComponent({
       }
     })
 
-   const ruleBuscarnomecClassTrib  = (val) => {
+    const ruleBuscarnomecClassTrib = (val) => {
       handleGetcClassTriba(val)
-      nomecclasstrib.value =formcClassTrib.value.nomecclasstrib
+      nomecclasstrib.value = formcClassTrib.value.nomecclasstrib
       return true
     }
 
@@ -517,27 +516,24 @@ export default defineComponent({
       try {
         cClassTrib = await getById(tablecClassTrib, id)
         Object.assign(formcClassTrib.value, cClassTrib)
-       form.value.cst_ibscbs = formcClassTrib.value.cstibscbs
+        form.value.cst_ibscbs = formcClassTrib.value.cstibscbs
 
 
-       form.value.reducao_cbs=formcClassTrib.value.predcbs
-       form.value.reducao_ibs=formcClassTrib.value.predibs
-       form.value.ibs_aliquota_estadual= formcClassTrib.value.ibsestadual
-       form.value.ibs_aliquota_municipal=formcClassTrib.value.ibsmunicipal
-       form.value.cbs_aliquota=formcClassTrib.value.pcbs
+        form.value.reducao_cbs = formcClassTrib.value.predcbs
+        form.value.reducao_ibs = formcClassTrib.value.predibs
+        form.value.ibs_aliquota_estadual = formcClassTrib.value.ibsestadual
+        form.value.ibs_aliquota_municipal = formcClassTrib.value.ibsmunicipal
+        form.value.cbs_aliquota = formcClassTrib.value.pcbs
 
-      } catch  {
-       formcClassTrib.value.nomecclasstrib = 'Código INVÁLIDO !'
-       form.value.cst_ibscbs =0
-       form.value.reducao_cbs=0
-       form.value.reducao_ibs=0
-       form.value.ibs_aliquota_estadual=0
-       form.value.ibs_aliquota_municipal=0
-       form.value.cbs_aliquota=0
+      } catch {
 
-
-
-
+        formcClassTrib.value.nomecclasstrib = 'Código INVÁLIDO!'
+        form.value.cst_ibscbs = 0
+        form.value.reducao_cbs = 0
+        form.value.reducao_ibs = 0
+        form.value.ibs_aliquota_estadual = 0
+        form.value.ibs_aliquota_municipal = 0
+        form.value.cbs_aliquota = 0
       }
     }
 
