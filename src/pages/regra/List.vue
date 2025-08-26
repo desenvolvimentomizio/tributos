@@ -19,7 +19,8 @@
 
     <!-- Tabela -->
     <q-table :rows="regras" :columns="columnsRegras" row-key="id" :loading="loading" :filter="filtro" flat bordered
-      class="q-mb-xl">
+      class="q-mb-xl" :pagination="{ rowsPerPage: 10 }" :rows-per-page-options="[10, 20, 50]">
+
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-sm">
           <q-btn color="info" label="Editar" size="sm" @click="handleEdit(props.row)">
@@ -60,7 +61,7 @@ export default defineComponent({
     const { user } = useAuthUser()
     const router = useRouter()
     const { listPublic, updateFim } = useApi()
-    const { notifyError,notifySuccess } = useNotify()
+    const { notifyError, notifySuccess } = useNotify()
     const identificacaoContabilidade = ref('')
     const contabilidades = ref([])
     const idContabilidade = ref('')
@@ -78,7 +79,7 @@ export default defineComponent({
     }
 
 
-const handleDesativaRegra = async (regra_tributaria) => {
+    const handleDesativaRegra = async (regra_tributaria) => {
       $q.dialog({
         title: 'Confirmação',
         message: `Deseja desativar a empresa "${regra_tributaria.identificacao}"?`,
@@ -96,7 +97,7 @@ const handleDesativaRegra = async (regra_tributaria) => {
       })
     }
 
-     const handleListContabilidades = async () => {
+    const handleListContabilidades = async () => {
       try {
         loading.value = true
         contabilidades.value = await listPublic(tableContabilidade, user.value.id)

@@ -40,6 +40,8 @@
       flat
       bordered
       class="q-mb-xl"
+  :pagination="{ rowsPerPage: 10 }" :rows-per-page-options="[10, 20, 50]"
+
     >
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-sm">

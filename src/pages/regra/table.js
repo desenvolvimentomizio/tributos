@@ -66,6 +66,22 @@ const columnsRegras = [
     style: 'width: 3%;'
   },
   {
+    name: 'regime_id',
+    label: 'Regime Tributário',
+    field: 'regime_id',
+    align: 'left',
+    format: val => {
+      const map = {
+        1: 'Simples Nacional',
+        2: 'Simples com Sub-limite',
+        3: 'Regime Normal'
+      }
+      return map[val] || 'Desconhecido'
+    },
+     style: 'width: 25%;'
+  },
+
+  {
     name: 'data_fim',
     align: 'left',
     label: 'Desativação',

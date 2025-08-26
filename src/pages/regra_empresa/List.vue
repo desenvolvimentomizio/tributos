@@ -48,7 +48,9 @@
 
     <!-- Abaixo lista de regras disponiveis empresas -->
     <q-table :rows="regrasDiferenteEmpresa" :columns="columnsRegrasEmpresa" row-key="id" :loading="loading" flat
-      bordered class="q-mb-xl">
+      bordered class="q-mb-xl"
+  :pagination="{ rowsPerPage: 10 }"
+  :rows-per-page-options="[10, 20, 50]"  >
 
       <template v-slot:top>
 
