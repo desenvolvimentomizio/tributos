@@ -63,6 +63,7 @@ export default defineComponent({
     const { notifyError,notifySuccess } = useNotify()
     const identificacaoContabilidade = ref('')
     const contabilidades = ref([])
+    const idContabilidade = ref('')
 
     const handleListRegras = async () => {
       try {
@@ -112,6 +113,7 @@ const handleDesativaRegra = async (regra_tributaria) => {
 
     const handleEdit = (row) => {
       router.push({ name: 'form-regra', params: { id: row.id } })
+      handleListRegras
     }
 
     onMounted(() => {

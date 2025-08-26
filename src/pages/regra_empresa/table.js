@@ -12,7 +12,7 @@ const columnsRegras = [
   {
     name: 'cst_icm_csosn',
     align: 'left',
-    label: 'CST/CSOSN ICM',
+    label: 'CST/CSOSN',
     field: 'cst_icm_csosn',
     sortable: true,
     style: 'width: 3%;'

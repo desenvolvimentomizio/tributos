@@ -130,7 +130,7 @@
                 <div class="text-h6 q-mb-md">IBS / CBS</div>
 
                 <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório', ruleBuscarnomecClassTrib,
+                  val => val !== null && val !== '' || 'Obrigatório', ruleBuscarnomecClassTrib, val => (val !== 0 && val !== '0') || 'Não pode ser 0'
                 ]" />
 
                 <q-input dense hide-bottom-space outlined v-model="formcClassTrib.nomecclasstrib" readonly
@@ -284,8 +284,6 @@ export default defineComponent({
     const aliquotaCOFINSOptions = [
       { label: '0 %', value: 0 },
       { label: '3 %', value: 3.0 },
-      { label: '7,60 %', value: 7.60 },
-      { label: '9,65 %', value: 9.65 }
     ]
 
     const aliquotaFCPOptions = [
