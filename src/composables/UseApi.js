@@ -260,10 +260,10 @@ const listRegrasDisponiveis = async (empresaId) => {
 
  const listRegrasDiferenteEmpresa = async (empresaId, regimeId) => {
     const { data, error } = await supabase
-      .from('regras_disponiveis')
+      .from('regras_por_cnpj')
       .select('*')
       .eq('regime_id', regimeId)
-    //  .neq('empresa_id', empresaId)
+      .neq('empresa_id', empresaId)
     if (error) {
       console.error('Erro ao buscar regras:', error)
       return []
