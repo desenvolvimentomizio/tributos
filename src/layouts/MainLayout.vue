@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
+      <q-toolbar >
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title> Mizio Tributos </q-toolbar-title>
@@ -25,8 +25,8 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer :width="220" v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list dense>
+    <q-drawer :width="220" v-model="leftDrawerOpen" show-if-above bordered  class="bg-grey-2" >
+      <q-list dense >
 
 
         <q-item-label header> Menu </q-item-label>
@@ -35,7 +35,7 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="bg-grey-3">
       <router-view v-slot="{ Component }">
         <transition
           appear
