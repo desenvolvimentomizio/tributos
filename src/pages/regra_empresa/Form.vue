@@ -544,7 +544,10 @@ export default defineComponent({
           await handlePostEmpresaRegras()
           notifySuccess('Registro incluído com sucesso')
         }
-        router.push({ name: 'contabilidade' })
+
+        empresa_id = route.params.empresa_id
+        router.push({ name: 'regra_empresa', params: { id:empresa_id  } })
+
       } catch (error) {
         notifyError('Erro ao salvar registro: ' + (error?.message || error))
       }
