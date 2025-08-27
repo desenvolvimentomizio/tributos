@@ -548,8 +548,8 @@ export default defineComponent({
         empresa_id = route.params.empresa_id
         router.push({ name: 'regra_empresa', params: { id:empresa_id  } })
 
-      } catch (error) {
-        notifyError('Erro ao salvar registro: ' + (error?.message || error))
+      } catch  {
+        notifyError('Erro ao salvar registro, verifique todos os campos !')
       }
     }
 

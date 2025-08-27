@@ -481,8 +481,8 @@ export default defineComponent({
           notifySuccess('Registro incluído com sucesso')
         }
         router.push({ name: 'regra' })
-      } catch (error) {
-        notifyError('Erro ao salvar registro: ' + (error?.message || error))
+      } catch {
+        notifyError('Erro ao salvar registro, verifique todos os campos !')
       }
     }
 

@@ -78,6 +78,7 @@ const columnsRegras = [
       }
       return map[val] || 'Desconhecido'
     },
+     sortable: true,
      style: 'width: 25%;'
   },
 
