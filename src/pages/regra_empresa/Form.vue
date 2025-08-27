@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page padding  class="bg-grey-2">
     <div class="row justify-center">
       <q-card class="col-md-10 col-xs-12 col-sm-12 q-pa-lg shadow-2 bg-white" style="border-radius: 16px;">
         <!-- Título -->
@@ -256,6 +256,7 @@ export default defineComponent({
     const table = 'regra_tributaria'
     const tableEmpresa = 'empresa'
     const tablecClassTrib = 'cclasstrib'
+    const tablenomeCfop = 'cfop'
     const tableEmpresaRegras = 'empresa_regra_tributaria'
 
     const descricaocst_icm_csosn = ref('')

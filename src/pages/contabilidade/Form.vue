@@ -1,6 +1,6 @@
 
 <template>
-  <q-page padding>
+  <q-page padding  class="bg-grey-2">
     <div class="row justify-center">
       <q-card
         class="col-md-6 col-xs-12 col-sm-12 q-pa-lg shadow-2 bg-white"

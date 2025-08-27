@@ -1,7 +1,7 @@
-<template>
-  <q-page padding>
+<template >
+  <q-page padding   >
     <div class="row justify-center">
-      <q-card class="col-md-10 col-xs-12 col-sm-12 q-pa-lg shadow-2 bg-white" style="border-radius: 16px;">
+      <q-card class="col-md-10 col-xs-12 col-sm-12 q-pa-lg shadow-2 " style="border-radius: 16px;">
         <!-- Título com fundo na cor primária -->
         <div class="text-h5 text-white text-center text-bold q-mb-lg q-pa-sm"
           style="background-color: var(--q-primary); border-radius: 8px;">
