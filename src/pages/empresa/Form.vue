@@ -174,7 +174,7 @@ export default defineComponent({
           })
         }
 
-        router.push({ name: 'contabilidade' })
+        router.push({ name: 'empresa' })
 
       } catch (error) {
         notifyError(error, error.message)

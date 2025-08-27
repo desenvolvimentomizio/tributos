@@ -9,9 +9,9 @@
         <div>
           <q-btn-dropdown flat color="white" icon="person">
             <q-list>
-              <q-item clickable v-close-popup>
+              <q-item clickable v-close-popup @click="handleContabilidade">
                 <q-item-section>
-                  <q-item-label>Perfil</q-item-label>
+                  <q-item-label>Contabilidade</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item clickable v-close-popup @click="handleLogout">
@@ -55,24 +55,13 @@ import DarkModeToggle from 'components/DarkModeToggle.vue'
 
 const linksList = [
   {
-    title: 'Início',
-    caption: '',
-    icon: 'mdi-home',
-    routeName: 'me',
-  },
-  {
-    title: 'Contabilidade',
-    caption: '',
-    icon: 'mdi-shape-outline',
-    routeName: 'contabilidade',
-  },
-  {
     title: 'Empresas',
     caption: '',
-    icon: 'mdi-archive',
+    icon: 'mdi-home',
     routeName: 'empresa',
   },
-  {
+
+ {
     title: 'Regras Tributárias',
     caption: '',
     icon: 'mdi-cog',
@@ -106,6 +95,10 @@ export default defineComponent({
       getBrand()
     })
 
+    const handleContabilidade = async () => {
+       router.push({ name: 'contabilidade' })
+    }
+
     const handleLogout = async () => {
       $q.dialog({
         title: 'Sair',
@@ -125,6 +118,7 @@ export default defineComponent({
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
       handleLogout,
+      handleContabilidade,
     }
   },
 })

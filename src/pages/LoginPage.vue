@@ -81,7 +81,7 @@ export default defineComponent({
       // Se isLoggedIn for um ref, use isLoggedIn.value
       // Se for função, use isLoggedIn()
       if (typeof isLoggedIn === 'function' ? isLoggedIn() : isLoggedIn.value) {
-        router.push({ name: 'me' })
+        router.push({ name: 'empresa' })
       }
     })
 
@@ -89,7 +89,7 @@ export default defineComponent({
       try {
         await login(form.value)
         notifySuccess('Login realizado com sucesso!')
-        router.push({ name: 'me' })
+        router.push({ name: 'empresa' })
       } catch {
         notifyError('Erro ao realizar login')
       }
