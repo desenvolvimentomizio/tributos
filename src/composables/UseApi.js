@@ -271,8 +271,10 @@ export default function useApi() {
   };
 
   const listRegrasDiferenteEmpresa = async (empresaId, regimeId) => {
+    console.log(user.value.id)
     const { data, error } = await supabase
-      .rpc('fn_regras_disponiveis', { p_empresa_id: empresaId, p_regime_id: regimeId });
+
+      .rpc('fn_regras_disponiveis', { p_empresa_id: empresaId, p_regime_id: regimeId, p_user_id: user.value.id  });
 
     if (error) {
       console.error('Erro ao buscar regras disponíveis:', error);
