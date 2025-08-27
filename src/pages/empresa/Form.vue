@@ -14,8 +14,8 @@
           <q-input outlined label="Razão Social" v-model="form.identificacao"
             :rules="[(val) => (val && val.length > 5) || 'Identificação é obrigatória e maior que 5 caracteres']" />
 
-          <q-input outlined label="CNPJ" v-model="form.cnpj" mask="##.###.###/####-##" fill-mask unmasked-value
-            inputmode="numeric" :rules="[
+          <q-input :readonly="isEditing" outlined label="CNPJ" v-model="form.cnpj" mask="##.###.###/####-##" fill-mask
+            unmasked-value inputmode="numeric" :rules="[
               (val) => (val && val.length > 0) || 'CNPJ é obrigatória',
               validaCnpjRule
             ]" />
@@ -30,27 +30,22 @@
               val => /.+@.+\..+/.test(val) || 'Email inválido'
             ]" />
 
-
-
-
-
           <q-select outlined v-model="form.regime_id" label="Regime Tributário" :options="regimeOptions" emit-value
             map-options option-label="label" option-value="value" filled
             :rules="[(val) => !!val || 'Regime é obrigatório']" />
 
+
           <div class="row q-col-gutter-md">
-            <div class="col-md-3 col-sm-12">
-              <q-input outlined label="CNAE" v-model="form.cnae"
-                :rules="[(val) => (val && val.length > 0) || 'CNAE é obrigatório']" unmasked-value
-                @blur="buscarDescricaoCnae" />
+            <div class="col-3">
+              <q-input outlined label="CNAE" v-model="form.cnae" mask="####-#/##" fill-mask
+                :rules="[ruleBuscarDescricaoCnae]" />
             </div>
-            <div class="col-md-9 col-sm-12 flex items-center">
-              <div class="text-caption text-grey q-mt-sm">
-                <span class="text-weight-bold">Descrição:</span>
-                {{ descricaoCnae || 'Digite o CNAE para ver a descrição' }}
-              </div>
+
+            <div class="col-9">
+              <q-input outlined v-model="descricaoCnae" readonly />
             </div>
           </div>
+
 
           <div class="q-my-md"></div>
 
@@ -85,6 +80,7 @@ export default defineComponent({
 
     const formRef = ref(null)
     const table = 'empresa'
+    const tablenomeCnae = 'cnae'
     const router = useRouter()
     const route = useRoute()
     const { user } = useAuthUser()
@@ -95,6 +91,8 @@ export default defineComponent({
     const cnpjRef = ref(null)
     const count = ref(0)
     const email = ref('')
+
+    let descricaoCnae = ref('')
 
     const form = ref({
       id: isUpdate.value || uuidv4(),
@@ -116,25 +114,26 @@ export default defineComponent({
     ]
 
 
-    const descricaoCnae = ref('')
-    const buscarDescricaoCnae = () => {
-      const mapaCnae = {
-        '6201-5/01': 'Desenvolvimento de programas de computador sob encomenda',
-        '6201-5/02': 'Desenvolvimento de software customizável',
-        '5611-2/01': 'Restaurantes e similares',
-        '4711-3/02': 'Comércio varejista de mercadorias em geral',
+    const ruleBuscarDescricaoCnae = async (val) => {
+      if (val) {
+        // aguarda o retorno da Promise
+        const tablecnae = await getById(tablenomeCnae, val)
+        descricaoCnae.value = tablecnae?.descricao ?? ''
+        // opcional para depuração:
+      } else {
+        descricaoCnae.value = ''
       }
-      descricaoCnae.value = mapaCnae[form.value.cnae] || ''
+      return true // Quasar aceita rule async que resolve para true/string
     }
+
+
+
 
 
 
     const onEmailUpdate = (val) => {
       email.value = (val ?? '').toString().trim().toLowerCase()
     }
-
-
-
 
     const handleSubmit = async () => {
 
@@ -187,7 +186,7 @@ export default defineComponent({
       try {
         const empresa = await getById(table, id)
         Object.assign(form.value, empresa)
-        buscarDescricaoCnae()
+
       } catch (error) {
         notifyError(error.message)
       }
@@ -246,8 +245,10 @@ export default defineComponent({
 
       // 2) checa existência no backend
       try {
-        const { count: c } = await fetchCountCNPJ(table, cleaned)
-        count.value = c ?? 0
+        if (!isUpdate.value) {
+          const { count: c } = await fetchCountCNPJ(table, cleaned)
+          count.value = c ?? 0
+        }
       } catch {
         // opcional: trate erro de rede/backend
         return 'Erro ao verificar CNPJ. Tente novamente.'
@@ -267,12 +268,14 @@ export default defineComponent({
       else handleGetContabilidade()
     })
 
+
     return {
       handleSubmit,
       form,
       isUpdate,
       descricaoCnae,
-      buscarDescricaoCnae,
+      ruleBuscarDescricaoCnae,
+
       onEmailUpdate,
       cnpjRef,
       formRef,

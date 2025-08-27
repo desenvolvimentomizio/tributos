@@ -50,7 +50,8 @@
                     ]" />
                   </div>
                   <div class="col-md-7 col-12">
-                    <q-input outlined v-model="descricaocfop_interno" readonly />
+
+                    <q-input outlined v-model="descricaocfop_interno" readonly type="textarea" autogrow :rows="2" />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-select v-model="form.icm_interno" :options="aliquotaICMOptions" label="% ICMS Interno" emit-value
@@ -66,7 +67,8 @@
                     ]" />
                   </div>
                   <div class="col-md-7 col-12">
-                    <q-input outlined v-model="descricaocfop_externo" readonly />
+
+                    <q-input outlined v-model="descricaocfop_externo" readonly type="textarea" autogrow :rows="2" />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-select v-model="form.icm_externo" :options="aliquotaICMOptions" label="% ICMS Externo" emit-value
@@ -400,40 +402,7 @@ export default defineComponent({
       '90': 'Outras'
     }
 
-    const mapCFOP = {
-      '1.101': 'Compra para industrialização',
-      '1.102': 'Compra para comercialização',
-      '1.106': 'Compra para utilização na prestação de serviço',
-      '1.108': 'Compra de mercadoria para uso ou consumo',
-      '1.109': 'Aquisição de ativo imobilizado',
-      '1.110': 'Compra para utilização em processo de industrialização por encomenda',
-      '1.115': 'Compra de mercadoria adquirida em operação com mercadoria sujeita à ST',
-      '1.201': 'Devolução de venda de produção do estabelecimento',
-      '1.202': 'Devolução de venda de mercadoria adquirida ou recebida de terceiros',
-      '2.101': 'Compra para industrialização',
-      '2.102': 'Compra para comercialização',
-      '2.108': 'Compra para uso ou consumo',
-      '2.109': 'Aquisição de ativo imobilizado',
-      '2.115': 'Compra de mercadoria sujeita à substituição tributária',
-      '2.201': 'Devolução de venda de produção do estabelecimento',
-      '2.202': 'Devolução de venda de mercadoria adquirida de terceiros',
-      '3.101': 'Compra para industrialização',
-      '3.102': 'Compra para comercialização',
-      '3.108': 'Compra para uso ou consumo',
-      '3.109': 'Aquisição de ativo imobilizado',
-      '5.101': 'Venda de produção do estabelecimento',
-      '5.102': 'Venda de mercadoria adquirida ou recebida de terceiros',
-      '5.103': 'Venda de produção efetuada fora do estabelecimento',
-      '5.104': 'Venda de mercadoria adquirida efetuada fora do estabelecimento',
-      '5.110': 'Venda de produção para utilização na prestação de serviço',
-      '6.101': 'Venda de produção do estabelecimento',
-      '6.102': 'Venda de mercadoria adquirida ou recebida de terceiros',
-      '6.108': 'Venda de produção para Zona Franca de Manaus',
-      '7.101': 'Venda de produção do estabelecimento',
-      '7.102': 'Venda de mercadoria adquirida ou recebida de terceiros',
-      '7.108': 'Venda de produção do estabelecimento à Zona Franca de Manaus',
-      '7.949': 'Outra saída de mercadoria ou prestação de serviço não especificado'
-    }
+
 
     const mapCSTCSOSN = {
       '101': 'Tributada pelo Simples Nacional com permissão de crédito',
@@ -497,14 +466,34 @@ export default defineComponent({
       descricaocst_icm_csosn.value = val ? (mapCSTICM[val] || mapCSTCSOSN[val] || 'NÃO ACHOU') : ''
       return true
     }
-    const ruleBuscarDescricaoCFOPInterno = (val) => {
-      descricaocfop_interno.value = val ? (mapCFOP[val] || 'NÃO ACHOU') : ''
-      return true
+
+
+
+     const ruleBuscarDescricaoCFOPInterno = async (val) => {
+      if (val) {
+        // aguarda o retorno da Promise
+        const tablecfop = await getById(tablenomeCfop, val)
+        descricaocfop_interno.value = tablecfop?.descricao ?? ''
+        // opcional para depuração:
+      } else {
+        descricaocfop_interno.value = ''
+      }
+      return true // Quasar aceita rule async que resolve para true/string
     }
-    const ruleBuscarDescricaoCFOPExterno = (val) => {
-      descricaocfop_externo.value = val ? (mapCFOP[val] || 'NÃO ACHOU') : ''
-      return true
+
+
+  const ruleBuscarDescricaoCFOPExterno = async (val) => {
+      if (val) {
+        // aguarda o retorno da Promise
+        const tablecfop = await getById(tablenomeCfop, val)
+        descricaocfop_externo.value = tablecfop?.descricao ?? ''
+        // opcional para depuração:
+      } else {
+        descricaocfop_externo.value = ''
+      }
+      return true // Quasar aceita rule async que resolve para true/string
     }
+
     const ruleBuscarDescricaoPIS = (val) => {
       descricaocst_pis.value = val ? (mapPISCOFINS[val] || 'NÃO ACHOU') : ''
       return true
