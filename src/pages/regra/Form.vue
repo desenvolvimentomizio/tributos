@@ -1,5 +1,5 @@
-<template >
-  <q-page padding   >
+<template>
+  <q-page padding>
     <div class="row justify-center">
       <q-card class="col-md-10 col-xs-12 col-sm-12 q-pa-lg shadow-2 " style="border-radius: 16px;">
         <!-- Título com fundo na cor primária -->
@@ -51,7 +51,7 @@
                   </div>
                   <div class="col-md-7 col-12">
 
-                    <q-input outlined v-model="descricaocfop_interno" readonly  type="textarea" autogrow :rows="2" />
+                    <q-input outlined v-model="descricaocfop_interno" readonly type="textarea" autogrow :rows="2" />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-select v-model="form.icm_interno" :options="aliquotaICMOptions" label="% ICMS Interno" emit-value
@@ -68,7 +68,7 @@
                   </div>
                   <div class="col-md-7 col-12">
 
-                    <q-input outlined v-model="descricaocfop_externo" readonly  type="textarea" autogrow :rows="2" />
+                    <q-input outlined v-model="descricaocfop_externo" readonly type="textarea" autogrow :rows="2" />
                   </div>
                   <div class="col-md-3 col-12">
                     <q-select v-model="form.icm_externo" :options="aliquotaICMOptions" label="% ICMS Externo" emit-value
@@ -140,9 +140,10 @@
                   :input-class="formcClassTrib.nomecclasstrib === 'Código INVÁLIDO!' ? 'text-red' : ''" />
 
 
-                <q-input readonly outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório',
-                ]" class="q-mt-md" />
+                <q-input readonly outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" mask="###" fill-mask="0"
+                  reverse-fill-mask :rules="[
+                    val => val !== null && val !== '' || 'Obrigatório',
+                  ]" class="q-mt-md" />
 
                 <q-input readonly outlined label="% CBS" v-model="form.cbs_aliquota" type="number" :rules="[
                   val => val !== null && val !== '' || 'Obrigatório',
@@ -433,7 +434,7 @@ export default defineComponent({
       return true
     }
 
-     const ruleBuscarDescricaoCFOPInterno = async (val) => {
+    const ruleBuscarDescricaoCFOPInterno = async (val) => {
       if (val) {
         // aguarda o retorno da Promise
         const tablecfop = await getById(tablenomeCfop, val)
@@ -445,7 +446,7 @@ export default defineComponent({
       return true // Quasar aceita rule async que resolve para true/string
     }
 
-  const ruleBuscarDescricaoCFOPExterno = async (val) => {
+    const ruleBuscarDescricaoCFOPExterno = async (val) => {
       if (val) {
         // aguarda o retorno da Promise
         const tablecfop = await getById(tablenomeCfop, val)
@@ -502,7 +503,7 @@ export default defineComponent({
       try {
         cClassTrib = await getById(tablecClassTrib, id)
         Object.assign(formcClassTrib.value, cClassTrib)
-        form.value.cst_ibscbs = formcClassTrib.value.cstibscbs
+        form.value.cst_ibscbs = String(formcClassTrib.value.cstibscbs).padStart(3, "0");
 
 
         form.value.reducao_cbs = formcClassTrib.value.predcbs

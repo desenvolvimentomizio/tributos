@@ -1,5 +1,5 @@
 <template>
-  <q-page padding  class="bg-grey-2">
+  <q-page padding class="bg-grey-2">
     <div class="row justify-center">
       <q-card class="col-md-10 col-xs-12 col-sm-12 q-pa-lg shadow-2 bg-white" style="border-radius: 16px;">
         <!-- Título -->
@@ -142,9 +142,10 @@
                   :input-class="formcClassTrib.nomecclasstrib === 'Código INVÁLIDO!' ? 'text-red' : ''" />
 
 
-                <q-input readonly outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório',
-                ]" class="q-mt-md" />
+                <q-input readonly outlined label="CST - IBS/CBS" v-model="form.cst_ibscbs" mask="###" fill-mask="0"
+                  reverse-fill-mask :rules="[
+                    val => val !== null && val !== '' || 'Obrigatório',
+                  ]" class="q-mt-md" />
 
                 <q-input readonly outlined label="% CBS" v-model="form.cbs_aliquota" type="number" :rules="[
                   val => val !== null && val !== '' || 'Obrigatório',
@@ -251,7 +252,7 @@ export default defineComponent({
 
     const isUpdate = computed(() => !!route.params.id)
     const idParam = route.params.id ? String(route.params.id) : null
-    let empresa_id =''
+    let empresa_id = ''
 
     const table = 'regra_tributaria'
     const tableEmpresa = 'empresa'
@@ -459,7 +460,7 @@ export default defineComponent({
     const handleRegra = () => {
       empresa_id = route.params.empresa_id
 
-      router.push({ name: 'regra_empresa', params: { id:empresa_id  } })
+      router.push({ name: 'regra_empresa', params: { id: empresa_id } })
     }
 
 
@@ -470,7 +471,7 @@ export default defineComponent({
 
 
 
-     const ruleBuscarDescricaoCFOPInterno = async (val) => {
+    const ruleBuscarDescricaoCFOPInterno = async (val) => {
       if (val) {
         // aguarda o retorno da Promise
         const tablecfop = await getById(tablenomeCfop, val)
@@ -483,7 +484,7 @@ export default defineComponent({
     }
 
 
-  const ruleBuscarDescricaoCFOPExterno = async (val) => {
+    const ruleBuscarDescricaoCFOPExterno = async (val) => {
       if (val) {
         // aguarda o retorno da Promise
         const tablecfop = await getById(tablenomeCfop, val)
@@ -546,9 +547,9 @@ export default defineComponent({
         }
 
         empresa_id = route.params.empresa_id
-        router.push({ name: 'regra_empresa', params: { id:empresa_id  } })
+        router.push({ name: 'regra_empresa', params: { id: empresa_id } })
 
-      } catch  {
+      } catch {
         notifyError('Erro ao salvar registro, verifique todos os campos !')
       }
     }
@@ -563,7 +564,7 @@ export default defineComponent({
       try {
         cClassTrib = await getById(tablecClassTrib, id)
         Object.assign(formcClassTrib.value, cClassTrib)
-        form.value.cst_ibscbs = formcClassTrib.value.cstibscbs
+        form.value.cst_ibscbs = String(formcClassTrib.value.cstibscbs).padStart(3, "0");
 
 
         form.value.reducao_cbs = formcClassTrib.value.predcbs
