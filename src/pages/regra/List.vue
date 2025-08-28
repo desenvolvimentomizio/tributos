@@ -111,11 +111,19 @@ export default defineComponent({
     }
 
 
-
     const handleEdit = (row) => {
-      router.push({ name: 'form-regra', params: { id: row.id } })
-      handleListRegras
+      if (!row.data_fim || row.data_fim === '') {
+        router.push({ name: 'form-regra', params: { id: row.id } })
+        handleListRegras()
+      } else {
+        $q.notify({
+          type: 'warning',
+          message: 'Esta regra não pode ser editada, pois já possui data de término.'
+        })
+      }
     }
+
+
 
     onMounted(() => {
       handleListContabilidades()
