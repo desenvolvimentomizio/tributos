@@ -33,43 +33,6 @@
 
 
 
-      <!-- Abaixo lista de empresas -->
-      <q-table :rows="empresas" :columns="columnsEmpresa" row-key="id" class="col-12" :loading="loading">
-        <template v-slot:top>
-
-          <div class="q-pa-sm row items-center justify-between full-width">
-            <!---- <div class="q-pa-sm row items-center"> -->
-            <span class="text-h6">Empresas</span>
-            <q-space />
-            <q-btn v-if="$q.platform.is.desktop" label="Incluir Empresa" color="primary"
-              :to="{ name: 'form-empresa' }" />
-          </div>
-        </template>
-
-
-
-
-        <template v-slot:body-cell-actions="props">
-          <q-td :props="props" class="q-gutter-x-sm">
-
-
-            <q-btn color="info" label="Editar" size="sm" @click="handleEditEmpresa(props.row)">
-              <q-tooltip> Editar </q-tooltip>
-            </q-btn>
-
-            <q-btn color="negative" label="Desativar" size="sm" @click="handleDesativaEmpresa(props.row)">
-              <q-tooltip> Desativar </q-tooltip>
-            </q-btn>
-
-            <q-btn color="primary" label="Regra" size="sm" @click="handleRegra(props.row)">
-              <q-tooltip> Regra </q-tooltip>
-            </q-btn>
-
-
-          </q-td>
-        </template>
-
-      </q-table>
 
 
 
