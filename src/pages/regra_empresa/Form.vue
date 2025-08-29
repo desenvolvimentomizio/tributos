@@ -132,10 +132,12 @@
               <q-card class="q-pa-md">
                 <div class="text-h6 q-mb-md">IBS / CBS</div>
 
-                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" :rules="[
-                    val => val !== null && val !== '' || 'Obrigatório', ruleBuscarnomecClassTrib, val => (val !== 0 && val !== '0') || 'Não pode ser 0'
-                  ]" />
 
+         <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" :rules="[
+                  val => val !== null && val !== '' || 'Obrigatório',
+                  ruleBuscarnomecClassTrib,
+                  val => (val !== 0 && val !== '0') || 'Não pode ser 0'
+                ]" @blur="preencherZeros" />
 
                 <q-input dense hide-bottom-space outlined v-model="formcClassTrib.nomecclasstrib" readonly
                   type="textarea" autogrow :rows="2"
@@ -607,6 +609,15 @@ export default defineComponent({
       }
     })
 
+    function preencherZeros() {
+      if (form.value.classificacao_ibscbs) {
+        form.value.classificacao_ibscbs = form.value.classificacao_ibscbs
+          .toString()
+          .padStart(6, '0')
+      }
+    }
+
+
     return {
       // dados
       form,
@@ -632,7 +643,7 @@ export default defineComponent({
 
       // flags/rotas
       isUpdate,
-
+      preencherZeros,
       // ações
       handleSubmit,
       handlePostEmpresaRegras,

@@ -110,23 +110,11 @@
 
                 <div class="row q-col-gutter-md">
                   <div class="col-md-3 col-12">
-
-                    <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" mask="######"
-                      fill-mask="0" :rules="[
-                        val => val !== null && val !== '' || 'Obrigatório',
-                        ruleBuscarnomecClassTrib,
-                        val => (val !== 0 && val !== '0') || 'Não pode ser 0'
-                      ]" />
-
-
-
-
-
+                    <q-input outlined label="CST COFINS" v-model="form.cst_cofins" :rules="[
+                      (val) => (val && val.length >= 1) || 'CST do COFINS é obrigatório',
+                      ruleBuscarDescricaoCOFINS
+                    ]" unmasked-value />
                   </div>
-
-
-
-
 
                   <div class="col-md-6 col-12">
                     <q-input outlined v-model="descricaocst_cofins" readonly />
@@ -144,8 +132,15 @@
               <q-card class="q-pa-md">
                 <div class="text-h6 q-mb-md">IBS / CBS</div>
 
+
                 <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" :rules="[
-                  val => val !== null && val !== '' || 'Obrigatório', ruleBuscarnomecClassTrib, val => (val !== 0 && val !== '0') || 'Não pode ser 0'
+                  val => val !== null && val !== '' || 'Obrigatório',
+                  ruleBuscarnomecClassTrib,
+                  val => (val !== 0 && val !== '0') || 'Não pode ser 0'
+                ]" @blur="preencherZeros" />
+
+
+
                 ]" />
 
                 <q-input dense hide-bottom-space outlined v-model="formcClassTrib.nomecclasstrib" readonly
