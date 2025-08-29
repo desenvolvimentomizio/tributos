@@ -133,7 +133,7 @@
                 <div class="text-h6 q-mb-md">IBS / CBS</div>
 
 
-         <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" :rules="[
+                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" :rules="[
                   val => val !== null && val !== '' || 'Obrigatório',
                   ruleBuscarnomecClassTrib,
                   val => (val !== 0 && val !== '0') || 'Não pode ser 0'

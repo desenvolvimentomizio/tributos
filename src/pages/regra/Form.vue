@@ -137,11 +137,7 @@
                   val => val !== null && val !== '' || 'Obrigatório',
                   ruleBuscarnomecClassTrib,
                   val => (val !== 0 && val !== '0') || 'Não pode ser 0'
-                ]" @blur="preencherZeros" />
-
-
-
-                ]" />
+                ]"  />
 
                 <q-input dense hide-bottom-space outlined v-model="formcClassTrib.nomecclasstrib" readonly
                   type="textarea" autogrow :rows="2"
