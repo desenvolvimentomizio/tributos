@@ -131,8 +131,7 @@
               <q-card class="q-pa-md">
                 <div class="text-h6 q-mb-md">IBS / CBS</div>
 
-                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" mask="######"
-                  fill-mask="0" :rules="[
+                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" :rules="[
                     val => val !== null && val !== '' || 'Obrigatório', ruleBuscarnomecClassTrib, val => (val !== 0 && val !== '0') || 'Não pode ser 0'
                   ]" />
 
@@ -361,17 +360,17 @@ export default defineComponent({
 
     // ------- Maps -------
     const mapCSTICM = {
-      '00': 'Tributada integralmente',
-      '10': 'Tributada e com cobrança do ICMS por substituição tributária',
-      '20': 'Com redução de base de cálculo',
-      '30': 'Isenta ou não tributada e com cobrança do ICMS por substituição tributária',
-      '40': 'Isenta',
-      '41': 'Não tributada',
-      '50': 'Suspensão',
-      '51': 'Diferimento',
-      '60': 'ICMS cobrado anteriormente por substituição tributária',
-      '70': 'Com redução de base de cálculo e cobrança do ICMS por substituição tributária',
-      '90': 'Outras'
+      '000': 'Tributada integralmente',
+      '010': 'Tributada e com cobrança do ICMS por substituição tributária',
+      '020': 'Com redução de base de cálculo',
+      '030': 'Isenta ou não tributada e com cobrança do ICMS por substituição tributária',
+      '040': 'Isenta',
+      '041': 'Não tributada',
+      '050': 'Suspensão',
+      '051': 'Diferimento',
+      '060': 'ICMS cobrado anteriormente por substituição tributária',
+      '070': 'Com redução de base de cálculo e cobrança do ICMS por substituição tributária',
+      '090': 'Outras'
     }
 
 

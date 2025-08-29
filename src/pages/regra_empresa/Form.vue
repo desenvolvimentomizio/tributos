@@ -132,8 +132,7 @@
               <q-card class="q-pa-md">
                 <div class="text-h6 q-mb-md">IBS / CBS</div>
 
-                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" mask="######"
-                  fill-mask="0" :rules="[
+                <q-input outlined label="Classificação IBS-CBS" v-model="form.classificacao_ibscbs" :rules="[
                     val => val !== null && val !== '' || 'Obrigatório', ruleBuscarnomecClassTrib, val => (val !== 0 && val !== '0') || 'Não pode ser 0'
                   ]" />
 
@@ -392,17 +391,17 @@ export default defineComponent({
     }
 
     const mapCSTICM = {
-      '00': 'Tributada integralmente',
-      '10': 'Tributada e com cobrança do ICMS por substituição tributária',
-      '20': 'Com redução de base de cálculo',
-      '30': 'Isenta ou não tributada e com cobrança do ICMS por substituição tributária',
-      '40': 'Isenta',
-      '41': 'Não tributada',
-      '50': 'Suspensão',
-      '51': 'Diferimento',
-      '60': 'ICMS cobrado anteriormente por substituição tributária',
-      '70': 'Com redução de base de cálculo e cobrança do ICMS por substituição tributária',
-      '90': 'Outras'
+      '000': 'Tributada integralmente',
+      '010': 'Tributada e com cobrança do ICMS por substituição tributária',
+      '020': 'Com redução de base de cálculo',
+      '030': 'Isenta ou não tributada e com cobrança do ICMS por substituição tributária',
+      '040': 'Isenta',
+      '041': 'Não tributada',
+      '050': 'Suspensão',
+      '051': 'Diferimento',
+      '060': 'ICMS cobrado anteriormente por substituição tributária',
+      '070': 'Com redução de base de cálculo e cobrança do ICMS por substituição tributária',
+      '090': 'Outras'
     }
 
 
@@ -421,15 +420,15 @@ export default defineComponent({
     }
 
     const mapPISCOFINS = {
-      '1': 'Operação Tributável com Alíquota Básica',
-      '2': 'Operação Tributável com Alíquota Diferenciada',
-      '3': 'Operação Tributável com Alíquota por Unidade de Medida de Produto',
-      '4': 'Operação Tributável Monofásica – Revenda a Alíquota Zero',
-      '5': 'Operação Tributável por Substituição Tributária',
-      '6': 'Operação Tributável a Alíquota Zero',
-      '7': 'Operação Isenta da Contribuição',
-      '8': 'Operação sem Incidência da Contribuição',
-      '9': 'Operação com Suspensão da Contribuição',
+      '01': 'Operação Tributável com Alíquota Básica',
+      '02': 'Operação Tributável com Alíquota Diferenciada',
+      '03': 'Operação Tributável com Alíquota por Unidade de Medida de Produto',
+      '04': 'Operação Tributável Monofásica – Revenda a Alíquota Zero',
+      '05': 'Operação Tributável por Substituição Tributária',
+      '06': 'Operação Tributável a Alíquota Zero',
+      '07': 'Operação Isenta da Contribuição',
+      '08': 'Operação sem Incidência da Contribuição',
+      '09': 'Operação com Suspensão da Contribuição',
       '49': 'Outras Operações de Saída',
       '50': 'Operação com Direito a Crédito – Receita Tributada no Mercado Interno',
       '51': 'Operação com Direito a Crédito – Receita Não-Tributada no Mercado Interno',
